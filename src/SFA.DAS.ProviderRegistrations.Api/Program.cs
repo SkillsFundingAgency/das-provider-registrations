@@ -15,10 +15,7 @@ namespace SFA.DAS.ProviderRegistrations.Api
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .ConfigureAppConfiguration(
-                    c => 
-                        c.AddAzureTableStorage(ProviderRegistrationsConfigurationKeys.ProviderRegistrations)
-                )
+                .ConfigureAppConfiguration(c => c.AddAzureTableStorage(ProviderRegistrationsConfigurationKeys.ProviderRegistrations))
                 .UseStructureMap()
                 .UseStartup<Startup>();
     }

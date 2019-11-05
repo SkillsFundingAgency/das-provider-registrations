@@ -19,6 +19,7 @@ namespace SFA.DAS.ProviderRegistrations.Api.Extensions
                     policy.RequireAuthenticatedUser();
                 });
             });
+
             services.AddAuthentication(auth =>
             {
                 auth.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
