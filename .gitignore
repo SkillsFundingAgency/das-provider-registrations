@@ -1,0 +1,17 @@
+src/.vs/SFA.DAS.ProviderRegistrations/DesignTimeBuild
+src/.vs/SFA.DAS.ProviderRegistrations/v16
+src/SFA.DAS.ProviderRegistrations.Api.UnitTests/bin
+src/SFA.DAS.ProviderRegistrations.Api.UnitTests/obj
+src/SFA.DAS.ProviderRegistrations.Api/bin
+src/SFA.DAS.ProviderRegistrations.Api/obj
+src/SFA.DAS.ProviderRegistrations.Database/bin
+src/SFA.DAS.ProviderRegistrations.Database/obj
+src/SFA.DAS.ProviderRegistrations.UnitTests/bin
+src/SFA.DAS.ProviderRegistrations.UnitTests/obj
+*.user
+src/SFA.DAS.ProviderRegistrations.Web.UnitTests/bin
+src/SFA.DAS.ProviderRegistrations.Web.UnitTests/obj
+src/SFA.DAS.ProviderRegistrations.Web/bin
+src/SFA.DAS.ProviderRegistrations.Web/obj
+src/SFA.DAS.ProviderRegistrations/bin
+src/SFA.DAS.ProviderRegistrations/obj
