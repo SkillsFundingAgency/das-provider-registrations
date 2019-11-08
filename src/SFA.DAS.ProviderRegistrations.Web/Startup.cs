@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Authorization.Mvc.Extensions;
+using SFA.DAS.ProviderRegistrations.Extensions;
 using SFA.DAS.ProviderRegistrations.Web.Authentication;
 using SFA.DAS.ProviderRegistrations.Web.DependencyResolution;
 using SFA.DAS.ProviderRegistrations.Web.Extensions;
@@ -17,12 +18,14 @@ namespace SFA.DAS.ProviderRegistrations.Web
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IHostingEnvironment environment)
         {
             Configuration = configuration;
+            Environment = environment;
         }
 
         public IConfiguration Configuration { get; }
+        public IHostingEnvironment Environment { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
@@ -37,6 +40,7 @@ namespace SFA.DAS.ProviderRegistrations.Web
                 })
                 .AddProviderIdamsAuthentication(Configuration)
                 .AddDasAuthorization()
+                .AddDasDistributedMemoryCache(Configuration, Environment.IsDevelopment())
                 .AddMemoryCache()
                 .AddMvc(options =>
                 {
@@ -44,17 +48,14 @@ namespace SFA.DAS.ProviderRegistrations.Web
                     ConfigureAuthorization(options);
                 })
                 .AddNavigationBarSettings(Configuration)
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 .AddControllersAsServices()
                 .AddSessionStateTempDataProvider()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddHealthChecks();
+            services.AddApplicationInsightsTelemetry();
         }
 
-        /// <summary>
-        ///     Override in integration tests to override authorization behaviour.
-        /// </summary>
         protected virtual void ConfigureAuthorization(MvcOptions options)
         {
             var policy = new AuthorizationPolicyBuilder()
@@ -70,7 +71,6 @@ namespace SFA.DAS.ProviderRegistrations.Web
             IoC.Initialize(registry);
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
@@ -80,7 +80,6 @@ namespace SFA.DAS.ProviderRegistrations.Web
             else
             {
                 app.UseExceptionHandler("/error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
