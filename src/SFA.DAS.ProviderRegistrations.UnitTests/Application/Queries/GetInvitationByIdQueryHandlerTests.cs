@@ -1,69 +1,52 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using AutoMapper;
+using AutoFixture.NUnit3;
 using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using NUnit.Framework;
 using SFA.DAS.ProviderRegistrations.Application.Queries.GetInvitationByIdQuery;
 using SFA.DAS.ProviderRegistrations.Data;
-using SFA.DAS.ProviderRegistrations.Mappings;
 using SFA.DAS.ProviderRegistrations.Models;
-using SFA.DAS.ProviderRegistrations.UnitTests.Builders;
-using SFA.DAS.Testing;
 
 namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Queries
 {
     [TestFixture]
     [Parallelizable]
-    public class GetInvitationByIdQueryHandlerTests : FluentTest<GetInvitationByIdQueryHandlerTestsFixture>
+    public class GetInvitationByIdQueryHandlerTests
     {
-        [Test]
-        public Task Handle_WhenHandlingGetInvitationByIdQueryAndInvitationIsFound_ThenShouldReturnGetInvitationByIdQueryResult()
+        [Test, ProviderAutoData]
+        public async Task Handle_WhenHandlingGetInvitationByIdQueryAndInvitationIsNotFound_ThenShouldReturnNull(
+            GetInvitationByIdQueryHandler handler,
+            GetInvitationByIdQuery query)
         {
-            return RunAsync(f => f.SetInvitation(), f => f.Handle(), (f, r) => r.Should().NotBeNull()
-                .And.Match<GetInvitationByIdQueryResult>(r2 =>
-                    r2.Invitation.EmployerOrganisation == f.Invitation.EmployerOrganisation &&
-                    r2.Invitation.Ukprn == f.Invitation.Ukprn));
+            var result = await handler.Handle(query, new CancellationToken());
+            result.Should().BeNull();
         }
 
-        [Test]
-        public Task Handle_WhenHandlingGetInvitationByIdQueryAndInvitationIsNotFound_ThenShouldReturnNull()
+        [Test, ProviderAutoData]
+        public async Task SampleTest(
+            [Frozen] ProviderRegistrationsDbContext db,
+            Invitation invitation,
+            GetInvitationByIdQueryHandler handler
+            )
         {
-            return RunAsync(f => f.Handle(), (f, r) => r.Should().BeNull());
-        }
-    }
+            db.Invitations.Add(invitation);
+            await db.SaveChangesAsync();
 
-    public class GetInvitationByIdQueryHandlerTestsFixture
-    { 
-        public GetInvitationByIdQuery Query { get; set; }
-        public GetInvitationByIdQueryHandler Handler { get; set; }
-        public Invitation Invitation { get; set; }
-        public ProviderRegistrationsDbContext Db { get; set; }
-        public IConfigurationProvider ConfigurationProvider { get; set; }
+            var query = new GetInvitationByIdQuery(invitation.Reference);
+            var result = await handler.Handle(query, new CancellationToken());
 
-        public GetInvitationByIdQueryHandlerTestsFixture()
-        {
-            Query = new GetInvitationByIdQuery(Guid.NewGuid());
-            Db = new ProviderRegistrationsDbContext(new DbContextOptionsBuilder<ProviderRegistrationsDbContext>().UseInMemoryDatabase(Guid.NewGuid().ToString()).ConfigureWarnings(warnings => warnings.Throw(RelationalEventId.QueryClientEvaluationWarning)).Options);
-            ConfigurationProvider = new MapperConfiguration(c => c.AddProfile(typeof(InvitationMappings)));
-            Handler = new GetInvitationByIdQueryHandler(new Lazy<ProviderRegistrationsDbContext>(() => Db), ConfigurationProvider);
-        }
-
-        public Task<GetInvitationByIdQueryResult> Handle()
-        {
-            return Handler.Handle(Query, CancellationToken.None);
-        }
-
-        public GetInvitationByIdQueryHandlerTestsFixture SetInvitation()
-        {
-            Invitation = EntityActivator.CreateInstance<Invitation>().Set(p => p.Reference, Query.CorrelationId).Set(p => p.EmployerOrganisation, "Foo").Set(p => p.Ukprn, 12345);
-            
-            Db.Invitations.Add(Invitation);
-            Db.SaveChanges();
-
-            return this;
+            result.Invitation.Should().NotBeNull();
+            result.Invitation.Should().BeEquivalentTo(new
+            {
+                invitation.Ukprn,
+                invitation.EmployerFirstName,
+                invitation.EmployerLastName,
+                invitation.EmployerEmail,
+                invitation.EmployerOrganisation,
+                invitation.Status,
+                SentDate = invitation.CreatedDate
+            });
         }
     }
 }
