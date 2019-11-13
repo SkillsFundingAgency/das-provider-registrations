@@ -24,7 +24,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Queries
         }
 
         [Test, ProviderAutoData]
-        public async Task SampleTest(
+        public async Task Handle_WhenHandlingGetInvitationByIdQueryAndInvitationIsNotFound_ThenShouldReturnNull(
             [Frozen] ProviderRegistrationsDbContext db,
             Invitation invitation,
             GetInvitationByIdQueryHandler handler
