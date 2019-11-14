@@ -7,6 +7,8 @@ using AutoFixture.NUnit3;
 using AutoMapper;
 using SFA.DAS.ProviderRegistrations.Mappings;
 using AutoFixture.AutoMoq;
+using SFA.DAS.ProviderRegistrations.Application.Commands.AddedAccountProviderCommand;
+using MediatR;
 
 namespace SFA.DAS.ProviderRegistrations.UnitTests
 {

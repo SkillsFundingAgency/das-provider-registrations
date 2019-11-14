@@ -1,20 +1,12 @@
-using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using AutoFixture.NUnit3;
-using AutoMapper;
 using FluentAssertions;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using NUnit.Framework;
 using SFA.DAS.ProviderRegistrations.Application.Queries.GetInvitationQuery;
 using SFA.DAS.ProviderRegistrations.Data;
-using SFA.DAS.ProviderRegistrations.Mappings;
 using SFA.DAS.ProviderRegistrations.Models;
-using SFA.DAS.ProviderRegistrations.UnitTests.Builders;
-using SFA.DAS.Testing;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Queries
 {

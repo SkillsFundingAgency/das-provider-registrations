@@ -1,104 +1,85 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
+using AutoFixture.NUnit3;
 using FluentAssertions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using NUnit.Framework;
 using SFA.DAS.ProviderRegistrations.Application.Commands.AddedAccountProviderCommand;
 using SFA.DAS.ProviderRegistrations.Data;
 using SFA.DAS.ProviderRegistrations.Models;
-using SFA.DAS.Testing;
-using SFA.DAS.UnitOfWork.Context;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
 {
     [TestFixture]
     [Parallelizable]
-    public class AddedAccountProviderCommandTests : FluentTest<AddedAccountProviderCommandHandlerTestFixture>
+    public class AddedAccountProviderCommandTests
     {
-        [Test]
-        public Task Handle_WhenCommandIsHandled_ThenShouldUpdateInvitationStatus()
+
+        [Test, ProviderAutoData]
+        public async Task Handle_WhenCommandIsHandled_ThenShouldUpdateInvitationStatus(
+            [Frozen] Lazy<ProviderRegistrationsDbContext> db,
+            AddedAccountProviderCommandHandler handler,
+            Invitation invitation)
         {
-            return RunAsync(f => f.Handle(), f =>
-            {
-                f.Invitation.Status.Should().Be((int) InvitationStatus.InvitationComplete);
-            });
+            //Arrange
+            var command = new AddedAccountProviderCommand(invitation.Ukprn, Guid.NewGuid(), invitation.Reference.ToString());
+            invitation.UpdateStatus((int)InvitationStatus.InvitationSent, DateTime.Now);
+            db.Value.Invitations.Add(invitation);
+            await db.Value.SaveChangesAsync();
+
+            //act
+            await ((IRequestHandler<AddedAccountProviderCommand, Unit>)handler).Handle(command, new CancellationToken());
+
+
+            //assert
+            var savedInvitation = await db.Value.Invitations.FirstAsync();
+            savedInvitation.Status.Should().Be((int)InvitationStatus.InvitationComplete);
         }
 
-        [Test]
-        public Task Handle_WhenDoesntExistCommandIsHandled_ThenNoChangesAreMade()
+        [Test, ProviderAutoData]
+        public async Task Handle_WhenDoesntExistCommandIsHandled_ThenNoChangesAreMade(
+            [Frozen] Lazy<ProviderRegistrationsDbContext> db,
+            AddedAccountProviderCommandHandler handler,
+            Invitation invitation)
         {
-            return RunAsync(f => f.HandleDoesntExist(), f =>
-            {
-                f.Invitation.Status.Should().Be((int) InvitationStatus.InvitationSent);
-                f.InvitationDoesntExist.Status.Should().Be((int) InvitationStatus.PayeSchemeAdded);
-                f.InvitationInvalidStatus.Status.Should().Be((int) InvitationStatus.InvitationComplete);
-            });
+            //Arrange
+            var command = new AddedAccountProviderCommand(12345, Guid.NewGuid(), Guid.NewGuid().ToString());
+            db.Value.Invitations.Add(invitation);
+            await db.Value.SaveChangesAsync();
+            var statusBefore = invitation.Status;
+
+            //act
+            await ((IRequestHandler<AddedAccountProviderCommand, Unit>)handler).Handle(command, new CancellationToken());
+
+
+            //assert
+            // Confirm nothing has changed.
+            var invite = await db.Value.Invitations.FirstAsync();
+            invite.Status.Should().Be(statusBefore);
         }
 
-        [Test]
-        public Task Handle_WhenInvalidStatusCommandIsHandled_ThenNoChangesAreMade()
+        [Test, ProviderAutoData]
+        public async Task Handle_WhenInvalidStatusCommandIsHandled_ThenNoChangesAreMade(
+            [Frozen] Lazy<ProviderRegistrationsDbContext> db,
+            AddedAccountProviderCommandHandler handler,
+            AddedAccountProviderCommand command,
+            Invitation invitation)
         {
-            return RunAsync(f => f.HandleInvalidStatus(), f =>
-            {
-                f.InvitationInvalidStatus.Status.Should().Be((int) InvitationStatus.InvitationComplete);
-            });
-        }
-    }
+            //Arrange
+            db.Value.Invitations.Add(invitation);
+            await db.Value.SaveChangesAsync();
 
-    public class AddedAccountProviderCommandHandlerTestFixture
-    {
-        public ProviderRegistrationsDbContext Db { get; set; }
-        public Invitation Invitation { get; set; }
-        public Invitation InvitationDoesntExist { get; set; }
-        public Invitation InvitationInvalidStatus { get; set; }
-        public AddedAccountProviderCommand Command { get; set; }
-        public AddedAccountProviderCommand CommandDoesntExist { get; set; }
-        public AddedAccountProviderCommand CommandInvalidStatus { get; set; }
-        public IUnitOfWorkContext UnitOfWorkContext { get; set; }
-        public IRequestHandler<AddedAccountProviderCommand, Unit> Handler { get; set; }
-        
-        public AddedAccountProviderCommandHandlerTestFixture()
-        {
-            Guid correlationId1 = Guid.NewGuid();
-            Guid correlationId2 = Guid.NewGuid();
-            Guid correlationId3 = Guid.NewGuid();
-            Db = new ProviderRegistrationsDbContext(new DbContextOptionsBuilder<ProviderRegistrationsDbContext>().UseInMemoryDatabase(Guid.NewGuid().ToString()).ConfigureWarnings(warnings => warnings.Throw(RelationalEventId.QueryClientEvaluationWarning)).Options);
-            Command = new AddedAccountProviderCommand(12345, Guid.NewGuid(), correlationId1.ToString());
-            CommandDoesntExist = new AddedAccountProviderCommand(12345, Guid.NewGuid(), Guid.NewGuid().ToString());
-            CommandInvalidStatus = new AddedAccountProviderCommand(12345, Guid.NewGuid(), correlationId3.ToString());
+            var statusBefore = invitation.Status;
 
-            Invitation = new Invitation(correlationId1, 12345, "Ref", "Org", "FirstName", "LastName", "Email", (int) InvitationStatus.InvitationSent, DateTime.Now, DateTime.Now);
-            InvitationDoesntExist = new Invitation(correlationId2, 12345, "Ref", "Org", "FirstName", "LastName", "Email", (int) InvitationStatus.PayeSchemeAdded, DateTime.Now, DateTime.Now);
-            InvitationInvalidStatus = new Invitation(correlationId3, 12345, "Ref", "Org", "FirstName", "LastName", "Email", (int) InvitationStatus.InvitationComplete, DateTime.Now, DateTime.Now);
-
-            Db.Invitations.Add(Invitation);
-            Db.Invitations.Add(InvitationDoesntExist);
-            Db.Invitations.Add(InvitationInvalidStatus);
-            Db.SaveChanges();
-
-            Handler = new AddedAccountProviderCommandHandler(new Lazy<ProviderRegistrationsDbContext>(() => Db));
-            UnitOfWorkContext = new UnitOfWorkContext();
-        }
-
-        public async Task Handle()
-        {
-            await Handler.Handle(Command, CancellationToken.None);
-            await Db.SaveChangesAsync();
-        }
-
-        public async Task HandleDoesntExist()
-        {
-            await Handler.Handle(CommandDoesntExist, CancellationToken.None);
-            await Db.SaveChangesAsync();
-        }
-
-        public async Task HandleInvalidStatus()
-        {
-            await Handler.Handle(CommandInvalidStatus, CancellationToken.None);
-            await Db.SaveChangesAsync();
+            //act
+            await ((IRequestHandler<AddedAccountProviderCommand, Unit>)handler).Handle(command, new CancellationToken());
+            
+            //assert
+            // Confirm nothing has changed.
+            var invite = await db.Value.Invitations.FirstAsync();
+            invite.Status.Should().Be(statusBefore);
         }
     }
 }
