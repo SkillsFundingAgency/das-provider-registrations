@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using SFA.DAS.ProviderRegistrations.Web.Validation;
 
 namespace SFA.DAS.ProviderRegistrations.Web.ViewModels
 {
@@ -23,6 +24,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.ViewModels
         [MaxLength(100)]
         [Required]
         [EmailAddress]
+        [Unsubscribed]
         public string EmployerEmailAddress { get; set; }
     }
 }
