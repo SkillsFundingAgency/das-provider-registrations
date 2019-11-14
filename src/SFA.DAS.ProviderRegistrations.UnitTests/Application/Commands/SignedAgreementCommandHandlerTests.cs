@@ -39,7 +39,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
         }
 
         [Test]
-        public Task Handle_WhenInvalidStatusCommandIsHandled_ThennoChangesAreMade()
+        public Task Handle_WhenInvalidStatusCommandIsHandled_ThenNoChangesAreMade()
         {
             return RunAsync(f => f.HandleInvalidStatus(), f =>
             {

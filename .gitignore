@@ -15,3 +15,14 @@ src/SFA.DAS.ProviderRegistrations.Web/bin
 src/SFA.DAS.ProviderRegistrations.Web/obj
 src/SFA.DAS.ProviderRegistrations/bin
 src/SFA.DAS.ProviderRegistrations/obj
+SFA.DAS.ProviderRegistrations.Database.jfm
+SFA.DAS.ProviderRegistrations.Database.dbmdl
+src/SFA.DAS.ProviderRegistrations.MessageHandlers.TestHarness/bin
+src/SFA.DAS.ProviderRegistrations.MessageHandlers.TestHarness/obj
+src/SFA.DAS.ProviderRegistrations.MessageHandlers.UnitTests/bin
+src/SFA.DAS.ProviderRegistrations.MessageHandlers.UnitTests/obj
+src/SFA.DAS.ProviderRegistrations.MessageHandlers/bin
+src/SFA.DAS.ProviderRegistrations.Messages/bin
+src/SFA.DAS.ProviderRegistrations.Messages/obj
+src/SFA.DAS.ProviderRegistrations.MessageHandlers/obj
+src/.learningtransport

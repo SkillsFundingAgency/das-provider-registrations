@@ -67,11 +67,6 @@ namespace SFA.DAS.ProviderRegistrations.Web.Controllers
                 return View("ReviewDetails", model);
             }
 
-            if (await _mediator.Send(new GetUnsubscribedQuery(_authenticationService.Ukprn.Value, model.EmployerEmailAddress.Trim().ToLower())))
-            {
-                return RedirectToAction("Error", "Error");
-            }
-
             await _mediator.Send(new AddInvitationCommand(
                 _authenticationService.Ukprn.Value,
                 _authenticationService.UserId,

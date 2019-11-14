@@ -3,5 +3,7 @@
     public class ProviderRegistrationsSettings 
     {
         public string DatabaseConnectionString { get; set; }
+
+        public string RedisConnectionString { get; set; }
     }
 }
