@@ -39,6 +39,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests
             return new MapperConfiguration(c =>
             {
                 c.AddProfile(typeof(InvitationMappings));
+                c.AddProfile(typeof(InvitationMappings));
             });
         }
 
