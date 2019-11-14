@@ -1,59 +1,47 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
+using AutoFixture.NUnit3;
 using FluentAssertions;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using NUnit.Framework;
 using SFA.DAS.ProviderRegistrations.Application.Queries.GetUnsubscribedQuery;
 using SFA.DAS.ProviderRegistrations.Data;
 using SFA.DAS.ProviderRegistrations.Models;
-using SFA.DAS.ProviderRegistrations.UnitTests.Builders;
-using SFA.DAS.Testing;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Queries
 {
     [TestFixture]
     [Parallelizable]
-    public class GetUnsubscribedQueryHandlerTests : FluentTest<GetUnsubscribedQueryHandlerTestsFixture>
+    public class GetUnsubscribedQueryHandlerTests
     {
-        [Test]
-        public Task Handle_WhenHandlingGetUnsubscribedQueryAndParametersAreMatched_ThenShouldReturnGetATrueResult()
+        [Test, ProviderAutoData]
+        public async Task Handle_WhenHandlingGetUnsubscribedQueryAndParametersAreMatched_ThenShouldReturnGetATrueResult(
+            [Frozen] ProviderRegistrationsDbContext db,
+            Unsubscribe entity,
+            GetUnsubscribedQueryHandler handler)
         {
-            return RunAsync(f => f.SetUnsubscribe(), f => f.Handle(), (f, r) =>
-            {
-                r.Should().BeTrue();
-            });
-        }
-    }
+            //arrange
+            db.Unsubscribed.Add(entity);
+            await db.SaveChangesAsync();
+            var query = new GetUnsubscribedQuery(entity.Ukprn, entity.EmailAddress);
 
-    public class GetUnsubscribedQueryHandlerTestsFixture
-    {
-        public GetUnsubscribedQuery Query { get; set; }
-        public IRequestHandler<GetUnsubscribedQuery, bool> Handler { get; set; }
-        public Unsubscribe Unsubscribe { get; set; }
-        public ProviderRegistrationsDbContext Db { get; set; }
-        
-        public GetUnsubscribedQueryHandlerTestsFixture()
-        {
-            Query = new GetUnsubscribedQuery(12345, "email@email.com");
-            Db = new ProviderRegistrationsDbContext(new DbContextOptionsBuilder<ProviderRegistrationsDbContext>().UseInMemoryDatabase(Guid.NewGuid().ToString()).ConfigureWarnings(warnings => warnings.Throw(RelationalEventId.QueryClientEvaluationWarning)).Options);
-            Handler = new GetUnsubscribedQueryHandler(new Lazy<ProviderRegistrationsDbContext>(() => Db));
+            //act
+            var result = await handler.Handle(query, new CancellationToken());
+
+            //assert
+            result.Should().BeTrue();
         }
 
-        public Task<bool> Handle()
+        [Test, ProviderAutoData]
+        public async Task Handle_WhenHandlingGetUnsubscribedQueryAndParametersAreNotMatched_ThenShouldReturnAFalseResult(
+            [Frozen] ProviderRegistrationsDbContext db,
+            GetUnsubscribedQuery query,
+            GetUnsubscribedQueryHandler handler)
         {
-            return Handler.Handle(Query, CancellationToken.None);
-        }
+            //act
+            var result = await handler.Handle(query, new CancellationToken());
 
-        public GetUnsubscribedQueryHandlerTestsFixture SetUnsubscribe()
-        {
-            Unsubscribe = EntityActivator.CreateInstance<Unsubscribe>().Set(i => i.Ukprn, 12345).Set(i => i.EmailAddress, "email@email.com");
-            Db.Unsubscribed.Add(Unsubscribe);
-            Db.SaveChanges();
-            
-            return this;
+            //assert
+            result.Should().BeFalse();
         }
     }
 }

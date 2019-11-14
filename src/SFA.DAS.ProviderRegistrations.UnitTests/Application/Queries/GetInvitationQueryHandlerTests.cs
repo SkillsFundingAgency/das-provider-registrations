@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoFixture.NUnit3;
 using AutoMapper;
 using FluentAssertions;
 using MediatR;
@@ -19,47 +20,37 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Queries
 {
     [TestFixture]
     [Parallelizable]
-    public class GetInvitationQueryHandlerTests : FluentTest<GetInvitationQueryHandlerTestsFixture>
+    public class GetInvitationQueryHandlerTests
     {
-        [Test]
-        public Task Handle_WhenHandlingGetInvitationQueryAndProviderIsFound_ThenShouldReturnGetInvitationQueryResult()
+        [Test, ProviderAutoData]
+        public async Task Handle_WhenHandlingGetInvitationQueryAndProviderIsFound_ThenShouldReturnGetInvitationQueryResult(
+            [Frozen] ProviderRegistrationsDbContext db,
+            GetInvitationQueryHandler handler,
+            Invitation invitation)
         {
-            return RunAsync(f => f.SetInvitations(), f => f.Handle(), (f, r) => r.Should().NotBeNull()
-                .And.Match<GetInvitationQueryResult>(
-                    a => a.Invitations.First().Ukprn == 12345
-                )
+            //arrange
+            db.Invitations.Add(invitation);
+            await db.SaveChangesAsync();
+            var query = new GetInvitationQuery(invitation.Ukprn, invitation.UserRef, "EmployerOrganisation", "Desc");
+
+            //act
+            var result = await handler.Handle(query, new CancellationToken());
+
+            //assert
+            result.Should().NotBeNull();
+            result.Invitations.Should().NotBeNull();
+            result.Invitations.Count.Should().Be(1);
+            result.Invitations.First().Should().BeEquivalentTo(
+                new
+                {
+                    invitation.Ukprn,
+                    invitation.Status,
+                    invitation.EmployerOrganisation,
+                    invitation.EmployerFirstName,
+                    invitation.EmployerLastName,
+                    invitation.EmployerEmail
+                }
             );
-        }
-    }
-
-    public class GetInvitationQueryHandlerTestsFixture
-    {
-        public GetInvitationQuery Query { get; set; }
-        public IRequestHandler<GetInvitationQuery, GetInvitationQueryResult> Handler { get; set; }
-        public Invitation Invitation { get; set; }
-        public ProviderRegistrationsDbContext Db { get; set; }
-        public IConfigurationProvider ConfigurationProvider { get; set; }
-        
-        public GetInvitationQueryHandlerTestsFixture()
-        {
-            Query = new GetInvitationQuery(12345, null, "EmployerOrganisation", "Desc");
-            Db = new ProviderRegistrationsDbContext(new DbContextOptionsBuilder<ProviderRegistrationsDbContext>().UseInMemoryDatabase(Guid.NewGuid().ToString()).ConfigureWarnings(warnings => warnings.Throw(RelationalEventId.QueryClientEvaluationWarning)).Options);
-            ConfigurationProvider = new MapperConfiguration(c => c.AddProfile(typeof(InvitationMappings)));
-            Handler = new GetInvitationQueryHandler(new Lazy<ProviderRegistrationsDbContext>(() => Db), ConfigurationProvider);
-        }
-
-        public Task<GetInvitationQueryResult> Handle()
-        {
-            return Handler.Handle(Query, CancellationToken.None);
-        }
-
-        public GetInvitationQueryHandlerTestsFixture SetInvitations()
-        {
-            Invitation = EntityActivator.CreateInstance<Invitation>().Set(i => i.Ukprn, 12345).Set(i => i.EmployerOrganisation, "Org");
-            Db.Invitations.Add(Invitation);
-            Db.SaveChanges();
-            
-            return this;
         }
     }
 }
