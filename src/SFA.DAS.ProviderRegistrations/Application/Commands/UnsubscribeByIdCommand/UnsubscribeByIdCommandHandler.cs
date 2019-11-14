@@ -29,6 +29,7 @@ namespace SFA.DAS.ProviderRegistrations.Application.Commands.UnsubscribeByIdComm
                     if (exists == null)
                     {
                         _db.Value.Unsubscribed.Add(new Unsubscribe(invitation.EmployerEmail, invitation.Ukprn));
+                        await _db.Value.SaveChangesAsync(cancellationToken);
                     }
                 }
             }
