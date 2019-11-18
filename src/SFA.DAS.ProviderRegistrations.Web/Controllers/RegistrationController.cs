@@ -6,7 +6,6 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.ProviderRegistrations.Application.Commands.AddInvitationCommand;
 using SFA.DAS.ProviderRegistrations.Application.Queries.GetInvitationQuery;
-using SFA.DAS.ProviderRegistrations.Application.Queries.GetUnsubscribedQuery;
 using SFA.DAS.ProviderRegistrations.Types;
 using SFA.DAS.ProviderRegistrations.Web.Authentication;
 using SFA.DAS.ProviderRegistrations.Web.Extensions;
@@ -103,6 +102,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.Controllers
             if (string.IsNullOrWhiteSpace(sortColumn)) sortColumn = Enum.GetNames(typeof(InvitationSortColumn)).First();
             if (string.IsNullOrWhiteSpace(sortDirection) || (sortDirection != "Asc" && sortDirection != "Desc")) sortDirection = "Asc";
 
+            //CB: Is this right? Should this not be fed in by IDAMS?
             var results = await _mediator.Send(new GetInvitationQuery(12345, null, sortColumn, sortDirection));
 
             var model = _mapper.Map<InvitationsViewModel>(results);
