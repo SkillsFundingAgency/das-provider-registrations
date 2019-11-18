@@ -1,17 +1,14 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-using AutoFixture.NUnit3;
 using FluentAssertions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using NUnit.Framework;
 using SFA.DAS.ProviderRegistrations.Application.Commands.AddedPayeSchemeCommand;
 using SFA.DAS.ProviderRegistrations.Data;
 using SFA.DAS.ProviderRegistrations.Models;
-using SFA.DAS.Testing;
-using SFA.DAS.UnitOfWork.Context;
+using SFA.DAS.ProviderRegistrations.UnitTests.AutoFixture;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
 {
@@ -21,7 +18,8 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
     {
         [Test, ProviderAutoData]
         public async Task Handle_WhenCommandIsHandled_ThenShouldUpdateInvitationStatus(
-                [Frozen] Lazy<ProviderRegistrationsDbContext> db,
+                ProviderRegistrationsDbContext setupContext,
+                ProviderRegistrationsDbContext confirmationContext,
                 AddedPayeSchemeCommandHandler handler,
                 AddedPayeSchemeCommand command,
                 Invitation invitation)
@@ -29,27 +27,28 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             //arrange
             invitation.UpdateStatus((int)InvitationStatus.InvitationSent, DateTime.Now);
             command.CorrelationId = invitation.Reference.ToString();
-            db.Value.Invitations.Add(invitation);
-            await db.Value.SaveChangesAsync();
+            setupContext.Invitations.Add(invitation);
+            await setupContext.SaveChangesAsync();
 
             //act
             await ((IRequestHandler<AddedPayeSchemeCommand, Unit>)handler).Handle(command, new CancellationToken());
 
             //assert
-            var savedInvitation = await db.Value.Invitations.FirstAsync();
+            var savedInvitation = await confirmationContext.Invitations.FirstAsync();
             savedInvitation.Status.Should().Be((int)InvitationStatus.PayeSchemeAdded);
         }
 
         [Test, ProviderAutoData]
         public async Task Handle_WhenDoesntExistCommandIsHandled_ThenNoChangesAreMade(
-            [Frozen] Lazy<ProviderRegistrationsDbContext> db,
+            ProviderRegistrationsDbContext setupContext,
+            ProviderRegistrationsDbContext confirmationContext,
             AddedPayeSchemeCommandHandler handler,
             AddedPayeSchemeCommand command,
             Invitation invitation)
         {
             //arrange
-            db.Value.Invitations.Add(invitation);
-            await db.Value.SaveChangesAsync();
+            setupContext.Invitations.Add(invitation);
+            await setupContext.SaveChangesAsync();
             var statusBefore = invitation.Status;
             command.CorrelationId = invitation.Reference.ToString();
 
@@ -58,22 +57,22 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
 
             //assert
             // Confirm nothing has changed.
-            var invite = await db.Value.Invitations.FirstAsync();
+            var invite = await confirmationContext.Invitations.FirstAsync();
             invite.Status.Should().Be(statusBefore);
-
         }
 
         [Test, ProviderAutoData]
         public async Task Handle_WhenInvalidStatusCommandIsHandled_ThenNoChangesAreMade(
-            [Frozen] Lazy<ProviderRegistrationsDbContext> db,
+            ProviderRegistrationsDbContext setupContext,
+            ProviderRegistrationsDbContext confirmationContext,
             AddedPayeSchemeCommandHandler handler,
             AddedPayeSchemeCommand command,
             Invitation invitation)
         {
             //arrange
             invitation.UpdateStatus((int)InvitationStatus.LegalAgreementSigned, DateTime.Now);
-            db.Value.Invitations.Add(invitation);
-            await db.Value.SaveChangesAsync();
+            setupContext.Invitations.Add(invitation);
+            await setupContext.SaveChangesAsync();
             command.CorrelationId = invitation.Reference.ToString();
 
             //act
@@ -81,7 +80,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
 
             //assert
             // Confirm nothing has changed.
-            var invite = await db.Value.Invitations.FirstAsync();
+            var invite = await confirmationContext.Invitations.FirstAsync();
             invite.Status.Should().Be((int)InvitationStatus.LegalAgreementSigned);
         }
     }

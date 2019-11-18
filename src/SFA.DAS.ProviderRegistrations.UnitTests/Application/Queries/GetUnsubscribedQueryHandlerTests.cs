@@ -1,9 +1,9 @@
-using AutoFixture.NUnit3;
 using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.ProviderRegistrations.Application.Queries.GetUnsubscribedQuery;
 using SFA.DAS.ProviderRegistrations.Data;
 using SFA.DAS.ProviderRegistrations.Models;
+using SFA.DAS.ProviderRegistrations.UnitTests.AutoFixture;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -15,13 +15,13 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Queries
     {
         [Test, ProviderAutoData]
         public async Task Handle_WhenHandlingGetUnsubscribedQueryAndParametersAreMatched_ThenShouldReturnGetATrueResult(
-            [Frozen] ProviderRegistrationsDbContext db,
+            ProviderRegistrationsDbContext setupContext,
             Unsubscribe entity,
             GetUnsubscribedQueryHandler handler)
         {
             //arrange
-            db.Unsubscribed.Add(entity);
-            await db.SaveChangesAsync();
+            setupContext.Unsubscribed.Add(entity);
+            await setupContext.SaveChangesAsync();
             var query = new GetUnsubscribedQuery(entity.Ukprn, entity.EmailAddress);
 
             //act
@@ -33,7 +33,6 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Queries
 
         [Test, ProviderAutoData]
         public async Task Handle_WhenHandlingGetUnsubscribedQueryAndParametersAreNotMatched_ThenShouldReturnAFalseResult(
-            [Frozen] ProviderRegistrationsDbContext db,
             GetUnsubscribedQuery query,
             GetUnsubscribedQueryHandler handler)
         {

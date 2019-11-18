@@ -1,9 +1,9 @@
-﻿using AutoFixture.NUnit3;
-using FluentAssertions;
+﻿using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.ProviderRegistrations.Application.Queries.GetInvitationByIdQuery;
 using SFA.DAS.ProviderRegistrations.Data;
 using SFA.DAS.ProviderRegistrations.Models;
+using SFA.DAS.ProviderRegistrations.UnitTests.AutoFixture;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -27,14 +27,14 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Queries
 
         [Test, ProviderAutoData]
         public async Task Handle_WhenHandlingGetInvitationByIdQueryAndInvitationIsFound_ThenShouldReturnGetInvitationByIdQueryResult(
-            [Frozen] ProviderRegistrationsDbContext db,
+            ProviderRegistrationsDbContext setupContext,
             Invitation invitation,
             GetInvitationByIdQueryHandler handler
             )
         {
             //arrange
-            db.Invitations.Add(invitation);
-            await db.SaveChangesAsync();
+            setupContext.Invitations.Add(invitation);
+            await setupContext.SaveChangesAsync();
             var query = new GetInvitationByIdQuery(invitation.Reference);
 
             //act

@@ -1,4 +1,3 @@
-using AutoFixture.NUnit3;
 using FluentAssertions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -6,6 +5,7 @@ using NUnit.Framework;
 using SFA.DAS.ProviderRegistrations.Application.Commands.AddedAccountProviderCommand;
 using SFA.DAS.ProviderRegistrations.Data;
 using SFA.DAS.ProviderRegistrations.Models;
+using SFA.DAS.ProviderRegistrations.UnitTests.AutoFixture;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -19,35 +19,37 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
 
         [Test, ProviderAutoData]
         public async Task Handle_WhenCommandIsHandled_ThenShouldUpdateInvitationStatus(
-            [Frozen] Lazy<ProviderRegistrationsDbContext> db,
+            ProviderRegistrationsDbContext setupContext,
+            ProviderRegistrationsDbContext confirmationContext,
             AddedAccountProviderCommandHandler handler,
             Invitation invitation)
         {
             //Arrange
             var command = new AddedAccountProviderCommand(invitation.Ukprn, Guid.NewGuid(), invitation.Reference.ToString());
             invitation.UpdateStatus((int)InvitationStatus.InvitationSent, DateTime.Now);
-            db.Value.Invitations.Add(invitation);
-            await db.Value.SaveChangesAsync();
+            setupContext.Invitations.Add(invitation);
+            await setupContext.SaveChangesAsync();
 
             //act
             await ((IRequestHandler<AddedAccountProviderCommand, Unit>)handler).Handle(command, new CancellationToken());
 
 
             //assert
-            var savedInvitation = await db.Value.Invitations.FirstAsync();
+            var savedInvitation = await confirmationContext.Invitations.FirstAsync();
             savedInvitation.Status.Should().Be((int)InvitationStatus.InvitationComplete);
         }
 
         [Test, ProviderAutoData]
         public async Task Handle_WhenDoesntExistCommandIsHandled_ThenNoChangesAreMade(
-            [Frozen] Lazy<ProviderRegistrationsDbContext> db,
+            ProviderRegistrationsDbContext setupContext,
+            ProviderRegistrationsDbContext confirmationContext,
             AddedAccountProviderCommandHandler handler,
             Invitation invitation)
         {
             //Arrange
             var command = new AddedAccountProviderCommand(12345, Guid.NewGuid(), Guid.NewGuid().ToString());
-            db.Value.Invitations.Add(invitation);
-            await db.Value.SaveChangesAsync();
+            setupContext.Invitations.Add(invitation);
+            await setupContext.SaveChangesAsync();
             var statusBefore = invitation.Status;
 
             //act
@@ -56,20 +58,21 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
 
             //assert
             // Confirm nothing has changed.
-            var invite = await db.Value.Invitations.FirstAsync();
+            var invite = await confirmationContext.Invitations.FirstAsync();
             invite.Status.Should().Be(statusBefore);
         }
 
         [Test, ProviderAutoData]
         public async Task Handle_WhenInvalidStatusCommandIsHandled_ThenNoChangesAreMade(
-            [Frozen] Lazy<ProviderRegistrationsDbContext> db,
+            ProviderRegistrationsDbContext setupContext,
+            ProviderRegistrationsDbContext confirmationContext,
             AddedAccountProviderCommandHandler handler,
             AddedAccountProviderCommand command,
             Invitation invitation)
         {
             //Arrange
-            db.Value.Invitations.Add(invitation);
-            await db.Value.SaveChangesAsync();
+            setupContext.Invitations.Add(invitation);
+            await setupContext.SaveChangesAsync();
 
             var statusBefore = invitation.Status;
 
@@ -78,7 +81,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             
             //assert
             // Confirm nothing has changed.
-            var invite = await db.Value.Invitations.FirstAsync();
+            var invite = await confirmationContext.Invitations.FirstAsync();
             invite.Status.Should().Be(statusBefore);
         }
     }

@@ -1,9 +1,9 @@
-using AutoFixture.NUnit3;
 using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.ProviderRegistrations.Application.Queries.GetInvitationQuery;
 using SFA.DAS.ProviderRegistrations.Data;
 using SFA.DAS.ProviderRegistrations.Models;
+using SFA.DAS.ProviderRegistrations.UnitTests.AutoFixture;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,13 +16,13 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Queries
     {
         [Test, ProviderAutoData]
         public async Task Handle_WhenHandlingGetInvitationQueryAndProviderIsFound_ThenShouldReturnGetInvitationQueryResult(
-            [Frozen] ProviderRegistrationsDbContext db,
+            ProviderRegistrationsDbContext setupContext,
             GetInvitationQueryHandler handler,
             Invitation invitation)
         {
             //arrange
-            db.Invitations.Add(invitation);
-            await db.SaveChangesAsync();
+            setupContext.Invitations.Add(invitation);
+            await setupContext.SaveChangesAsync();
             var query = new GetInvitationQuery(invitation.Ukprn, invitation.UserRef, "EmployerOrganisation", "Desc");
 
             //act
