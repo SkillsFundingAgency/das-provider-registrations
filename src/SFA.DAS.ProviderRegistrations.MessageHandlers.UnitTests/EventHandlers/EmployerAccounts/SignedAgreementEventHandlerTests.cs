@@ -26,7 +26,7 @@ namespace SFA.DAS.ProviderRegistrations.MessageHandlers.UnitTests.EventHandlers.
             //arrange
 
             //act
-            await handler.Handle(message,context);
+            await handler.Handle(message, context);
 
             //assert
             mediator.Verify(s => s.Send(It.Is<SignedAgreementCommand>(c =>
@@ -35,11 +35,8 @@ namespace SFA.DAS.ProviderRegistrations.MessageHandlers.UnitTests.EventHandlers.
                 c.LegalEntityId == message.LegalEntityId &&
                 c.OrganisationName == message.OrganisationName &&
                 c.UserName == message.UserName &&
-                c.UserRef == message.UserRef),It.IsAny<CancellationToken>()));
-            
-                //CB: To sort CorrelationId with new Package.
-                // &&
-                //c.CorrelationId == message.CorrelationId);
+                c.UserRef == message.UserRef &&
+                c.CorrelationId == message.CorrelationId), It.IsAny<CancellationToken>()));
         }
     }
 }
