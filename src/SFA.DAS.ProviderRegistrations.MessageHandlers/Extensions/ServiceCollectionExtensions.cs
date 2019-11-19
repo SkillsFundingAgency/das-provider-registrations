@@ -1,4 +1,5 @@
 ﻿using System.Data.Common;
+using Microsoft.Azure.ServiceBus.Primitives;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NServiceBus;
@@ -42,7 +43,14 @@ namespace SFA.DAS.ProviderRegistrations.MessageHandlers.Extensions
                     }
                     else
                     {
-                        endpointConfiguration.UseAzureServiceBusTransport(configuration.ServiceBusConnectionString, s => s.AddRouting());
+                        var transport = endpointConfiguration.UseTransport<AzureServiceBusTransport>();
+                        var ruleNameShortener = new RuleNameShortener();
+
+                        var tokenProvider = TokenProvider.CreateManagedServiceIdentityTokenProvider();
+                        transport.CustomTokenProvider(tokenProvider);
+                        transport.ConnectionString(configuration.ServiceBusConnectionString);
+                        transport.RuleNameShortener(ruleNameShortener.Shorten);
+                        transport.Routing().AddRouting();
                     }
 
                     var endpoint = Endpoint.Start(endpointConfiguration).GetAwaiter().GetResult();
