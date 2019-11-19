@@ -13,7 +13,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.AutoFixture
         public void Customize(IFixture fixture)
         {
             var perTestDatabaseName = Guid.NewGuid();
-            fixture.Register(() => CreateInMemoryProviderDb(databaseGuid));
+            fixture.Register(() => CreateInMemoryProviderDb(perTestDatabaseName));
             fixture.Register(CreateMappings);
         }
 
