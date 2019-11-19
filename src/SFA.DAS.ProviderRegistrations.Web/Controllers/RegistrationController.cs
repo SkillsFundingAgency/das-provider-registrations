@@ -102,8 +102,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.Controllers
             if (string.IsNullOrWhiteSpace(sortColumn)) sortColumn = Enum.GetNames(typeof(InvitationSortColumn)).First();
             if (string.IsNullOrWhiteSpace(sortDirection) || (sortDirection != "Asc" && sortDirection != "Desc")) sortDirection = "Asc";
 
-            //TODO Awaiting Info For User or PRN Filter
-            var results = await _mediator.Send(new GetInvitationQuery(12345, null, sortColumn, sortDirection));
+            var results = await _mediator.Send(new GetInvitationQuery(_authenticationService.Ukprn.GetValueOrDefault(0), null, sortColumn, sortDirection));
 
             var model = _mapper.Map<InvitationsViewModel>(results);
             model.SortColumn = sortColumn;
