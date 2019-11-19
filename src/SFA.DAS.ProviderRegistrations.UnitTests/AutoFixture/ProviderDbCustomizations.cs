@@ -22,7 +22,6 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.AutoFixture
             return new MapperConfiguration(c =>
             {
                 c.AddProfile(typeof(InvitationMappings));
-                c.AddProfile(typeof(InvitationMappings));
             });
         }
 

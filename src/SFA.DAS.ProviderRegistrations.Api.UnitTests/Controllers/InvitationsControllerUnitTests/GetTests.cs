@@ -33,7 +33,6 @@ namespace SFA.DAS.ProviderRegistrations.Api.UnitTests.Controllers.InvitationsCon
             var result = await controller.Get(correlationId.ToString(), new CancellationToken());
 
             //assert
-            result.Should().NotBeNull();
             result.Should().BeOfType<OkObjectResult>()
                 .Which.Value.Should().BeOfType<InvitationDto>()
                 .Which.Should().BeEquivalentTo(queryResult.Invitation);
@@ -47,7 +46,7 @@ namespace SFA.DAS.ProviderRegistrations.Api.UnitTests.Controllers.InvitationsCon
             var result = await controller.Get("INVALID", new CancellationToken());
 
             //assert
-            result.Should().NotBeNull().And.BeOfType<BadRequestObjectResult>();
+            result.Should().BeOfType<BadRequestObjectResult>();
         }
     }
 }

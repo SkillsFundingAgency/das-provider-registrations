@@ -3,6 +3,7 @@ using NUnit.Framework;
 using SFA.DAS.ProviderRegistrations.Application.Commands.AddInvitationCommand;
 using SFA.DAS.ProviderRegistrations.Data;
 using SFA.DAS.ProviderRegistrations.UnitTests.AutoFixture;
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -51,9 +52,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             var result = await handler.Handle(command, new CancellationToken());
 
             //assert
-            var invitation = confirmationContext.Invitations.First(f => f.Reference.ToString() == result);
-
-            result.Should().Be(invitation.Reference.ToString());
+            confirmationContext.Invitations.Should().ContainEquivalentOf(new { Reference = Guid.Parse(result) });
         }
     }
 }

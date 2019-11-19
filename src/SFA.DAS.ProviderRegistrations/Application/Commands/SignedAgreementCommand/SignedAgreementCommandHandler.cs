@@ -23,7 +23,7 @@ namespace SFA.DAS.ProviderRegistrations.Application.Commands.SignedAgreementComm
             {
                 var invitation = await _db.Value.Invitations.SingleOrDefaultAsync(i => i.Reference == Guid.Parse(request.CorrelationId) && i.Status < (int) InvitationStatus.LegalAgreementSigned, cancellationToken);
                 invitation?.UpdateStatus((int) InvitationStatus.LegalAgreementSigned, DateTime.Now);
-                await _db.Value.SaveChangesAsync();
+                await _db.Value.SaveChangesAsync(cancellationToken);
             }
         }
     }
