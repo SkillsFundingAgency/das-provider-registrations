@@ -11,7 +11,7 @@ variables:
   buildPlatform: 'anycpu'
 
 jobs:
-- job: 'Code Build'
+- job: 'CodeBuild'
   pool: 
     name: 'DAS - Continuous Integration' 
   workspace: 
