@@ -23,6 +23,7 @@ namespace SFA.DAS.ProviderRegistrations.Application.Commands.AddedAccountProvide
             {
                 var invitation = await _db.Value.Invitations.SingleOrDefaultAsync(i => i.Reference == Guid.Parse(request.CorrelationId) && i.Status < (int) InvitationStatus.InvitationComplete, cancellationToken);
                 invitation?.UpdateStatus((int) InvitationStatus.InvitationComplete, DateTime.Now);
+                await _db.Value.SaveChangesAsync(cancellationToken);
             }
         }
     }

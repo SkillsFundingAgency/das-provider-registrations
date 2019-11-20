@@ -13,8 +13,8 @@ namespace SFA.DAS.ProviderRegistrations.Application.Commands.AddedAccountProvide
 
         public AddedAccountProviderCommand(long ukprn, Guid userRef, string correlationId)
         {
-            Ukprn = Ukprn;
-            UserRef = UserRef;
+            Ukprn = ukprn;
+            UserRef = userRef;
             CorrelationId = correlationId;
         }
     }
