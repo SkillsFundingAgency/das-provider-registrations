@@ -6,48 +6,38 @@ trigger:
 
 pr: none
 
-workspace:
-    clean: all
-
 variables:
   buildConfiguration: 'release'
   buildPlatform: 'anycpu'
 
 jobs:
 - job: 'Code Build'
-
   pool: 
     name: 'DAS - Continuous Integration' 
-
   workspace: 
     clean: all 
-
   steps: 
   - task: gittools.gitversion.gitversion-task.GitVersion@5
     displayName: GitVersion
     inputs:
       updateAssemblyInfo: true
-
   - task: DotNetCoreCLI@2
     displayName: 'dotnet restore'
     inputs:
       command: restore
       projects: 'src/**/*.csproj'
-
   - task: DotNetCoreCLI@2
     displayName: 'dotnet build'
     inputs:
       commands: build
       projects: 'src/**/*.csproj'
       arguments: '--configuration $(buildConfiguration)'
-
   - task: DotNetCoreCLI@2
     displayName: 'dotnet test'
     inputs:
       command: test
       projects: '**/*Tests.csproj'
       arguments: '--configuration $(buildConfiguration) --no-build'
-
   - task: DotNetCoreCLI@2 
     displayName: 'dotnet pack'
     inputs: 
@@ -56,7 +46,6 @@ jobs:
       packDirectory: '$(build.artifactstagingdirectory)/publish' 
       versioningScheme: byBuildNumber 
       buildProperties: 'Version="$(Build.BuildNumber)"' 
-
   - task: DotNetCoreCLI@2
     displayName: 'Publish API'
     inputs:
@@ -64,7 +53,6 @@ jobs:
       publishWebProjects: false
       projects: 'src/SFA.DAS.ProviderRegistrations.Api/SFA.DAS.ProviderRegistrations.Api.csproj'
       arguments: '--configuration $(buildConfiguration) --output $(build.artifactstagingdirectory)/publish --no-restore --no-build'
-
   - task: DotNetCoreCLI@2
     displayName: 'Publish Web'
     inputs:
@@ -72,7 +60,6 @@ jobs:
       publishWebProjects: false
       projects: 'src/SFA.DAS.ProviderRegistrations.MessageHandlers/SFA.DAS.ProviderRegistrations.MessageHandlers.csproj'
       arguments: '--configuration $(buildConfiguration) --output $(build.artifactstagingdirectory)/publish --no-restore --no-build'
-
   - task: DotNetCoreCLI@2
     displayName: 'Publish Web Job'
     inputs:
@@ -80,14 +67,12 @@ jobs:
       publishWebProjects: false
       projects: 'src/SFA.DAS.ProviderRegistrations.Web/SFA.DAS.ProviderRegistrations.Web.csproj'
       arguments: '--configuration $(buildConfiguration) --output $(build.artifactstagingdirectory)/publish --no-restore --no-build'
-
   - task: CopyFiles@2
     displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
     inputs:
       Contents: azure/**
       TargetFolder: '$(build.artifactstagingdirectory)/'
       OverWrite: true
-
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact'
     inputs:
@@ -106,14 +91,12 @@ jobs:
       platform: '$(buildPlatform)'
       configuration: '$(buildConfiguration)'
       msbuildArgs: '/p:PackageLocation="$(build.artifactstagingdirectory)/publish"'
-
   - task: CopyFiles@2
     displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
     inputs:
       contents: |
         src/**/*.dacpac
       targetFolder: '$(build.artifactstagingdirectory)/publish'
-      
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact'
     inputs:
