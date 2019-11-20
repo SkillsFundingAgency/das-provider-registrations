@@ -15,7 +15,10 @@ variables:
   buildPlatform: 'anycpu'
 
 pool:
-  name: 'DAS - Continuous Integration'
+  name: 'Continuous Integration 02 - SSD - 160ACU'
+  demands: 
+  - msbuild
+  - visualstudio
 
 steps:
 - task: gittools.gitversion.gitversion-task.GitVersion@5
