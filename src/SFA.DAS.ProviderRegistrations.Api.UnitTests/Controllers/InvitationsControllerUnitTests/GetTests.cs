@@ -5,84 +5,48 @@ using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using SFA.DAS.Testing;
 using NUnit.Framework;
 using SFA.DAS.ProviderRegistrations.Api.Controllers;
 using SFA.DAS.ProviderRegistrations.Application.Queries.GetInvitationByIdQuery;
 using SFA.DAS.ProviderRegistrations.Types;
+using SFA.DAS.ProviderRegistrations.Api.UnitTests.AutoFixture;
+using AutoFixture.NUnit3;
 
 namespace SFA.DAS.ProviderRegistrations.Api.UnitTests.Controllers.InvitationsControllerUnitTests
 {
     [TestFixture]
     [Parallelizable]
-    public class GetTests : FluentTest<GetTestsFixture>
+    public class GetTests
     {
-        [Test]
-        public Task WhenValidCorrelationIdIsSupplied_ThenShouldReturnInvitationFromQuery()
+        [Test, DomainAutoData]
+        public async Task WhenValidCorrelationIdIsSupplied_ThenShouldReturnInvitationFromQuery(
+            [Frozen] Mock<IMediator> mediator,
+            InvitationsController controller,
+            GetInvitationByIdQueryResult queryResult,
+            Guid correlationId)
         {
-            return RunAsync(
-                f => f.CallGet(),
-                (f, r) =>
-                {
-                    r.Should().NotBeNull();
-                    r.Should().BeOfType<OkObjectResult>();
+            //arrange
+            mediator.Setup(m => m.Send(It.Is<GetInvitationByIdQuery>(q => q.CorrelationId == correlationId), It.IsAny<CancellationToken>()))
+             .ReturnsAsync(queryResult);
+            
+            //act
+            var result = await controller.Get(correlationId.ToString(), new CancellationToken());
 
-                    var okObjectResult = r as OkObjectResult;
-                    okObjectResult.Should().NotBeNull();
-                   
-                    var model = okObjectResult?.Value as InvitationDto;
-                    model.Should().NotBeNull();
-                    model.Should().BeEquivalentTo(f.Result.Invitation);
-                });
+            //assert
+            result.Should().BeOfType<OkObjectResult>()
+                .Which.Value.Should().BeOfType<InvitationDto>()
+                .Which.Should().BeEquivalentTo(queryResult.Invitation);
         }
 
-        [Test]
-        public Task WhenCorrelationIdIsInvalid_ThenShouldReturnBadRequest()
+        [Test, DomainAutoData]
+        public async Task WhenCorrelationIdIsInvalid_ThenShouldReturnBadRequest(InvitationsController controller)
         {
-            return RunAsync(
-                f => f.SetCorrelationId("INVALID"), 
-                f => f.CallGet(),
-                (f, r) =>
-                {
-                    r.Should().NotBeNull();
-                    r.Should().BeOfType<BadRequestObjectResult>();
 
-                    var badRequestObjectResult = r as BadRequestObjectResult;
-                    badRequestObjectResult.Should().NotBeNull();
-                });
-        }
-    }
+            //act
+            var result = await controller.Get("INVALID", new CancellationToken());
 
-    public class GetTestsFixture
-    {
-        public string CorrelationId { get; set; }
-        public Mock<IMediator> Mediator { get; set; }
-        public InvitationsController InvitationsController { get; set; }
-        public GetInvitationByIdQueryResult Result { get; set; }
-
-        public GetTestsFixture()
-        {
-            CorrelationId = Guid.NewGuid().ToString();
-
-            Mediator = new Mock<IMediator>();
-
-            Result = new GetInvitationByIdQueryResult(new InvitationDto());
-
-            Mediator.Setup(m => m.Send(It.Is<GetInvitationByIdQuery>(q => q.CorrelationId == Guid.Parse(CorrelationId)), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(Result);
-
-            InvitationsController = new InvitationsController(Mediator.Object);
-        }
-
-        public async Task<ActionResult> CallGet()
-        {
-            return await InvitationsController.Get(CorrelationId, CancellationToken.None);
-        }
-
-        public GetTestsFixture SetCorrelationId(string correlationId)
-        {
-            CorrelationId = correlationId;
-            return this;
+            //assert
+            result.Should().BeOfType<BadRequestObjectResult>();
         }
     }
 }

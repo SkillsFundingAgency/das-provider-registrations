@@ -17,7 +17,7 @@ namespace SFA.DAS.ProviderRegistrations.MessageHandlers.EventHandlers.ProviderRe
 
         public Task Handle(AddedAccountProviderEvent message, IMessageHandlerContext context)
         {
-            return _mediator.Send(new AddedAccountProviderCommand(message.ProviderUkprn, message.UserRef, message.CorrelationId));
+            return _mediator.Send(new AddedAccountProviderCommand(message.ProviderUkprn, message.UserRef, message.CorrelationId.ToString()));
         }
     }
 }

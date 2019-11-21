@@ -1,79 +1,43 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using FluentAssertions;
-using MediatR;
+﻿using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
-using Moq;
 using NUnit.Framework;
 using SFA.DAS.ProviderRegistrations.Api.Controllers;
-using SFA.DAS.ProviderRegistrations.Application.Commands.UnsubscribeByIdCommand;
-using SFA.DAS.Testing;
+using SFA.DAS.ProviderRegistrations.Api.UnitTests.AutoFixture;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.ProviderRegistrations.Api.UnitTests.Controllers.UnsubscribeControllerUnitTests
 {
     [TestFixture]
     [Parallelizable]
-    public class GetTests : FluentTest<GetTestsFixture>
+    public class GetTests
     {
-        [Test]
-        public Task WhenValidCorrelationIdIsSupplied_ThenShouldReturnOk()
+        [Test, DomainAutoData]
+        public async Task WhenValidCorrelationIdIsSupplied_ThenShouldReturnOk(
+            UnsubscribeController controller,
+            Guid correlationId)
         {
-            return RunAsync(
-                f => f.CallGet(),
-                (f, r) =>
-                {
-                    r.Should().NotBeNull();
-                    r.Should().BeOfType<OkResult>();
+            //arrange
 
-                    var okResult = r as OkResult;
-                    okResult.Should().NotBeNull();
-                });
+            //act
+            var result = await controller.Get(correlationId.ToString(), new CancellationToken());
+
+            //assert
+            result.Should().NotBeNull().And.BeOfType<OkResult>();
         }
 
-        [Test]
-        public Task WhenCorrelationIdIsInvalid_ThenShouldReturnBadRequest()
+        [Test, DomainAutoData]
+        public async Task WhenCorrelationIdIsInvalid_ThenShouldReturnBadRequest(
+            UnsubscribeController controller)
         {
-            return RunAsync(
-                f => f.SetCorrelationId("INVALID"), 
-                f => f.CallGet(),
-                (f, r) =>
-                {
-                    r.Should().NotBeNull();
-                    r.Should().BeOfType<BadRequestObjectResult>();
+            //arrange
 
-                    var badRequestObjectResult = r as BadRequestObjectResult;
-                    badRequestObjectResult.Should().NotBeNull();
-                });
-        }
-    }
+            //act
+            var result = await controller.Get("INVALID", new CancellationToken());
 
-    public class GetTestsFixture
-    {
-        public string CorrelationId { get; set; }
-        public Mock<IMediator> Mediator { get; set; }
-        public UnsubscribeController UnsubscribeController { get; set; }
-     
-        public GetTestsFixture()
-        {
-            CorrelationId = Guid.NewGuid().ToString();
-
-            Mediator = new Mock<IMediator>();
-
-            Mediator.Setup(m => m.Send(It.Is<UnsubscribeByIdCommand>(q => q.CorrelationId == Guid.Parse(CorrelationId)), It.IsAny<CancellationToken>()));
-
-            UnsubscribeController = new UnsubscribeController(Mediator.Object);
-        }
-
-        public async Task<ActionResult> CallGet()
-        {
-            return await UnsubscribeController.Get(CorrelationId, CancellationToken.None);
-        }
-
-        public GetTestsFixture SetCorrelationId(string correlationId)
-        {
-            CorrelationId = correlationId;
-            return this;
+            //assert
+            result.Should().NotBeNull().And.BeOfType<BadRequestObjectResult>();
         }
     }
 }
