@@ -38,14 +38,6 @@ jobs:
       command: test
       projects: '**/*Tests.csproj'
       arguments: '--configuration $(buildConfiguration) --no-build'
-  - task: DotNetCoreCLI@2 
-    displayName: 'dotnet pack'
-    inputs: 
-      command: pack 
-      packagesToPack: src/SFA.DAS.ProviderRegistrations.Messages/SFA.DAS.ProviderRegistrations.Messages.csproj 
-      packDirectory: '$(build.artifactstagingdirectory)/publish' 
-      versioningScheme: byBuildNumber 
-      buildProperties: 'Version="$(Build.BuildNumber)"' 
   - task: DotNetCoreCLI@2
     displayName: 'Publish API'
     inputs:
