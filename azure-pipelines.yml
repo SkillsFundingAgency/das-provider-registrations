@@ -53,7 +53,7 @@ jobs:
       projects: 'src/SFA.DAS.ProviderRegistrations.MessageHandlers/SFA.DAS.ProviderRegistrations.MessageHandlers.csproj'
       arguments: '--configuration $(buildConfiguration) --output $(build.artifactstagingdirectory)/publish --no-restore --no-build'
   - task: DotNetCoreCLI@2
-    displayName: 'Publish Web Job'
+    displayName: 'Publish Web'
     inputs:
       command: publish
       publishWebProjects: false
