@@ -448,7 +448,7 @@
         },
         {
             "apiVersion": "2017-05-10",
-            "name": "sql-database",
+            "name": "preg-sql-database",
             "type": "Microsoft.Resources/deployments",
             "resourceGroup": "[parameters('sharedResourceGroup')]",
             "properties": {
