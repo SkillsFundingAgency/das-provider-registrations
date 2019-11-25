@@ -484,19 +484,19 @@
         }
     ],
     "outputs": {
-        "databaseName": {
+        "DatabaseName": {
             "type": "string",
             "value": "[variables('databaseName')]"
         },
-        "webJobAppServiceName": {
+        "WebJobAppServiceName": {
             "type": "string",
             "value": "[variables('webJobAppServiceName')]"
         },
-        "uiAppServiceName": {
+        "UIAppServiceName": {
             "type": "string",
             "value": "[variables('uiAppServiceName')]"
         },
-        "apiAppServiceName": {
+        "APIAppServiceName": {
             "type": "string",
             "value": "[variables('apiAppServiceName')]"
         }
