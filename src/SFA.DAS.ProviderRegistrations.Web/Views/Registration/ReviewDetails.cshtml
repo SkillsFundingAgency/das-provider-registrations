@@ -68,6 +68,10 @@
                     </dd>
                 </div>
             </dl>
+            
+            <p class="govuk-body">
+                <a target="_blank" class="govuk-link" href="@Url.ProviderAction("EmailPreview")?EmployerName=@(Model.EmployerFirstName + " " + Model.EmployerLastName)&EmployerOrganisation=@Model.EmployerOrganisation"  class="">See a copy of the email the employer will receive</a>&nbsp;(opens in a new tab)
+            </p>
 
             <button type="submit" class="govuk-button">Invite employer</button>
         </div>

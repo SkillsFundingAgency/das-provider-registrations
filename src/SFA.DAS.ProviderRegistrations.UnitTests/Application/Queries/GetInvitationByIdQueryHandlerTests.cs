@@ -30,7 +30,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Queries
             ProviderRegistrationsDbContext setupContext,
             Invitation invitation,
             GetInvitationByIdQueryHandler handler
-            )
+        )
         {
             //arrange
             setupContext.Invitations.Add(invitation);

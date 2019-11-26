@@ -4,8 +4,10 @@ using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using SFA.DAS.Provider.Shared.UI.Attributes;
 using SFA.DAS.ProviderRegistrations.Application.Commands.AddInvitationCommand;
 using SFA.DAS.ProviderRegistrations.Application.Queries.GetInvitationQuery;
+using SFA.DAS.ProviderRegistrations.Application.Queries.GetProviderByUkprn;
 using SFA.DAS.ProviderRegistrations.Types;
 using SFA.DAS.ProviderRegistrations.Web.Authentication;
 using SFA.DAS.ProviderRegistrations.Web.Extensions;
@@ -109,6 +111,21 @@ namespace SFA.DAS.ProviderRegistrations.Web.Controllers
             model.SortDirection = sortDirection;
 
             return View(model);
+        }
+
+        [HttpGet]
+        [HideNavigationBar]
+        public async Task<ActionResult> EmailPreview(string employerName, string employerOrganisation)
+        {
+            var provider = await _mediator.Send(new GetProviderByUkprnQuery(_authenticationService.Ukprn.GetValueOrDefault(0)));
+
+            return View(new EmailPreviewViewModel
+            {
+                EmployerName = employerName,
+                EmployerOrganisation = employerOrganisation,
+                ProviderOrganisation = provider.ProviderName,
+                ProviderName = _authenticationService.UserName
+            });
         }
     }
 }
