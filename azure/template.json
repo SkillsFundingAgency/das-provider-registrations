@@ -83,7 +83,11 @@
         },
         "aspInstances": {
             "type": "int",
-            "defaultValue": 2
+            "defaultValue": 1
+        },
+        "aspSku": {
+            "type": "string",
+            "defaultValue": "Basic"
         },
         "appServiceAllowedIPs": {
             "type": "array",
@@ -120,6 +124,9 @@
                     },
                     "aspInstances": {
                         "value": "[parameters('aspInstances')]"
+                    },
+                    "aspSku": {
+                        "value": "[parameters('aspSku')]"
                     }
                 }
             }
