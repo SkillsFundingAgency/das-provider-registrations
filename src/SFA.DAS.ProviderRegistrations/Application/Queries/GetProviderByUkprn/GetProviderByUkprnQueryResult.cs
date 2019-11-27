@@ -1,12 +1,10 @@
-using SFA.DAS.Apprenticeships.Api.Types.Providers;
-
 namespace SFA.DAS.ProviderRegistrations.Application.Queries.GetProviderByUkprn
 {
     public class GetProviderByUkprnQueryResult
     {
-        public GetProviderByUkprnQueryResult(Provider provider)
+        public GetProviderByUkprnQueryResult(string providerName)
         {
-            ProviderName = provider.ProviderName;
+            ProviderName = providerName;
         }
 
         public string ProviderName { get; }
