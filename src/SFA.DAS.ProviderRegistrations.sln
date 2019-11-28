@@ -25,7 +25,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.ProviderRegistratio
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.ProviderRegistrations.MessageHandlers.UnitTests", "SFA.DAS.ProviderRegistrations.MessageHandlers.UnitTests\SFA.DAS.ProviderRegistrations.MessageHandlers.UnitTests.csproj", "{829E019D-5D0B-4589-9B8D-071C7169360D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.ProviderRegistrations.MessageHandlers.TestHarness", "SFA.DAS.ProviderRegistrations.MessageHandlers.TestHarness\SFA.DAS.ProviderRegistrations.MessageHandlers.TestHarness.csproj", "{B7323636-059B-465A-9529-93E409A70158}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.ProviderRegistrations.MessageHandlers.TestHarness", "SFA.DAS.ProviderRegistrations.MessageHandlers.TestHarness\SFA.DAS.ProviderRegistrations.MessageHandlers.TestHarness.csproj", "{B7323636-059B-465A-9529-93E409A70158}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

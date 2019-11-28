@@ -59,3 +59,8 @@ td.govuk-table__cell.nowrap {
     border-width: 0 5px 10px;
     border-bottom-color: inherit;
 }
+
+img.esfa {
+    content: url("/images/esfa.svg");
+    max-width: 200px;
+}
