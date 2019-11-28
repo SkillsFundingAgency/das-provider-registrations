@@ -3,6 +3,9 @@ using NUnit.Framework;
 using SFA.DAS.ProviderRegistrations.UnitTests.AutoFixture;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoFixture;
+using AutoFixture.NUnit3;
+using SFA.DAS.Apprenticeships.Api.Types.Providers;
 using SFA.DAS.ProviderRegistrations.Application.Queries.GetProviderByUkprn;
 
 namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Queries
@@ -14,7 +17,8 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Queries
         [Test, ProviderAutoData]
         public async Task Handle_WhenHandlingGetProviderByUkprnQueryAndParametersAreMatched_ThenShouldReturnGetAProviderNameResult(
             long ukprn,
-            GetProviderByUkprnQueryHandler handler)
+            GetProviderByUkprnQueryHandler handler,
+            [Frozen]Provider provider)
         {
             //arrange
             var query = new GetProviderByUkprnQuery(ukprn);
@@ -24,7 +28,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Queries
 
             //assert
             result.Should().NotBeNull();
-            result.ProviderName.Should().NotBeNullOrWhiteSpace();
+            result.ProviderName.Should().Be(provider.ProviderName);
         }
     }
 }
