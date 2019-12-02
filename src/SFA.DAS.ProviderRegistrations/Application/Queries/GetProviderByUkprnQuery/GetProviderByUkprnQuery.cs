@@ -1,6 +1,6 @@
 using MediatR;
 
-namespace SFA.DAS.ProviderRegistrations.Application.Queries.GetProviderByUkprn
+namespace SFA.DAS.ProviderRegistrations.Application.Queries.GetProviderByUkprnQuery
 {
     public class GetProviderByUkprnQuery : IRequest<GetProviderByUkprnQueryResult>
     {

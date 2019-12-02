@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Provider.Shared.UI.Attributes;
 using SFA.DAS.ProviderRegistrations.Application.Commands.AddInvitationCommand;
 using SFA.DAS.ProviderRegistrations.Application.Queries.GetInvitationQuery;
-using SFA.DAS.ProviderRegistrations.Application.Queries.GetProviderByUkprn;
+using SFA.DAS.ProviderRegistrations.Application.Queries.GetProviderByUkprnQuery;
 using SFA.DAS.ProviderRegistrations.Types;
 using SFA.DAS.ProviderRegistrations.Web.Authentication;
 using SFA.DAS.ProviderRegistrations.Web.Extensions;
