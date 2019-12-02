@@ -54,7 +54,7 @@ namespace SFA.DAS.ProviderRegistrations.Api
 
             app.UseHttpsRedirection();
             app.UseMvc();
-            app.UseHealthChecks("/health-check");
+            app.UseHealthChecks("/health");
         }
 
         public void ConfigureContainer(Registry registry)
