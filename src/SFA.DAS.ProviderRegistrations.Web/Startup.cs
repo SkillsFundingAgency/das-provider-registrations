@@ -90,7 +90,7 @@ namespace SFA.DAS.ProviderRegistrations.Web
                 .UseCookiePolicy()
                 .UseAuthentication()
                 .UseMvc()
-                .UseHealthChecks("/health-check");
+                .UseHealthChecks("/health");
 
             var logger = loggerFactory.CreateLogger(nameof(Startup));
             logger.Log(LogLevel.Information, "Application start up configure is complete");
