@@ -1,8 +1,5 @@
 using FluentAssertions;
 using NUnit.Framework;
-using SFA.DAS.ProviderRegistrations.Application.Queries.GetUnsubscribedQuery;
-using SFA.DAS.ProviderRegistrations.Data;
-using SFA.DAS.ProviderRegistrations.Models;
 using SFA.DAS.ProviderRegistrations.UnitTests.AutoFixture;
 using System.Threading;
 using System.Threading.Tasks;
