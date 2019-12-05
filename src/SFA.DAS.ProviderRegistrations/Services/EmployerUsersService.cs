@@ -17,7 +17,7 @@ namespace SFA.DAS.ProviderRegistrations.Services
 
         public async Task<bool> IsEmailAddressInUse(string emailAddress, CancellationToken cancellationToken = default)
         {
-            var employerUserEmailQueryUri = $"/api/users/email/{emailAddress}";
+            var employerUserEmailQueryUri = $"/api/users/email?emailAddress={emailAddress}";
 
             try
             {

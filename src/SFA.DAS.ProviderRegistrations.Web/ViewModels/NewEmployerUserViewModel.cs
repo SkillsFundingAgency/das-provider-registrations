@@ -25,8 +25,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.ViewModels
         [Required]
         [EmailAddress]
         [Unsubscribed]
-        // InUse attribute has been disabled until DevOps upgrade EmployerUsers API
-        // [InUse]
+        [InUse]
         public string EmployerEmailAddress { get; set; }
     }
 }
