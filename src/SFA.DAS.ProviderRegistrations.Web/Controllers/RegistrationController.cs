@@ -8,6 +8,7 @@ using SFA.DAS.Provider.Shared.UI.Attributes;
 using SFA.DAS.ProviderRegistrations.Application.Commands.AddInvitationCommand;
 using SFA.DAS.ProviderRegistrations.Application.Queries.GetInvitationQuery;
 using SFA.DAS.ProviderRegistrations.Application.Queries.GetProviderByUkprnQuery;
+using SFA.DAS.ProviderRegistrations.Configuration;
 using SFA.DAS.ProviderRegistrations.Types;
 using SFA.DAS.ProviderRegistrations.Web.Authentication;
 using SFA.DAS.ProviderRegistrations.Web.Extensions;
@@ -22,12 +23,18 @@ namespace SFA.DAS.ProviderRegistrations.Web.Controllers
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
         private readonly IAuthenticationService _authenticationService;
+        private readonly ProviderRegistrationsSettings _configuration;
 
-        public RegistrationController(IMediator mediator, IMapper mapper, IAuthenticationService authenticationService)
+        public RegistrationController(
+            IMediator mediator, 
+            IMapper mapper, 
+            IAuthenticationService authenticationService,
+            ProviderRegistrationsSettings configuration)
         {
             _mediator = mediator;
             _mapper = mapper;
             _authenticationService = authenticationService;
+            _configuration = configuration;
         }
 
         [HttpGet]
@@ -87,6 +94,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.Controllers
             switch (action)
             {
                 case "Invite": return Redirect(@Url.ProviderAction("StartAccountSetup"));
+                case "View": return Redirect(@Url.ProviderAction("InvitedEmployers"));
                 case "Homepage": return Redirect(@Url.ProviderApprenticeshipServiceLink(""));
                 default:
                 {
@@ -124,7 +132,8 @@ namespace SFA.DAS.ProviderRegistrations.Web.Controllers
                 EmployerName = employerName,
                 EmployerOrganisation = employerOrganisation,
                 ProviderOrganisation = provider.ProviderName,
-                ProviderName = _authenticationService.UserName
+                ProviderName = _authenticationService.UserName,
+                EmployerAccountsUrl = $"{_configuration.EmployerAccountsBaseUrl}/service/register"
             });
         }
     }

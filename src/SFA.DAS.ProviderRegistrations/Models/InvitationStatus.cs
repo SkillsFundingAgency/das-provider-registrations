@@ -12,6 +12,6 @@ namespace SFA.DAS.ProviderRegistrations.Models
 
         [Display(Name = "Legal agreement signed")] LegalAgreementSigned = 3,
 
-        [Display(Name = "Invitstion Complete")] InvitationComplete = 4
+        [Display(Name = "Legal agreement signed")] InvitationComplete = 4
     }
 }
