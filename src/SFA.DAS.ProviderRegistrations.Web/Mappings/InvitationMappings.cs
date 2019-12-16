@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using SFA.DAS.ProviderRegistrations.Application.Queries.GetInvitationQuery;
+using SFA.DAS.ProviderRegistrations.Types;
 using SFA.DAS.ProviderRegistrations.Web.ViewModels;
 
 namespace SFA.DAS.ProviderRegistrations.Web.Mappings
@@ -8,6 +9,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.Mappings
     {
         public InvitationMappings()
         {
+            CreateMap<InvitationDto, InvitationViewModel>();
             CreateMap<GetInvitationQueryResult, InvitationsViewModel>();
         }
     }

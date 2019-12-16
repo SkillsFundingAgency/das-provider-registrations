@@ -9,5 +9,7 @@
         public string ProviderName { get; set; }
 
         public string ProviderOrganisation { get; set; }
+
+        public string EmployerAccountsUrl { get; set; }
     }
 }

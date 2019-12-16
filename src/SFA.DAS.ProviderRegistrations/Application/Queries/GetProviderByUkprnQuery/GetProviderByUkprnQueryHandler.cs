@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using MediatR;
 using SFA.DAS.ProviderRegistrations.Services;
 
-namespace SFA.DAS.ProviderRegistrations.Application.Queries.GetProviderByUkprn
+namespace SFA.DAS.ProviderRegistrations.Application.Queries.GetProviderByUkprnQuery
 {
     public class GetProviderByUkprnQueryHandler : IRequestHandler<GetProviderByUkprnQuery, GetProviderByUkprnQueryResult>
     {
