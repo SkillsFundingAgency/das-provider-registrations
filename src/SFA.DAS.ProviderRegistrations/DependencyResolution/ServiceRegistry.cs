@@ -8,8 +8,8 @@ namespace SFA.DAS.ProviderRegistrations.DependencyResolution
         public ServiceRegistry()
         {
             For<IApprenticeshipInfoService>().Use<ApprenticeshipInfoService>();
-            For<IEmployerUsersApiHttpClientFactory>().Use<EmployerUsersApiHttpClientFactory>();
-            For<IEmployerUsersService>().Use<EmployerUsersService>();
+            For<IEmployerUsersApiHttpClientFactory>().Use<EmployerApprenticeshipApiHttpClientFactory>();
+            For<IEmployerApprenticeshipService>().Use<EmployerApprenticeshipService>();
         }
     }
 }

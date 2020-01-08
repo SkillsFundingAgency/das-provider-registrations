@@ -14,7 +14,7 @@ namespace SFA.DAS.ProviderRegistrations.DependencyResolution
             AddConfiguration<ActiveDirectorySettings>(ProviderRegistrationsConfigurationKeys.ActiveDirectorySettings);
             AddConfiguration<ProviderRegistrationsSettings>(ProviderRegistrationsConfigurationKeys.ProviderRegistrations);
             AddConfiguration<NServiceBusSettings>(ProviderRegistrationsConfigurationKeys.NServiceBusSettings);
-            AddConfiguration<EmployerUsersApiClientSettings>(ProviderRegistrationsConfigurationKeys.EmployerUsersApiClientSettings);
+            AddConfiguration<EmployerApprenticeshipApiClientSettings>(ProviderRegistrationsConfigurationKeys.EmployerApprenticeshipApiClientSettings);
         }
 
         private void AddConfiguration<T>(string key) where T : class

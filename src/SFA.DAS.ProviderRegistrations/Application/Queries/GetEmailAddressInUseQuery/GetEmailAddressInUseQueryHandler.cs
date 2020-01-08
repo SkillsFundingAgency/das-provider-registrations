@@ -7,9 +7,9 @@ namespace SFA.DAS.ProviderRegistrations.Application.Queries.GetEmailAddressInUse
 {
     public class GetEmailAddressInUseQueryHandler : IRequestHandler<GetEmailAddressInUseQuery, bool>
     {
-        private readonly IEmployerUsersService _api;
+        private readonly IEmployerApprenticeshipService _api;
     
-        public GetEmailAddressInUseQueryHandler(IEmployerUsersService api)
+        public GetEmailAddressInUseQueryHandler(IEmployerApprenticeshipService api)
         {
             _api = api;
         }
