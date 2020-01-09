@@ -5,16 +5,16 @@ namespace SFA.DAS.ProviderRegistrations.Services
 {
     class EmployerApprenticeshipApiHttpClientFactory : IEmployerUsersApiHttpClientFactory
     {
-        private readonly EmployerApprenticeshipApiClientSettings _employerUsersApiClientSettings;
+        private readonly EmployerApprenticeshipApiClientSettings _employerApprenticeshipApiClientSettings;
 
-        public EmployerApprenticeshipApiHttpClientFactory(EmployerApprenticeshipApiClientSettings employerUsersApiClientSettings)
+        public EmployerApprenticeshipApiHttpClientFactory(EmployerApprenticeshipApiClientSettings employerApprenticeshipApiClientSettings)
         {
-            _employerUsersApiClientSettings = employerUsersApiClientSettings;
+            _employerApprenticeshipApiClientSettings = employerApprenticeshipApiClientSettings;
         }
 
         public IRestHttpClient CreateRestHttpClient()
         {
-            return new RestHttpClient(new AzureActiveDirectoryHttpClientFactory(_employerUsersApiClientSettings).CreateHttpClient());
+            return new RestHttpClient(new AzureActiveDirectoryHttpClientFactory(_employerApprenticeshipApiClientSettings).CreateHttpClient());
         }
     }
 }
