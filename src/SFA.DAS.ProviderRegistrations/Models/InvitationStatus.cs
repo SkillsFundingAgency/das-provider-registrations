@@ -10,8 +10,8 @@ namespace SFA.DAS.ProviderRegistrations.Models
 
         [Display(Name = "PAYE scheme added")] PayeSchemeAdded = 2,
 
-        [Display(Name = "Legal agreement signed")] LegalAgreementSigned = 3,
+        [Display(Name = "Legal agreement accepted")] LegalAgreementSigned = 3,
 
-        [Display(Name = "Invitstion Complete")] InvitationComplete = 4
+        [Display(Name = "Legal agreement accepted")] InvitationComplete = 4
     }
 }

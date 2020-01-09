@@ -32,6 +32,16 @@ td.govuk-table__cell.nowrap {
     white-space: nowrap
 }
 
+a.approved-sort {
+    color: #005ea5 !important;
+    text-decoration: none
+}
+
+span.govuk-link-span {
+    color: #005ea5;
+    text-decoration: underline
+}
+
 .sorted-ascending::after {
     content: "";
     margin-left: 3px;
@@ -58,9 +68,4 @@ td.govuk-table__cell.nowrap {
     border-style: solid;
     border-width: 0 5px 10px;
     border-bottom-color: inherit;
-}
-
-img.esfa {
-    content: url("/images/esfa.svg");
-    max-width: 200px;
 }
