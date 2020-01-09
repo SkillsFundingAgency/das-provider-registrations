@@ -17,7 +17,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Queries
         [Test, ProviderAutoData]
         public async Task Handle_WhenHandlingGetEmailAddressInUseQueryHandlerAndParametersAreMatched_ThenShouldReturnATrueResult(
             string emailAddress,
-            [Frozen] Mock<IEmployerUsersService> employerUserService,
+            [Frozen] Mock<IEmployerApprenticeshipService> employerUserService,
             GetEmailAddressInUseQueryHandler handler)
         {
             //arrange
@@ -34,7 +34,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Queries
         [Test, ProviderAutoData]
         public async Task Handle_WhenHandlingGetEmailAddressInUseQueryHandlerAndParametersAreNotMatched_ThenShouldReturnAFalseResult(
             string emailAddress,
-            [Frozen] Mock<IEmployerUsersService> employerUserService,
+            [Frozen] Mock<IEmployerApprenticeshipService> employerUserService,
             GetEmailAddressInUseQueryHandler handler)
         {
             //arrange
