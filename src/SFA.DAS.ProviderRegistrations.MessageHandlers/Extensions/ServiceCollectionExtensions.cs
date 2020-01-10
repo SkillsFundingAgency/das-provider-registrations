@@ -25,8 +25,10 @@ namespace SFA.DAS.ProviderRegistrations.MessageHandlers.Extensions
                 {
                     var container = p.GetService<IContainer>();
                     var configuration = config.GetSection(ProviderRegistrationsConfigurationKeys.NServiceBusSettings).Get<NServiceBusSettings>();
-                  
-                    var endpointConfiguration = new EndpointConfiguration("SFA.DAS.ProviderRegistrations.MessageHandlers")
+
+                    var endpointName = "SFA.DAS.ProviderRegistrations.MessageHandlers";
+                    var endpointConfiguration = new EndpointConfiguration(endpointName)
+                        .UseErrorQueue($"{endpointName}-errors")
                         .UseInstallers()
                         .UseLicense(configuration.NServiceBusLicense)
                         .UseMessageConventions()
