@@ -6,6 +6,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Provider.Shared.UI.Attributes;
 using SFA.DAS.ProviderRegistrations.Application.Commands.AddInvitationCommand;
+using SFA.DAS.ProviderRegistrations.Application.Commands.SendInvitationEmailCommand;
 using SFA.DAS.ProviderRegistrations.Application.Queries.GetInvitationQuery;
 using SFA.DAS.ProviderRegistrations.Application.Queries.GetProviderByUkprnQuery;
 using SFA.DAS.ProviderRegistrations.Configuration;
@@ -75,14 +76,18 @@ namespace SFA.DAS.ProviderRegistrations.Web.Controllers
                 return View("ReviewDetails", model);
             }
 
-            await _mediator.Send(new AddInvitationCommand(
-                _authenticationService.Ukprn.Value,
-                _authenticationService.UserId,
-                model.EmployerOrganisation.Trim(),
-                model.EmployerFirstName.Trim(),
-                model.EmployerLastName.Trim(),
-                model.EmployerEmailAddress.Trim().ToLower()
-            ));
+            var ukprn = _authenticationService.Ukprn.Value;
+            var userId = _authenticationService.UserId;
+            _authenticationService.TryGetUserClaimValue(ProviderClaims.DisplayName, out string providerDisplayName);
+
+            var employerOrganisation = model.EmployerOrganisation.Trim();
+            var employerFirstName = model.EmployerFirstName.Trim();
+            var employerLastName = model.EmployerLastName.Trim();
+            var employerEmail = model.EmployerEmailAddress.Trim().ToLower();
+            var employerFullName = string.Concat(employerFirstName, " ", employerLastName);
+            
+            await _mediator.Send(new AddInvitationCommand(ukprn, userId, employerOrganisation, employerFirstName, employerLastName, employerEmail));
+            await _mediator.Send(new SendInvitationEmailCommand(ukprn, providerDisplayName, employerOrganisation, employerFullName, employerEmail));
 
             return View("InviteConfirmation");
         }
