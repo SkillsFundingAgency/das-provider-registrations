@@ -11,6 +11,7 @@ namespace SFA.DAS.ProviderRegistrations.Application.Commands.SendInvitationEmail
 {
     public class SendInvitationEmailCommandHandler : AsyncRequestHandler<SendInvitationEmailCommand>
     {
+        private const string NotificationTemplateId = "ProviderInviteEmployerNotification";
         private readonly IMessageSession _publisher;
         private readonly IMediator _mediator;
 
@@ -32,7 +33,7 @@ namespace SFA.DAS.ProviderRegistrations.Application.Commands.SendInvitationEmail
                 { "employer_name", request.EmployerFullName }
             };
 
-            await _publisher.Send(new SendEmailCommand("InviteEmployerNotification_dev", request.EmployerEmail, string.Empty, tokens, string.Empty));
+            await _publisher.Send(new SendEmailCommand(NotificationTemplateId, request.EmployerEmail, string.Empty, tokens, string.Empty));
         }
     }
 }
