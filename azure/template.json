@@ -231,7 +231,7 @@
                 },
                 "parameters": {
                     "principalId": {
-                        "value": "[reference('webjob-app-service').outputs.managedServiceIdentityId.value]"
+						"value": "[createArray(reference('webjob-app-service').outputs.managedServiceIdentityId.value, reference('ui-app-service').outputs.stagingManagedServiceIdentityId.value)[copyIndex()]]"
                     },
                     "assignmentType": {
                         "value": "ServiceBusOwner"
@@ -242,7 +242,8 @@
                 }
             },
             "dependsOn": [
-                "webjob-app-service"
+                "webjob-app-service",
+				"ui-app-service"
             ]
         },
         {
