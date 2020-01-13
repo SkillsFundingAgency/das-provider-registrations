@@ -220,7 +220,7 @@
         },
         {
             "apiVersion": "2017-05-10",
-            "name": "webjob-role-assignment",
+			"name": "[concat('role-assignments-', copyIndex())]",
             "type": "Microsoft.Resources/deployments",
             "resourceGroup": "[parameters('sharedResourceGroup')]",
             "properties": {
@@ -231,7 +231,7 @@
                 },
                 "parameters": {
                     "principalId": {
-						"value": "[createArray(reference('webjob-app-service').outputs.managedServiceIdentityId.value, reference('ui-app-service').outputs.stagingManagedServiceIdentityId.value)[copyIndex()]]"
+						"value": "[createArray(reference('webjob-app-service').outputs.managedServiceIdentityId.value, reference('ui-app-service').outputs.managedServiceIdentityId.value, reference('ui-app-service').outputs.stagingManagedServiceIdentityId.value)[copyIndex()]]"
                     },
                     "assignmentType": {
                         "value": "ServiceBusOwner"
@@ -240,6 +240,10 @@
                         "value": "[parameters('sharedServiceBusName')]"
                     }
                 }
+            },
+			"copy": {
+                "name": "role-assignments",
+                "count": 3
             },
             "dependsOn": [
                 "webjob-app-service",
