@@ -86,8 +86,8 @@ namespace SFA.DAS.ProviderRegistrations.Web.Controllers
             var employerEmail = model.EmployerEmailAddress.Trim().ToLower();
             var employerFullName = string.Concat(employerFirstName, " ", employerLastName);
             
-            await _mediator.Send(new AddInvitationCommand(ukprn, userId, employerOrganisation, employerFirstName, employerLastName, employerEmail));
-            await _mediator.Send(new SendInvitationEmailCommand(ukprn, providerDisplayName, employerOrganisation, employerFullName, employerEmail));
+            var correlationId = await _mediator.Send(new AddInvitationCommand(ukprn, userId, employerOrganisation, employerFirstName, employerLastName, employerEmail));
+            await _mediator.Send(new SendInvitationEmailCommand(ukprn, providerDisplayName, employerOrganisation, employerFullName, employerEmail, correlationId));
 
             return View("InviteConfirmation");
         }

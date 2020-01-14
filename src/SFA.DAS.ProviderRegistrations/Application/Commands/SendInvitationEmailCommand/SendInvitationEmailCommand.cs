@@ -4,13 +4,14 @@ namespace SFA.DAS.ProviderRegistrations.Application.Commands.SendInvitationEmail
 {
     public class SendInvitationEmailCommand : IRequest
     {
-        public SendInvitationEmailCommand(long ukprn, string providerFullName, string organisation, string employerFullName, string email)
+        public SendInvitationEmailCommand(long ukprn, string providerFullName, string organisation, string employerFullName, string email, string correlationId)
         {
             Ukprn = ukprn;
             ProviderFullName = providerFullName;
             EmployerOrganisation = organisation;
             EmployerFullName = employerFullName;
             EmployerEmail = email;
+            CorrelationId = correlationId;
         }
 
         public long Ukprn { get; }
@@ -20,7 +21,9 @@ namespace SFA.DAS.ProviderRegistrations.Application.Commands.SendInvitationEmail
         public string EmployerOrganisation { get; }
 
         public string EmployerFullName { get; }
-                
+
         public string EmployerEmail { get; }
+
+        public string CorrelationId { get; }
     }
 }
