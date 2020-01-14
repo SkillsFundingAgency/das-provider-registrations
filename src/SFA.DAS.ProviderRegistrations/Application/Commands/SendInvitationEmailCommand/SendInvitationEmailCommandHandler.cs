@@ -33,7 +33,8 @@ namespace SFA.DAS.ProviderRegistrations.Application.Commands.SendInvitationEmail
                 { "employer_name", request.EmployerFullName }
             };
 
-            await _publisher.Send(new SendEmailCommand(NotificationTemplateId, request.EmployerEmail, string.Empty, tokens, string.Empty));
+            // Reply to and Subject switched out by template.
+            await _publisher.Send(new SendEmailCommand(NotificationTemplateId, request.EmployerEmail, "noreply@sfa.gov.uk", tokens, "Invitation to Apprenticeship Service"));
         }
     }
 }
