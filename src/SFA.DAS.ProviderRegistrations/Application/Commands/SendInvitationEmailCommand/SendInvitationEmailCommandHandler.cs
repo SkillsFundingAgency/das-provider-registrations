@@ -38,8 +38,7 @@ namespace SFA.DAS.ProviderRegistrations.Application.Commands.SendInvitationEmail
                 { "unsubscribe_training_provider", $"{_configuration.EmployerAccountsBaseUrl}/service/unsubscribe/{request.CorrelationId}" }
             };
 
-            // Reply to and Subject switched out by template.
-            await _publisher.Send(new SendEmailCommand(NotificationTemplateId, request.EmployerEmail, "noreply@sfa.gov.uk", tokens, "Invitation to Apprenticeship Service"));
+            await _publisher.Send(new SendEmailCommand(NotificationTemplateId, request.EmployerEmail, tokens));
         }
     }
 }

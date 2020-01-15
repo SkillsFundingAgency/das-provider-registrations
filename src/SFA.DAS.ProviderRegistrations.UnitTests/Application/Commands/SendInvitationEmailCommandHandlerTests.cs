@@ -50,9 +50,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             mockPublisher.Verify(s => s.Send(It.Is<SendEmailCommand>(t =>
                 t.TemplateId == "ProviderInviteEmployerNotification" &&
                 t.RecipientsAddress == command.EmployerEmail &&
-                t.ReplyToAddress == "noreply@sfa.gov.uk" &&
-                t.Tokens.OrderBy(kvp => kvp.Key).SequenceEqual(tokens.OrderBy(kvp => kvp.Key)) &&
-                t.Subject == "Invitation to Apprenticeship Service"),It.IsAny<SendOptions>()));
+                t.Tokens.OrderBy(kvp => kvp.Key).SequenceEqual(tokens.OrderBy(kvp => kvp.Key))),It.IsAny<SendOptions>()));
         }
     }
 }
