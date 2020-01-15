@@ -14,6 +14,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.DependencyResolution
             registry.IncludeRegistry<DataRegistry>();
             registry.IncludeRegistry<MapperRegistry>();
             registry.IncludeRegistry<ServiceRegistry>();
+            registry.IncludeRegistry<NServiceBusRegistry>();
             registry.IncludeRegistry<DefaultRegistry>();
         }
     }
