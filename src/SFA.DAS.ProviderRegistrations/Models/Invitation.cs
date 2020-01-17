@@ -26,7 +26,11 @@ namespace SFA.DAS.ProviderRegistrations.Models
 
         public DateTime UpdatedDate { get; private set; }
 
-        public Invitation(Guid reference, long ukprn, string userRef, string employerOrganisation, string employerFirstName, string employerLastName, string employerEmail, int status, DateTime createdDate, DateTime updatedDate)
+        public string ProviderOrganisationName { get; private set; }
+
+        public string ProviderUserFullName { get; private set; }
+
+        public Invitation(Guid reference, long ukprn, string userRef, string employerOrganisation, string employerFirstName, string employerLastName, string employerEmail, int status, DateTime createdDate, DateTime updatedDate, string providerOrgName, string providerUserFullName)
         {
             Reference = reference;
             Ukprn = ukprn;
@@ -38,6 +42,8 @@ namespace SFA.DAS.ProviderRegistrations.Models
             Status = status;
             CreatedDate = createdDate;
             UpdatedDate = updatedDate;
+            ProviderOrganisationName = providerOrgName;
+            ProviderUserFullName = providerUserFullName;
         }
 
         private Invitation()

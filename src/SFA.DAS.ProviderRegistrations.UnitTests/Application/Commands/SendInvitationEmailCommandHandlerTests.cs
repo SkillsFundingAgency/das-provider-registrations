@@ -24,19 +24,16 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
         [Test, ProviderAutoData]
         public async Task Handle_WhenHandlingSendInvitationEmailCommand_ThenShouldAddInvitation(
             [Frozen] Mock<IMessageSession> mockPublisher,
-            [Frozen] Mock<IMediator> mediator,
             [Frozen] ProviderRegistrationsSettings settings,
             SendInvitationEmailCommandHandler handler,
-            SendInvitationEmailCommand command,
-            string providerName)
+            SendInvitationEmailCommand command)
         {
 
             //arrange
-            mediator.Setup(s => s.Send(It.Is<GetProviderByUkprnQuery>(r => r.Ukprn == command.Ukprn), It.IsAny<CancellationToken>())).ReturnsAsync(new GetProviderByUkprnQueryResult(providerName));
             var tokens = new Dictionary<string, string>
             {
-                { "provider_organisation", providerName },
-                { "provider_name", command.ProviderFullName },
+                { "provider_organisation", command.ProviderOrgName },
+                { "provider_name", command.ProviderUserFullName },
                 { "employer_organisation", command.EmployerOrganisation },
                 { "employer_name", command.EmployerFullName },
                 { "invitation_link", $"{settings.EmployerAccountsBaseUrl}/service/register/{command.CorrelationId}" },
