@@ -18,6 +18,8 @@ namespace SFA.DAS.ProviderRegistrations.Data
             builder.Property(a => a.Status).IsRequired().HasColumnType("int");
             builder.Property(a => a.CreatedDate).HasColumnType("datetime");
             builder.Property(a => a.UpdatedDate).HasColumnType("datetime");
+            builder.Property(a => a.ProviderOrganisationName).IsRequired().HasColumnType("varchar(255)");
+            builder.Property(a => a.ProviderUserFullName).IsRequired().HasColumnType("varchar(255)");
         }
     }
 }

@@ -11,5 +11,7 @@
     [Status] INT NOT NULL,
     [CreatedDate] DATETIME NOT NULL,
     [UpdatedDate] DATETIME NOT NULL, 
+    [ProviderOrganisationName] VARCHAR(255) NULL , 
+    [ProviderUserFullName] VARCHAR(255) NULL, 
     CONSTRAINT [PK_Invitations] PRIMARY KEY ([Id])
 )

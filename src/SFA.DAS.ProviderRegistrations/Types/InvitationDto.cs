@@ -19,5 +19,9 @@ namespace SFA.DAS.ProviderRegistrations.Types
         public string State { get; set; }
 
         public DateTime SentDate { get; set; }
+
+        public string ProviderOrganisationName { get; set; }
+
+        public string ProviderUserFullName { get; set; }
     }
 }

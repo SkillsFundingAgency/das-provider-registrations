@@ -14,24 +14,20 @@ namespace SFA.DAS.ProviderRegistrations.Application.Commands.SendInvitationEmail
     {
         private const string NotificationTemplateId = "ProviderInviteEmployerNotification";
         private readonly IMessageSession _publisher;
-        private readonly IMediator _mediator;
         private readonly ProviderRegistrationsSettings _configuration;
 
-        public SendInvitationEmailCommandHandler(IMediator mediator, IMessageSession publisher, ProviderRegistrationsSettings configuration)
+        public SendInvitationEmailCommandHandler(IMessageSession publisher, ProviderRegistrationsSettings configuration)
         {
             _publisher = publisher;
-            _mediator = mediator;
             _configuration = configuration;
         }
 
         protected override async Task Handle(SendInvitationEmailCommand request, CancellationToken cancellationToken)
         {
-            var provider = await _mediator.Send(new GetProviderByUkprnQuery(request.Ukprn), cancellationToken);
-
             var tokens = new Dictionary<string, string>()
             {
-                { "provider_organisation", provider.ProviderName },
-                { "provider_name", request.ProviderFullName },
+                { "provider_organisation", request.ProviderOrgName },
+                { "provider_name", request.ProviderUserFullName },
                 { "employer_organisation", request.EmployerOrganisation },
                 { "employer_name", request.EmployerFullName },
                 { "invitation_link", $"{_configuration.EmployerAccountsBaseUrl}/service/register/{request.CorrelationId}" },

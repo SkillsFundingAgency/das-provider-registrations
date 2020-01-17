@@ -30,7 +30,9 @@ namespace SFA.DAS.ProviderRegistrations.Application.Commands.AddInvitationComman
                 request.EmployerEmail,
                 0,
                 DateTime.Now,
-                DateTime.Now);
+                DateTime.Now,
+                request.ProviderOrganisationName,
+                request.ProviderUserFullName);
 
             _db.Value.Invitations.Add(invitation);
             await _db.Value.SaveChangesAsync(cancellationToken);

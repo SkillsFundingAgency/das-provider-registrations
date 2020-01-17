@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
@@ -78,16 +79,18 @@ namespace SFA.DAS.ProviderRegistrations.Web.Controllers
 
             var ukprn = _authenticationService.Ukprn.Value;
             var userId = _authenticationService.UserId;
-            _authenticationService.TryGetUserClaimValue(ProviderClaims.DisplayName, out string providerDisplayName);
+            _authenticationService.TryGetUserClaimValue(ProviderClaims.DisplayName, out string providerUserFullName);
 
+            var provider = await _mediator.Send(new GetProviderByUkprnQuery(ukprn), new CancellationToken());
+                        
             var employerOrganisation = model.EmployerOrganisation.Trim();
             var employerFirstName = model.EmployerFirstName.Trim();
             var employerLastName = model.EmployerLastName.Trim();
             var employerEmail = model.EmployerEmailAddress.Trim().ToLower();
             var employerFullName = string.Concat(employerFirstName, " ", employerLastName);
             
-            var correlationId = await _mediator.Send(new AddInvitationCommand(ukprn, userId, employerOrganisation, employerFirstName, employerLastName, employerEmail));
-            await _mediator.Send(new SendInvitationEmailCommand(ukprn, providerDisplayName, employerOrganisation, employerFullName, employerEmail, correlationId));
+            var correlationId = await _mediator.Send(new AddInvitationCommand(ukprn, userId, provider.ProviderName, providerUserFullName, employerOrganisation, employerFirstName, employerLastName, employerEmail));
+            await _mediator.Send(new SendInvitationEmailCommand(ukprn,provider.ProviderName, providerUserFullName, employerOrganisation, employerFullName, employerEmail, correlationId));
 
             return View("InviteConfirmation");
         }
