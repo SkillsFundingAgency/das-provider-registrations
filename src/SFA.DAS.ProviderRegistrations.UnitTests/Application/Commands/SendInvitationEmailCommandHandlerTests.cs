@@ -40,7 +40,8 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
                 { "employer_organisation", command.EmployerOrganisation },
                 { "employer_name", command.EmployerFullName },
                 { "invitation_link", $"{settings.EmployerAccountsBaseUrl}/service/register/{command.CorrelationId}" },
-                { "unsubscribe_training_provider", $"{settings.EmployerAccountsBaseUrl}/service/unsubscribe/{command.CorrelationId}" }
+                { "unsubscribe_training_provider", $"{settings.EmployerAccountsBaseUrl}/service/unsubscribe/{command.CorrelationId}" },
+                { "report_training_provider", $"{settings.EmployerAccountsBaseUrl}/report/trainingprovider/{command.CorrelationId}" }
             };
 
             //act

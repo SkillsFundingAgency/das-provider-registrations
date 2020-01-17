@@ -35,7 +35,9 @@ namespace SFA.DAS.ProviderRegistrations.Application.Commands.SendInvitationEmail
                 { "employer_organisation", request.EmployerOrganisation },
                 { "employer_name", request.EmployerFullName },
                 { "invitation_link", $"{_configuration.EmployerAccountsBaseUrl}/service/register/{request.CorrelationId}" },
-                { "unsubscribe_training_provider", $"{_configuration.EmployerAccountsBaseUrl}/service/unsubscribe/{request.CorrelationId}" }
+                { "unsubscribe_training_provider", $"{_configuration.EmployerAccountsBaseUrl}/service/unsubscribe/{request.CorrelationId}" },
+                { "report_training_provider", $"{_configuration.EmployerAccountsBaseUrl}/report/trainingprovider/{request.CorrelationId}" }
+
             };
 
             await _publisher.Send(new SendEmailCommand(NotificationTemplateId, request.EmployerEmail, tokens));
