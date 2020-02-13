@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Linq.Expressions;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -23,6 +24,14 @@ namespace SFA.DAS.ProviderRegistrations.Web.Extensions
             }
 
             return new HtmlString(errorClass);
+        }
+
+        public static int GetModelOrder<TModel>(
+            this IHtmlHelper<TModel> htmlHelper,
+            string expressionText)
+        {
+            var modelMetaData = htmlHelper.ViewData.ModelMetadata.Properties.Single(p => p.Name == expressionText);
+            return modelMetaData.Order;
         }
     }
 }
