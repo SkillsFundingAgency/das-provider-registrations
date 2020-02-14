@@ -18,10 +18,10 @@
                 </h2>
                 <div class="govuk-error-summary__body">
                     <ul class="govuk-list govuk-error-summary__list">
-                        @foreach (var error in ViewData.ModelState.Keys.SelectMany(key => ViewData.ModelState[key].Errors.Select(x => new {Order = Html.GetModelOrder(key), Key = key, x.ErrorMessage})).OrderBy(x => x.Order))
+                        @foreach (var error in Html.GetModelErrorsInOrder())
                         {
                             <li>
-                                <a href="#@error.Key">@error.ErrorMessage</a>
+                                <a href="#@error.Key">@error.Value</a>
                             </li>
                         }
                     </ul>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Microsoft.AspNetCore.Html;
@@ -26,12 +27,13 @@ namespace SFA.DAS.ProviderRegistrations.Web.Extensions
             return new HtmlString(errorClass);
         }
 
-        public static int GetModelOrder<TModel>(
-            this IHtmlHelper<TModel> htmlHelper,
-            string expressionText)
+        public static IEnumerable<KeyValuePair<string, string>> GetModelErrorsInOrder<TModel>(
+            this IHtmlHelper<TModel> htmlHelper)
         {
-            var modelMetaData = htmlHelper.ViewData.ModelMetadata.Properties.Single(p => p.Name == expressionText);
-            return modelMetaData.Order;
+            return htmlHelper.ViewData.ModelState.Keys.SelectMany(
+                key => htmlHelper.ViewData.ModelState[key].Errors.Select(
+                    x => new KeyValuePair<string, string>(key, x.ErrorMessage))).OrderBy(
+                o => htmlHelper.ViewData.ModelMetadata.Properties.Single(p => p.Name == o.Key).Order);
         }
     }
 }
