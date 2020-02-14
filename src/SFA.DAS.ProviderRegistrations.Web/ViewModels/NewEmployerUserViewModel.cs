@@ -1,6 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using AutoMapper.Configuration.Annotations;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using SFA.DAS.ProviderRegistrations.Web.Validation;
 
 namespace SFA.DAS.ProviderRegistrations.Web.ViewModels
