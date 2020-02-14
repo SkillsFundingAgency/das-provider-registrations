@@ -7,19 +7,19 @@ namespace SFA.DAS.ProviderRegistrations.Web.ViewModels
     {
         [Display(Name = "employer organisation", Order = 0)]
         [MaxLength(50)]
-        [RegularExpression(@"^[A-Za-z0-9àáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð '-]+$", ErrorMessage = "Employer organisation must only include letters a to z, numbers 0 to 9, hyphens, spaces and apostrophes")]
+        [RegularExpression(@"^[A-Za-z0-9 '-]+$", ErrorMessage = "Employer organisation must only include letters a to z, numbers 0 to 9, hyphens, spaces and apostrophes")]
         [Required(ErrorMessage = "Enter an employer organisation")]
         public string EmployerOrganisation { get; set; }
 
         [Display(Name = "employer first name", Order = 1)]
         [MaxLength(50)]
-        [RegularExpression(@"^[A-Za-zàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð '-]+$", ErrorMessage = "Employer first name must only include letters a to z, hyphens, spaces and apostrophes")]
+        [RegularExpression(@"^[A-Za-z '-]+$", ErrorMessage = "Employer first name must only include letters a to z, hyphens, spaces and apostrophes")]
         [Required(ErrorMessage = "Enter an employer first name")]
         public string EmployerFirstName { get; set; }
 
         [Display(Name = "employer last name", Order = 2)]
         [MaxLength(50)]
-        [RegularExpression(@"^[A-Za-zàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð '-]+$", ErrorMessage = "Employer last name must only include letters a to z, hyphens, spaces and apostrophes")]
+        [RegularExpression(@"^[A-Za-z '-]+$", ErrorMessage = "Employer last name must only include letters a to z, hyphens, spaces and apostrophes")]
         [Required(ErrorMessage = "Enter an employer last name")]
         public string EmployerLastName { get; set; }
 
