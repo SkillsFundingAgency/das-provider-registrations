@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -23,6 +25,15 @@ namespace SFA.DAS.ProviderRegistrations.Web.Extensions
             }
 
             return new HtmlString(errorClass);
+        }
+
+        public static IEnumerable<KeyValuePair<string, string>> GetModelErrorsInOrder<TModel>(
+            this IHtmlHelper<TModel> htmlHelper)
+        {
+            return htmlHelper.ViewData.ModelState.Keys.SelectMany(
+                key => htmlHelper.ViewData.ModelState[key].Errors.Select(
+                    x => new KeyValuePair<string, string>(key, x.ErrorMessage))).OrderBy(
+                o => htmlHelper.ViewData.ModelMetadata.Properties.Single(p => p.Name == o.Key).Order);
         }
     }
 }

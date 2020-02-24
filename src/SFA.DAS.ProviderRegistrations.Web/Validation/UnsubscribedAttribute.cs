@@ -13,7 +13,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.Validation
             var authenticationService = (IAuthenticationService) validationContext.GetService(typeof(IAuthenticationService));
 
             return mediator.Send(new GetUnsubscribedQuery(authenticationService.Ukprn.Value, (value as string)?.Trim().ToLower())).Result
-                ? new ValidationResult("This employer has unsubscribed from invitation emails.")
+                ? new ValidationResult(ErrorMessage)
                 : ValidationResult.Success;
         }
     }
