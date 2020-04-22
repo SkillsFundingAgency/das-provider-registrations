@@ -12,6 +12,7 @@ using SFA.DAS.ProviderRegistrations.Extensions;
 using SFA.DAS.ProviderRegistrations.Web.Authentication;
 using SFA.DAS.ProviderRegistrations.Web.DependencyResolution;
 using SFA.DAS.ProviderRegistrations.Web.Extensions;
+using SFA.DAS.ProviderRegistrations.Web.Filters;
 using StructureMap;
 
 namespace SFA.DAS.ProviderRegistrations.Web
@@ -45,9 +46,11 @@ namespace SFA.DAS.ProviderRegistrations.Web
                 .AddMvc(options =>
                 {
                     options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+                    options.Filters.Add(new GoogleAnalyticsFilter());
                     ConfigureAuthorization(options);
                 })
                 .AddNavigationBarSettings(Configuration)
+                .AddGoogleAnalyticsSettings(Configuration)
                 .AddControllersAsServices()
                 .AddSessionStateTempDataProvider()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
