@@ -15,15 +15,17 @@ namespace SFA.DAS.ProviderRegistrations.Web.UnitTests.Filters
     class WhenAddingGoogleAnalyticsInformation
     {
         [Test, DomainAutoData]
-        public async Task ThenProviderIdIsAddedToViewBag(
+        public async Task ThenProviderIdAndUserIdIsAddedToViewBag(
             uint ukPrn,
+            string userId,
             [ArrangeActionContext] ActionExecutingContext context,
             [Frozen] Mock<ActionExecutionDelegate> nextMethod,
             GoogleAnalyticsFilter filter)
         {
             //Arrange
-            var claim = new Claim(ProviderClaims.Ukprn, ukPrn.ToString());
-            context.HttpContext.User = new ClaimsPrincipal(new ClaimsIdentity(new[] { claim }));
+            var prnClaim = new Claim(ProviderClaims.Ukprn, ukPrn.ToString());
+            var userClaim = new Claim(ProviderClaims.Email, userId.ToString());
+            context.HttpContext.User = new ClaimsPrincipal(new ClaimsIdentity(new[] { prnClaim, userClaim }));
 
             //Act
             await filter.OnActionExecutionAsync(context, nextMethod.Object);
@@ -34,6 +36,33 @@ namespace SFA.DAS.ProviderRegistrations.Web.UnitTests.Filters
             var viewBagData = actualController.ViewBag.GaData as GaData;
             Assert.IsNotNull(viewBagData);
             Assert.AreEqual(ukPrn.ToString(), viewBagData.UkPrn);
+            Assert.AreEqual(userId, viewBagData.UserId);
+        }
+
+        [Test, DomainAutoData]
+        public async Task AndContextIsNonController_ThenNoDataIsAddedToViewbag(
+            long ukPrn,
+            string userId,
+            [ArrangeActionContext] ActionExecutingContext context,
+            [Frozen] Mock<ActionExecutionDelegate> nextMethod,
+            GoogleAnalyticsFilter filter)
+        {
+            //Arrange
+            var prnClaim = new Claim(ProviderClaims.Ukprn, ukPrn.ToString());
+            var userClaim = new Claim(ProviderClaims.Email, userId.ToString());
+            context.HttpContext.User = new ClaimsPrincipal(new ClaimsIdentity(new[] { prnClaim, userClaim }));
+
+            var contextWithoutController = new ActionExecutingContext(
+                new ActionContext(context.HttpContext, context.RouteData, context.ActionDescriptor),
+                context.Filters,
+                context.ActionArguments,
+                "");
+
+            //Act
+            await filter.OnActionExecutionAsync(contextWithoutController, nextMethod.Object);
+
+            //Assert
+            Assert.DoesNotThrowAsync(() => filter.OnActionExecutionAsync(contextWithoutController, nextMethod.Object));
         }
     }
 }
