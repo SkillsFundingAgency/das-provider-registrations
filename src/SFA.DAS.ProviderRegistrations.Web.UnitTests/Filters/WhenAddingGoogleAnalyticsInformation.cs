@@ -24,7 +24,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.UnitTests.Filters
         {
             //Arrange
             var prnClaim = new Claim(ProviderClaims.Ukprn, ukPrn.ToString());
-            var userClaim = new Claim(ProviderClaims.Email, userId.ToString());
+            var userClaim = new Claim(ProviderClaims.Upn, userId.ToString());
             context.HttpContext.User = new ClaimsPrincipal(new ClaimsIdentity(new[] { prnClaim, userClaim }));
 
             //Act
@@ -49,7 +49,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.UnitTests.Filters
         {
             //Arrange
             var prnClaim = new Claim(ProviderClaims.Ukprn, ukPrn.ToString());
-            var userClaim = new Claim(ProviderClaims.Email, userId.ToString());
+            var userClaim = new Claim(ProviderClaims.Upn, userId);
             context.HttpContext.User = new ClaimsPrincipal(new ClaimsIdentity(new[] { prnClaim, userClaim }));
 
             var contextWithoutController = new ActionExecutingContext(
