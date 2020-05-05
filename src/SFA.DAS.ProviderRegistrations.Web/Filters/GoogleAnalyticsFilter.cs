@@ -26,7 +26,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.Filters
         private GaData PopulateGaData(ActionExecutingContext context)
         {
             var ukPrn = context.HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals(ProviderClaims.Ukprn))?.Value;
-            var userId = context.HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals(ProviderClaims.Email))?.Value;
+            var userId = context.HttpContext.User.Claims.FirstOrDefault(c => c.Type.Equals(ProviderClaims.Upn))?.Value;
 
             return new GaData
             {
