@@ -38,6 +38,10 @@
         "sharedStorageAccountConnectionString": {
             "type": "securestring"
         },
+        "elasticPoolName": {
+            "type": "string",
+            "defaultValue": ""
+        },
         "databaseSkuName": {
             "type": "string",
             "defaultValue": "S0"
@@ -50,7 +54,7 @@
             "type": "string",
             "defaultValue": "[subscription().subscriptionId]"
         },
-        "logAnalyticsResourceGroup": {
+        "sharedManagementResourceGroup": {
             "type": "string"
         },
         "logAnalyticsWorkspaceName": {
@@ -69,9 +73,6 @@
             "type": "string"
         },
         "keyVaultName": {
-            "type": "string"
-        },
-        "keyVaultResourceGroup": {
             "type": "string"
         },
         "loggingRedisConnectionString": {
@@ -270,7 +271,7 @@
                         "value": "[parameters('keyVaultName')]"
                     },
                     "keyVaultResourceGroup": {
-                        "value": "[parameters('keyVaultResourceGroup')]"
+                        "value": "[parameters('sharedManagementResourceGroup')]"
                     }
                 }
             }
@@ -374,7 +375,7 @@
                         "value": "[parameters('keyVaultName')]"
                     },
                     "keyVaultResourceGroup": {
-                        "value": "[parameters('keyVaultResourceGroup')]"
+                        "value": "[parameters('sharedManagementResourceGroup')]"
                     }
                 }
             }
@@ -476,6 +477,9 @@
                     "sqlServerName": {
                         "value": "[parameters('sharedSqlServerName')]"
                     },
+                    "elasticPoolName": {
+                        "value": "[parameters('elasticPoolName')]"
+                    },
                     "databaseSkuName": {
                         "value": "[parameters('databaseSkuName')]"
                     },
@@ -486,7 +490,7 @@
                         "value": "[parameters('logAnalyticsSubscriptionId')]"
                     },
                     "logAnalyticsResourceGroup": {
-                        "value": "[parameters('logAnalyticsResourceGroup')]"
+                        "value": "[parameters('sharedManagementResourceGroup')]"
                     },
                     "logAnalyticsWorkspaceName": {
                         "value": "[parameters('logAnalyticsWorkspaceName')]"
