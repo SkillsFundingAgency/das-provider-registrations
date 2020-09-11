@@ -1,9 +1,7 @@
-﻿using SFA.DAS.Apprenticeships.Api.Types.Providers;
-
-namespace SFA.DAS.ProviderRegistrations.Services
+﻿namespace SFA.DAS.ProviderRegistrations.Services
 {
     public interface IApprenticeshipInfoService
     {
-        Provider GetProvider(long ukprn);
+        Apprenticeships.Api.Types.Providers.Provider GetProvider(long ukprn);
     }
 }

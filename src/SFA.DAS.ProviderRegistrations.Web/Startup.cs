@@ -50,6 +50,7 @@ namespace SFA.DAS.ProviderRegistrations.Web
                     ConfigureAuthorization(options);
                 })
                 .AddNavigationBarSettings(Configuration)
+                .AddZenDeskSettings(Configuration)
                 .AddGoogleAnalyticsSettings(Configuration)
                 .AddControllersAsServices()
                 .AddSessionStateTempDataProvider()

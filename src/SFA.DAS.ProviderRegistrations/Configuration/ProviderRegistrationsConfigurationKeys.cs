@@ -7,5 +7,6 @@
         public static string ActiveDirectorySettings = $"{ProviderRegistrations}:ActiveDirectorySettings";
         public static string NServiceBusSettings = $"{ProviderRegistrations}:NServiceBusSettings";
         public static string EmployerApprenticeshipApiClientSettings = $"{ProviderRegistrations}:EmployerApprenticeshipApiClientSettings";
+        public static string ZenDeskSettings = $"{ProviderRegistrations}:ZenDeskSettings";
     }
 }

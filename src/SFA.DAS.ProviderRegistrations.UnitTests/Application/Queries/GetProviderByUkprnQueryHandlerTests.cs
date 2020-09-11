@@ -4,7 +4,6 @@ using SFA.DAS.ProviderRegistrations.UnitTests.AutoFixture;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
-using SFA.DAS.Apprenticeships.Api.Types.Providers;
 using SFA.DAS.ProviderRegistrations.Application.Queries.GetProviderByUkprnQuery;
 
 namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Queries
@@ -17,7 +16,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Queries
         public async Task Handle_WhenHandlingGetProviderByUkprnQueryAndParametersAreMatched_ThenShouldReturnGetAProviderNameResult(
             long ukprn,
             GetProviderByUkprnQueryHandler handler,
-            [Frozen] Provider provider)
+            [Frozen] Apprenticeships.Api.Types.Providers.Provider provider)
         {
             //arrange
             var query = new GetProviderByUkprnQuery(ukprn);

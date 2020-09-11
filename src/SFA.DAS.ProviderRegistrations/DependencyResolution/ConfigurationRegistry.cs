@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using SFA.DAS.AutoConfiguration.DependencyResolution;
 using SFA.DAS.ProviderRegistrations.Configuration;
+using SFA.DAS.Provider.Shared.UI.Models;
 using StructureMap;
 
 namespace SFA.DAS.ProviderRegistrations.DependencyResolution
@@ -15,6 +16,7 @@ namespace SFA.DAS.ProviderRegistrations.DependencyResolution
             AddConfiguration<ProviderRegistrationsSettings>(ProviderRegistrationsConfigurationKeys.ProviderRegistrations);
             AddConfiguration<NServiceBusSettings>(ProviderRegistrationsConfigurationKeys.NServiceBusSettings);
             AddConfiguration<EmployerApprenticeshipApiClientSettings>(ProviderRegistrationsConfigurationKeys.EmployerApprenticeshipApiClientSettings);
+            AddConfiguration<ZenDeskConfiguration>(ProviderRegistrationsConfigurationKeys.ZenDeskSettings);
         }
 
         private void AddConfiguration<T>(string key) where T : class
