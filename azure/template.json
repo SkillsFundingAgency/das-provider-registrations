@@ -11,16 +11,19 @@
         "environmentName": {
             "type": "string"
         },
-        "sharedFrontEndAppServicePlan": {
+        "sharedFrontEndAppServicePlanName": {
             "type": "string"
         },
-        "sharedFrontEndAppServicePlanResourceGroupName": {
+        "sharedFrontEndSubnetResourceId": {
             "type": "string"
         },
-        "sharedBackEndAppServicePlan": {
+        "sharedBackEndAppServicePlanName": {
             "type": "string"
         },
-        "sharedBackEndAppServicePlanResourceGroupName": {
+        "sharedBackEndSubnetResourceId": {
+            "type": "string"
+        },
+        "sharedAppServicePlanResourceGroup": {
             "type": "string"
         },
         "sharedSqlServerName": {
@@ -94,6 +97,21 @@
             "type": "array",
             "defaultValue": [
             ]
+        },
+        "sharedEnvResourceGroup": {
+            "type": "string"
+        },
+        "sharedEnvVirtualNetworkName": {
+            "type": "string"
+        },
+        "subnetObject": {
+            "type": "object"
+        },
+        "subnetServiceEndpointList": {
+            "type": "array"
+        },
+        "subnetDelegations": {
+            "type": "array"
         }
     },
     "variables": {
@@ -106,6 +124,36 @@
         "databaseName": "[concat(variables('resourceNamePrefix'), '-db')]"
     },
     "resources": [
+        {
+            "apiVersion": "2017-05-10",
+            "name": "webjob-subnet",
+            "resourceGroup": "[parameters('sharedEnvResourceGroup')]",
+            "type": "Microsoft.Resources/deployments",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('deploymentUrlBase'),'subnet.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "virtualNetworkName": {
+                        "value": "[parameters('sharedEnvVirtualNetworkName')]"
+                    },
+                    "subnetName": {
+                        "value": "[parameters('subnetObject').name]"
+                    },
+                    "subnetAddressPrefix": {
+                        "value": "[parameters('subnetObject').addressSpace]"
+                    },
+                    "serviceEndpointList": {
+                        "value": "[parameters('subnetServiceEndpointList')]"
+                    },
+                    "delegations": {
+                        "value": "[parameters('subnetDelegations')]"
+                    }
+                }
+            }
+        },
         {
             "apiVersion": "2017-05-10",
             "name": "webjob-app-service-plan",
@@ -171,6 +219,9 @@
                     },
                     "appServicePlanResourceGroup": {
                         "value": "[resourceGroup().name]"
+                    },
+                    "subnetResourceId": {
+                        "value": "[reference('webjob-subnet').outputs.SubnetResourceId.value]"
                     },
                     "deployStagingSlot": {
                         "value": false
@@ -255,7 +306,7 @@
             "condition": "[greater(length(parameters('uiCustomHostName')), 0)]",
             "apiVersion": "2017-05-10",
             "name": "ui-app-service-certificate",
-            "resourceGroup": "[parameters('sharedFrontEndAppServicePlanResourceGroupName')]",
+            "resourceGroup": "[parameters('sharedAppServicePlanResourceGroup')]",
             "type": "Microsoft.Resources/deployments",
             "properties": {
                 "mode": "Incremental",
@@ -311,10 +362,13 @@
                         "value": "[variables('uiAppServiceName')]"
                     },
                     "appServicePlanName": {
-                        "value": "[parameters('sharedFrontEndAppServicePlan')]"
+                        "value": "[parameters('sharedFrontEndAppServicePlanName')]"
                     },
                     "appServicePlanResourceGroup": {
-                        "value": "[parameters('sharedFrontEndAppServicePlanResourceGroupName')]"
+                        "value": "[parameters('sharedAppServicePlanResourceGroup')]"
+                    },
+                    "subnetResourceId": {
+                        "value": "[parameters('sharedFrontEndSubnetResourceId')]"
                     },
                     "appServiceAppSettings": {
                         "value": [
@@ -359,7 +413,7 @@
             "condition": "[greater(length(parameters('apiCustomHostName')), 0)]",
             "apiVersion": "2017-05-10",
             "name": "api-app-service-certificate",
-            "resourceGroup": "[parameters('sharedFrontEndAppServicePlanResourceGroupName')]",
+            "resourceGroup": "[parameters('sharedAppServicePlanResourceGroup')]",
             "type": "Microsoft.Resources/deployments",
             "properties": {
                 "mode": "Incremental",
@@ -415,10 +469,13 @@
                         "value": "[variables('apiAppServiceName')]"
                     },
                     "appServicePlanName": {
-                        "value": "[parameters('sharedBackEndAppServicePlan')]"
+                        "value": "[parameters('sharedBackEndAppServicePlanName')]"
                     },
                     "appServicePlanResourceGroup": {
-                        "value": "[parameters('sharedBackEndAppServicePlanResourceGroupName')]"
+                        "value": "[parameters('sharedAppServicePlanResourceGroup')]"
+                    },
+                    "subnetResourceId": {
+                        "value": "[parameters('sharedBackEndSubnetResourceId')]"
                     },
                     "appServiceAppSettings": {
                         "value": [
