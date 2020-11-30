@@ -8,5 +8,6 @@
         public static string NServiceBusSettings = $"{ProviderRegistrations}:NServiceBusSettings";
         public static string EmployerApprenticeshipApiClientSettings = $"{ProviderRegistrations}:EmployerApprenticeshipApiClientSettings";
         public static string ZenDeskSettings = $"{ProviderRegistrations}:ZenDeskSettings";
+        public static string RedisConnectionSettings = $"{ProviderRegistrations}:RedisConnectionSettings";
     }
 }

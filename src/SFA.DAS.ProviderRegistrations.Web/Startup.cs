@@ -8,7 +8,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Authorization.Mvc.Extensions;
-using SFA.DAS.Provider.Shared.UI.Startup;
 using SFA.DAS.ProviderRegistrations.Extensions;
 using SFA.DAS.ProviderRegistrations.Web.Authentication;
 using SFA.DAS.ProviderRegistrations.Web.DependencyResolution;
@@ -44,6 +43,7 @@ namespace SFA.DAS.ProviderRegistrations.Web
                 .AddDasAuthorization()
                 .AddDasDistributedMemoryCache(Configuration, Environment.IsDevelopment())
                 .AddMemoryCache()
+                .AddDataProtection(Configuration, Environment)
                 .AddMvc(options =>
                 {
                     options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
