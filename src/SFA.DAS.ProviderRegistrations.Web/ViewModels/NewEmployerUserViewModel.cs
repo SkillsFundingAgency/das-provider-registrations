@@ -26,7 +26,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.ViewModels
         [Display(Name = "employer email address", Order = 3)]
         [MaxLength(50)]
         [Required(ErrorMessage = "Enter an employer email address")]
-        [EmailAddress(ErrorMessage = "Enter an email address in the correct format, like name@example.com")]
+        [MailAddress(ErrorMessage = "Enter an email address in the correct format, like name@example.com")]
         [Unsubscribed(ErrorMessage = "Enter an email address that has not been unsubscribed from invitation emails")]
         [InUse(ErrorMessage = "Enter an email address that is not already being used on an existing account")]
         public string EmployerEmailAddress { get; set; }
