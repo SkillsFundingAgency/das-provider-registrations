@@ -10,12 +10,15 @@ namespace SFA.DAS.ProviderRegistrations.Web.Validation
         {
             try
             {
-                new MailAddress(value as string);
-                return ValidationResult.Success;
+                var emailAddress = value.ToString().Trim();
+                if (emailAddress.Contains(' ')) return new ValidationResult(ErrorMessage); 
+
+                var mailAddress = new MailAddress(emailAddress);
+                return mailAddress.Address == emailAddress ? ValidationResult.Success : new ValidationResult(ErrorMessage);
             }
-            catch (FormatException ex)
+            catch 
             {
-                return new ValidationResult(ex.Message);
+                return new ValidationResult(ErrorMessage);
             }
         }
     }
