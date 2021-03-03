@@ -70,4 +70,4 @@ Provider Registrations does not have a default landing page. There are 2 routes 
 - https://localhost:5001/[UKPRN]/Registration/StartAccountSetup 
 - https://localhost:5001/[UKPRN]/Registration/InvitedEmployers
 
-The UKPRN must be replaced to matchthe UKPRN of the provider used to login.
+The UKPRN must be replaced to match the UKPRN of the provider used to login.
