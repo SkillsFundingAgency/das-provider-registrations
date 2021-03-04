@@ -71,3 +71,5 @@ Provider Registrations does not have a default landing page. There are 2 routes 
 - https://localhost:5001/[UKPRN]/Registration/InvitedEmployers
 
 The UKPRN must be replaced to match the UKPRN of the provider used to login.
+
+Please refer to the [Support Site](https://skillsfundingagency.atlassian.net/wiki/spaces/NDL/pages/1536557450/Repositories+and+Environments#RepositoriesandEnvironments-PAS-ProviderApprenticeshipService) for login information.
