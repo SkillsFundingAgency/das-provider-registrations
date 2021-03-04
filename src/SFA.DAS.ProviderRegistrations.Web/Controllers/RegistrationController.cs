@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Provider.Shared.UI.Attributes;
 using SFA.DAS.ProviderRegistrations.Application.Commands.AddInvitationCommand;
@@ -40,12 +41,14 @@ namespace SFA.DAS.ProviderRegistrations.Web.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = nameof(PolicyNames.HasContributorOrAbovePermission))]
         public IActionResult StartAccountSetup()
         {
             return View();
         }
 
         [HttpGet]
+        [Authorize(Policy = nameof(PolicyNames.HasContributorOrAbovePermission))]
         public IActionResult NewEmployerUser()
         { 
             return View();
@@ -53,6 +56,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = nameof(PolicyNames.HasContributorOrAbovePermission))]
         public IActionResult NewEmployerUser(NewEmployerUserViewModel model)
         {
             if (!ModelState.IsValid)
@@ -65,6 +69,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = nameof(PolicyNames.HasContributorOrAbovePermission))]
         public async Task<IActionResult> InviteEmployeruser(NewEmployerUserViewModel model, string command)
         {
             if (command == "Change")
@@ -97,6 +102,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = nameof(PolicyNames.HasContributorOrAbovePermission))]
         public IActionResult InviteConfirmation(string action)
         {
             switch (action)
@@ -113,6 +119,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = nameof(PolicyNames.HasViewerOrAbovePermission))]
         public async Task<IActionResult> InvitedEmployers(string sortColumn, string sortDirection)
         {
             sortColumn = Enum.GetNames(typeof(InvitationSortColumn)).SingleOrDefault(e => e == sortColumn);
@@ -131,6 +138,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.Controllers
 
         [HttpGet]
         [HideNavigationBar]
+        [Authorize(Policy = nameof(PolicyNames.HasContributorOrAbovePermission))]
         public async Task<ActionResult> EmailPreview(string employerName, string employerOrganisation)
         {
             var provider = await _mediator.Send(new GetProviderByUkprnQuery(_authenticationService.Ukprn.GetValueOrDefault(0)));
