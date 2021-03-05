@@ -31,6 +31,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.Authentication
                     options.CookieManager = new ChunkingCookieManager { ChunkSize = 3000 };
                     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
                     options.ReturnUrlParameter = "/Home/Index";
+                    options.AccessDeniedPath = "/Error/403";
                 });
             return services;
         }

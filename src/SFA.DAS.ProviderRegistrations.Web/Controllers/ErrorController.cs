@@ -8,7 +8,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.Controllers
     [AllowAnonymous]
     public class ErrorController : Controller
     {
-        [Route("error")]
+        [Route("error/{statuscode?}")]
         public IActionResult Error(int? statusCode)
         {
             switch (statusCode)
