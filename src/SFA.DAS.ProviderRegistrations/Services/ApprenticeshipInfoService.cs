@@ -1,5 +1,6 @@
 ﻿using SFA.DAS.ProviderRegistrations.Configuration;
-using SFA.DAS.Providers.Api.Client;
+using SFA.DAS.ProviderRegistrations.Infastructure;
+using SFA.Roatp.Api.Client;
 
 namespace SFA.DAS.ProviderRegistrations.Services
 {
@@ -12,9 +13,9 @@ namespace SFA.DAS.ProviderRegistrations.Services
             _configuration = configuration;
         }
 
-        public Apprenticeships.Api.Types.Providers.Provider GetProvider(long ukprn)
+        public Roatp.Api.Types.Provider GetProvider(long ukprn)
         {
-            var api = new ProviderApiClient(_configuration.ProviderApiClientBaseUrl);
+            var api = new RoatpApiClient(_configuration.RoatpApiClientBaseUrl);
             return api.Get(ukprn);
         }
     }

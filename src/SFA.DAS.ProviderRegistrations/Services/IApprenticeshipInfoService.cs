@@ -2,6 +2,6 @@
 {
     public interface IApprenticeshipInfoService
     {
-        Apprenticeships.Api.Types.Providers.Provider GetProvider(long ukprn);
+        Roatp.Api.Types.Provider GetProvider(long ukprn);
     }
 }

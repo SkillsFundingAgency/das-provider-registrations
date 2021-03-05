@@ -17,7 +17,7 @@ namespace SFA.DAS.ProviderRegistrations.Application.Queries.GetProviderByUkprnQu
         public Task<GetProviderByUkprnQueryResult> Handle(GetProviderByUkprnQuery request, CancellationToken cancellationToken)
         {
             var provider = _api.GetProvider(request.Ukprn);
-            return Task.FromResult(new GetProviderByUkprnQueryResult(provider.ProviderName));
+            return Task.FromResult(new GetProviderByUkprnQueryResult(provider.Name));
         }
     }
 }
