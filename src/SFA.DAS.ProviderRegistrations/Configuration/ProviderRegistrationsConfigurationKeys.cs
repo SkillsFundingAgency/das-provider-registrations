@@ -9,5 +9,6 @@
         public static string EmployerApprenticeshipApiClientSettings = $"{ProviderRegistrations}:EmployerApprenticeshipApiClientSettings";
         public static string ZenDeskSettings = $"{ProviderRegistrations}:ZenDeskSettings";
         public static string RedisConnectionSettings = $"{ProviderRegistrations}:RedisConnectionSettings";
+        public static string RoatpApiClientSettings =$"{ProviderRegistrations}:RoatpApiClientSettings";
     }
 }

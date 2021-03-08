@@ -7,17 +7,17 @@ namespace SFA.DAS.ProviderRegistrations.Application.Queries.GetProviderByUkprnQu
 {
     public class GetProviderByUkprnQueryHandler : IRequestHandler<GetProviderByUkprnQuery, GetProviderByUkprnQueryResult>
     {
-        private readonly IApprenticeshipInfoService _api;
+        private readonly IProviderService _api;
     
-        public GetProviderByUkprnQueryHandler(IApprenticeshipInfoService api)
+        public GetProviderByUkprnQueryHandler(IProviderService api)
         {
             _api = api;
         }
 
-        public Task<GetProviderByUkprnQueryResult> Handle(GetProviderByUkprnQuery request, CancellationToken cancellationToken)
+        public async Task<GetProviderByUkprnQueryResult> Handle(GetProviderByUkprnQuery request, CancellationToken cancellationToken)
         {
-            var provider = _api.GetProvider(request.Ukprn);
-            return Task.FromResult(new GetProviderByUkprnQueryResult(provider.Name));
+            var provider = await _api.GetProvider(request.Ukprn);
+            return new GetProviderByUkprnQueryResult(provider.Name);
         }
     }
 }
