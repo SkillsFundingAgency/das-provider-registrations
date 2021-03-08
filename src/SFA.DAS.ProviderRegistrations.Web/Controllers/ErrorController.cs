@@ -4,7 +4,7 @@ using SFA.DAS.Provider.Shared.UI.Attributes;
 
 namespace SFA.DAS.ProviderRegistrations.Web.Controllers
 {
-    [HideNavigationBar]
+    [HideNavigationBar(hideAccountHeader: false, hideNavigationLinks: true)]
     [AllowAnonymous]
     public class ErrorController : Controller
     {
