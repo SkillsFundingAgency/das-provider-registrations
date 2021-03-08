@@ -26,6 +26,7 @@ src/SFA.DAS.ProviderRegistrations.Messages/bin
 src/SFA.DAS.ProviderRegistrations.Messages/obj
 src/SFA.DAS.ProviderRegistrations.MessageHandlers/obj
 src/.learningtransport
+src/.vs
 
 src/.idea/.idea.SFA.DAS.ProviderRegistrations/.idea/
 
