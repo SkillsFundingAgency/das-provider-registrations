@@ -3,10 +3,10 @@ using SFA.DAS.Provider.Shared.UI.Attributes;
 
 namespace SFA.DAS.ProviderRegistrations.Web.Controllers
 {
-    [HideNavigationBar]
+    [HideNavigationBar(hideAccountHeader: false, hideNavigationLinks: true)]
     public class ErrorController : Controller
     {
-        [Route("error")]
+        [Route("error/{statuscode?}")]
         public IActionResult Error(int? statusCode)
         {
             switch (statusCode)
