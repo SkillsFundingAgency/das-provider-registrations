@@ -16,7 +16,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Queries
         public async Task Handle_WhenHandlingGetProviderByUkprnQueryAndParametersAreMatched_ThenShouldReturnGetAProviderNameResult(
             long ukprn,
             GetProviderByUkprnQueryHandler handler,
-            [Frozen] Apprenticeships.Api.Types.Providers.Provider provider)
+            [Frozen] Models.Provider provider)
         {
             //arrange
             var query = new GetProviderByUkprnQuery(ukprn);
@@ -26,7 +26,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Queries
 
             //assert
             result.Should().NotBeNull();
-            result.ProviderName.Should().Be(provider.ProviderName);
+            result.ProviderName.Should().Be(provider.Name);
         }
     }
 }

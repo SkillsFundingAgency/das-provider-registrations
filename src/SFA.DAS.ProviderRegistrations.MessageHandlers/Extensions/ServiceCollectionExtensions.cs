@@ -48,7 +48,7 @@ namespace SFA.DAS.ProviderRegistrations.MessageHandlers.Extensions
                         var transport = endpointConfiguration.UseTransport<AzureServiceBusTransport>();
                         var ruleNameShortener = new RuleNameShortener();
 
-                        var tokenProvider = TokenProvider.CreateManagedServiceIdentityTokenProvider();
+                        var tokenProvider = TokenProvider.CreateManagedIdentityTokenProvider();
                         transport.CustomTokenProvider(tokenProvider);
                         transport.ConnectionString(configuration.ServiceBusConnectionString);
                         transport.RuleNameShortener(ruleNameShortener.Shorten);
