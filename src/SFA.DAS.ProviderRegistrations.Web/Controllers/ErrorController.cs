@@ -4,8 +4,8 @@ using SFA.DAS.Provider.Shared.UI.Attributes;
 
 namespace SFA.DAS.ProviderRegistrations.Web.Controllers
 {
-    [HideNavigationBar]
     [AllowAnonymous]
+    [HideNavigationBar(hideAccountHeader: false, hideNavigationLinks: true)]
     public class ErrorController : Controller
     {
         [Route("error/{statuscode?}")]
