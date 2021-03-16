@@ -17,6 +17,7 @@ namespace SFA.DAS.ProviderRegistrations.DependencyResolution
             AddConfiguration<NServiceBusSettings>(ProviderRegistrationsConfigurationKeys.NServiceBusSettings);
             AddConfiguration<EmployerApprenticeshipApiClientSettings>(ProviderRegistrationsConfigurationKeys.EmployerApprenticeshipApiClientSettings);
             AddConfiguration<ZenDeskConfiguration>(ProviderRegistrationsConfigurationKeys.ZenDeskSettings);
+            AddConfiguration<RoatpApiClientSettings>(ProviderRegistrationsConfigurationKeys.RoatpApiClientSettings);
         }
 
         private void AddConfiguration<T>(string key) where T : class
