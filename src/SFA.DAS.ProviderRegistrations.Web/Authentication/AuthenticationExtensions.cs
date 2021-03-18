@@ -28,7 +28,6 @@ namespace SFA.DAS.ProviderRegistrations.Web.Authentication
                     options.Events.OnSecurityTokenValidated = OnSecurityTokenValidated;
                 }).AddCookie(options =>
                 {
-                    options.AccessDeniedPath = "/Error/403";
                     options.CookieManager = new ChunkingCookieManager { ChunkSize = 3000 };
                     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
                     options.ReturnUrlParameter = "/Home/Index";
