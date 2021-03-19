@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using SFA.DAS.Authorization.Mvc.Extensions;
 using SFA.DAS.ProviderRegistrations.Extensions;
 using SFA.DAS.ProviderRegistrations.Web.Authentication;
+using SFA.DAS.ProviderRegistrations.Web.Authorization;
 using SFA.DAS.ProviderRegistrations.Web.DependencyResolution;
 using SFA.DAS.ProviderRegistrations.Web.Extensions;
 using SFA.DAS.ProviderRegistrations.Web.Filters;
@@ -40,7 +41,6 @@ namespace SFA.DAS.ProviderRegistrations.Web
                     options.MinimumSameSitePolicy = SameSiteMode.None;
                 })
                 .AddProviderIdamsAuthentication(Configuration)
-                .AddDasAuthorization()
                 .AddDasDistributedMemoryCache(Configuration, Environment.IsDevelopment())
                 .AddMemoryCache()
                 .AddDataProtection(Configuration, Environment)
@@ -48,7 +48,8 @@ namespace SFA.DAS.ProviderRegistrations.Web
                 {
                     options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
                     options.Filters.Add(new GoogleAnalyticsFilter());
-                    ConfigureAuthorization(options);
+                    options.Filters.Add(new AuthorizeFilter(PolicyNames.ProviderPolicyName));
+                    options.AddAuthorization();
                 })
                 .AddNavigationBarSettings(Configuration)
                 .AddZenDeskSettings(Configuration)
@@ -60,16 +61,7 @@ namespace SFA.DAS.ProviderRegistrations.Web
 
             services.AddHealthChecks();
             services.AddApplicationInsightsTelemetry();
-        }
-
-        protected virtual void ConfigureAuthorization(MvcOptions options)
-        {
-            var policy = new AuthorizationPolicyBuilder()
-                .RequireProviderInRouteMatchesProviderInClaims()
-                .Build();
-
-            options.Filters.Add(new AuthorizeFilter(policy));
-            options.AddAuthorization();
+            services.AddAuthorizationService();
         }
 
         public void ConfigureContainer(Registry registry)
