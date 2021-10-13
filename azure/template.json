@@ -112,6 +112,9 @@
         },
         "subnetDelegations": {
             "type": "array"
+        },
+        "cdnUrl": {
+            "type": "string"
         }
     },
     "variables": {
@@ -396,6 +399,10 @@
                                 {
                                     "name": "ConfigurationStorageConnectionString",
                                     "value": "[parameters('configurationStorageConnectionString')]"
+                                },
+                                {
+                                    "name": "cdn:url",
+                                    "value": "[parameters('cdnUrl')]"
                                 }
                             ]
                         }
