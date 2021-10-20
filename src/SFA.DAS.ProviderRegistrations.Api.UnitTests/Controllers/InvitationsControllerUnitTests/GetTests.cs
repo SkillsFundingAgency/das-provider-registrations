@@ -15,13 +15,12 @@ using AutoFixture.NUnit3;
 namespace SFA.DAS.ProviderRegistrations.Api.UnitTests.Controllers.InvitationsControllerUnitTests
 {
     [TestFixture]
-    [Parallelizable]
     public class GetTests
     {
         [Test, DomainAutoData]
         public async Task WhenValidCorrelationIdIsSupplied_ThenShouldReturnInvitationFromQuery(
             [Frozen] Mock<IMediator> mediator,
-            InvitationsController controller,
+            [Greedy] InvitationsController controller,
             GetInvitationByIdQueryResult queryResult,
             Guid correlationId)
         {
@@ -39,7 +38,8 @@ namespace SFA.DAS.ProviderRegistrations.Api.UnitTests.Controllers.InvitationsCon
         }
 
         [Test, DomainAutoData]
-        public async Task WhenCorrelationIdIsInvalid_ThenShouldReturnBadRequest(InvitationsController controller)
+        public async Task WhenCorrelationIdIsInvalid_ThenShouldReturnBadRequest(
+            [Greedy] InvitationsController controller)
         {
 
             //act

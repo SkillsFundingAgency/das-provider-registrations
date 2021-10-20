@@ -20,7 +20,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.UnitTests.Controllers.RegistrationCo
         public async Task ThenAnInvitationIsAdded(
             [Frozen] Mock<IAuthenticationService> authService,
             [Frozen] Mock<IMediator> mediator,
-            RegistrationController controller)
+            [Greedy] RegistrationController controller)
         {
             //arrange
             mediator.Setup(x => x.Send(It.Is<GetInvitationQuery>(s => s.Ukprn == authService.Object.Ukprn), It.IsAny<CancellationToken>())).ReturnsAsync(new GetInvitationQueryResult(new List<InvitationDto>()));

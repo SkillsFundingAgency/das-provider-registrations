@@ -18,27 +18,6 @@ namespace SFA.DAS.ProviderRegistrations.MessageHandlers.UnitTests.CommandHandler
     public class RunHealthCheckCommandHandlerTests
     {
         [Test, DomainAutoData]
-        public async Task Handle_WhenHandlingCommand_ThenShouldLogInformation(
-            [Frozen] Mock<ILogger<RunHealthCheckCommandHandler>> logger,
-            RunHealthCheckCommandHandler handler,
-            RunHealthCheckCommand message,
-            TestableMessageHandlerContext context)
-        {
-            //arrange
-
-            //act
-            await handler.Handle(message, context);
-
-            //assert
-            logger.Verify(l => l.Log(
-                    LogLevel.Information,
-                    It.IsAny<EventId>(),
-                    It.IsAny<object>(),
-                    It.IsAny<Exception>(),
-                    It.IsAny<Func<object, Exception, string>>()));
-        }
-
-        [Test, DomainAutoData]
         public async Task Handle_WhenHandlingCommand_ThenShouldAddMessageIdToDistributedCache(
             [Frozen] Mock<IDistributedCache> distributedCache,
             RunHealthCheckCommandHandler handler,
