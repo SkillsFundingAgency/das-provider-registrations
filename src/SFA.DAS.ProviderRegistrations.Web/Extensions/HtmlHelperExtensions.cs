@@ -4,7 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace SFA.DAS.ProviderRegistrations.Web.Extensions
 {
@@ -15,7 +15,8 @@ namespace SFA.DAS.ProviderRegistrations.Web.Extensions
             Expression<Func<TModel, TProperty>> expression,
             string errorClass)
         {
-            var expressionText = ExpressionHelper.GetExpressionText(expression);
+            var expressionProvider = htmlHelper.ViewContext.HttpContext.RequestServices.GetService(typeof(ModelExpressionProvider)) as ModelExpressionProvider;
+            var expressionText = expressionProvider.GetExpressionText(expression);
             var fullHtmlFieldName = htmlHelper.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldName(expressionText);
             var state = htmlHelper.ViewData.ModelState[fullHtmlFieldName];
 

@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Internal;
 using Moq;
 using NServiceBus.Testing;
 using NUnit.Framework;
@@ -34,7 +33,7 @@ namespace SFA.DAS.ProviderRegistrations.MessageHandlers.UnitTests.CommandHandler
             logger.Verify(l => l.Log(
                     LogLevel.Information,
                     It.IsAny<EventId>(),
-                    It.Is<FormattedLogValues>(v => v.ToString().Equals($"Handled {nameof(RunHealthCheckCommand)} with MessageId '{context.MessageId}'")),
+                    It.IsAny<object>(),
                     It.IsAny<Exception>(),
                     It.IsAny<Func<object, Exception, string>>()));
         }
