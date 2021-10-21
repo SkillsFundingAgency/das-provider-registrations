@@ -15,8 +15,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.Extensions
         {
             if (!environment.IsDevelopment())
             {
-                var redisConfiguration = configuration.GetSection(ProviderRegistrationsConfigurationKeys.RedisConnectionSettings)
-                    .Get<RedisConnectionSettings>();
+                var redisConfiguration = configuration.GetSection(ProviderRegistrationsConfigurationKeys.RedisConnectionSettings).Get<RedisConnectionSettings>();
 
                 if (redisConfiguration != null)
                 {

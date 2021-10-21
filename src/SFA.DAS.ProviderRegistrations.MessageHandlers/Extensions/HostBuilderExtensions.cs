@@ -14,7 +14,11 @@ namespace SFA.DAS.ProviderRegistrations.MessageHandlers.Extensions
         {
             return hostBuilder.ConfigureAppConfiguration((context, builder) =>
             {
-                builder.AddAzureTableStorage(ProviderRegistrationsConfigurationKeys.ProviderRegistrations)
+                builder.AddAzureTableStorage(options =>
+                    {
+                        options.ConfigurationKeys = ProviderRegistrationsConfigurationKeys.ProviderRegistrations.Split(',');
+                        options.PreFixConfigurationKeys = false;
+                    })
                     .AddJsonFile("appsettings.json", true, true)
                     .AddJsonFile($"appsettings.{context.HostingEnvironment.EnvironmentName}.json", true, true)
                     .AddEnvironmentVariables()

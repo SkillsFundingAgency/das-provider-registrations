@@ -8,7 +8,7 @@ namespace SFA.DAS.ProviderRegistrations.Extensions
     {
         public static IServiceCollection AddDasDistributedMemoryCache(this IServiceCollection services, IConfiguration configuration, bool isDevelopment)
         {
-            var redisConnectionString = configuration.GetSection(ProviderRegistrationsConfigurationKeys.ProviderRegistrations).Get<ProviderRegistrationsSettings>().RedisConnectionString;
+            var redisConnectionString = configuration.GetSection(ProviderRegistrationsConfigurationKeys.RedisConnectionSettings).Get<RedisConnectionSettings>().RedisConnectionString;
 
             if (isDevelopment)
             {

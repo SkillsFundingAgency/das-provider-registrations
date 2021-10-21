@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Authorization.Mvc.Extensions;
+using SFA.DAS.Provider.Shared.UI.Startup;
 using SFA.DAS.ProviderRegistrations.Extensions;
 using SFA.DAS.ProviderRegistrations.Web.Authentication;
 using SFA.DAS.ProviderRegistrations.Web.Authorization;
@@ -59,6 +60,7 @@ namespace SFA.DAS.ProviderRegistrations.Web
                 .AddSessionStateTempDataProvider()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
+            services.AddProviderUiServiceRegistration(Configuration);
             services.AddHealthChecks();
             services.AddApplicationInsightsTelemetry();
             services.AddAuthorizationService();
