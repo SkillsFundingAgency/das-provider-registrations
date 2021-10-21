@@ -9,35 +9,27 @@ pr: none
 variables:
   buildConfiguration: 'release'
   buildPlatform: 'anycpu'
+  
+resources:
+  repositories:
+  - repository: das-platform-building-blocks
+    type: github
+    name: SkillsFundingAgency/das-platform-building-blocks
+    ref: refs/tags/0.4.10
+    endpoint: SkillsFundingAgency
 
 jobs:
 - job: 'CodeBuild'
   pool: 
-    name: 'DAS - Continuous Integration' 
+    name: DAS - Continuous Integration Agents
+    demands: LATEST_DOTNET_VERSION -equals 3.1
   workspace: 
     clean: all 
   steps: 
-  - task: gittools.gitversion.gitversion-task.GitVersion@5
-    displayName: GitVersion
-    inputs:
-      updateAssemblyInfo: true
-  - task: DotNetCoreCLI@2
-    displayName: 'dotnet restore'
-    inputs:
-      command: restore
-      projects: 'src/**/*.csproj'
-  - task: DotNetCoreCLI@2
-    displayName: 'dotnet build'
-    inputs:
-      commands: build
-      projects: 'src/**/*.csproj'
-      arguments: '--configuration $(buildConfiguration)'
-  - task: DotNetCoreCLI@2
-    displayName: 'dotnet test'
-    inputs:
-      command: test
-      projects: '**/*Tests.csproj'
-      arguments: '--configuration $(buildConfiguration) --no-build'
+  - template: azure-pipelines-templates/build/step/gitversion.yml@das-platform-building-blocks
+  
+  - template: azure-pipelines-templates/build/step/app-build.yml@das-platform-building-blocks
+  
   - task: DotNetCoreCLI@2
     displayName: 'Publish API'
     inputs:
@@ -45,6 +37,7 @@ jobs:
       publishWebProjects: false
       projects: 'src/SFA.DAS.ProviderRegistrations.Api/SFA.DAS.ProviderRegistrations.Api.csproj'
       arguments: '--configuration $(buildConfiguration) --output $(build.artifactstagingdirectory)/publish --no-restore --no-build'
+  
   - task: DotNetCoreCLI@2
     displayName: 'Publish Web Job'
     inputs:
@@ -54,6 +47,7 @@ jobs:
       arguments: '--configuration $(buildConfiguration) --output $(build.artifactstagingdirectory)/publish/SFA.DAS.ProviderRegistrations.MessageHandlers/App_Data/jobs/continuous/ProviderRegistrations-MessageHandlers --no-restore --no-build'
       zipAfterPublish: false
       modifyOutputPath: false
+  
   - task: DotNetCoreCLI@2
     displayName: 'Publish Web'
     inputs:
@@ -61,12 +55,14 @@ jobs:
       publishWebProjects: false
       projects: 'src/SFA.DAS.ProviderRegistrations.Web/SFA.DAS.ProviderRegistrations.Web.csproj'
       arguments: '--configuration $(buildConfiguration) --output $(build.artifactstagingdirectory)/publish --no-restore --no-build'
+  
   - task: CopyFiles@2
     displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
     inputs:
       Contents: azure/**
       TargetFolder: '$(build.artifactstagingdirectory)/'
       OverWrite: true
+  
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact'
     inputs:
@@ -74,7 +70,8 @@ jobs:
 
 - job: 'DACPACBuild'
   pool: 
-    vmImage: 'windows-2019'
+    name: DAS - Continuous Integration
+    demands: Agent.OS -equals Windows_NT
   workspace:
     clean: all
   steps:
@@ -85,12 +82,14 @@ jobs:
       platform: '$(buildPlatform)'
       configuration: '$(buildConfiguration)'
       msbuildArgs: '/p:PackageLocation="$(build.artifactstagingdirectory)/publish"'
+  
   - task: CopyFiles@2
     displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
     inputs:
       contents: |
         src/**/*.dacpac
       targetFolder: '$(build.artifactstagingdirectory)/publish'
+  
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact'
     inputs:
