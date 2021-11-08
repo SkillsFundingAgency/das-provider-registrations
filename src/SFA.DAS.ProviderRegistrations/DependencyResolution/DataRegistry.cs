@@ -5,7 +5,7 @@ using SFA.DAS.ProviderRegistrations.Data;
 using StructureMap;
 using System;
 using Microsoft.Azure.Services.AppAuthentication;
-using SFA.DAS.AutoConfiguration;
+using SFA.DAS.Configuration;
 
 namespace SFA.DAS.ProviderRegistrations.DependencyResolution
 {
@@ -15,9 +15,12 @@ namespace SFA.DAS.ProviderRegistrations.DependencyResolution
         
         public DataRegistry()
         {
+            var environmentName = Environment.GetEnvironmentVariable(EnvironmentVariableNames.EnvironmentName);
             For<DbConnection>().Use($"Build DbConnection", c => {
                 var azureServiceTokenProvider = new AzureServiceTokenProvider();
-                return new SqlConnection
+                return environmentName.Equals("LOCAL", StringComparison.CurrentCultureIgnoreCase)
+                    ? new SqlConnection(GetConnectionString(c))
+                    : new SqlConnection
                     {
                         ConnectionString = GetConnectionString(c),
                         AccessToken = azureServiceTokenProvider.GetAccessTokenAsync(AzureResource).Result
