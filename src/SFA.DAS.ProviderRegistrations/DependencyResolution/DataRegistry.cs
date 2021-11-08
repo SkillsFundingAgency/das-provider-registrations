@@ -15,7 +15,7 @@ namespace SFA.DAS.ProviderRegistrations.DependencyResolution
         
         public DataRegistry()
         {
-            var environmentName = Environment.GetEnvironmentVariable(EnvironmentVariableNames.Environment);
+            var environmentName = Environment.GetEnvironmentVariable("APPSETTING_EnvironmentName");
             For<DbConnection>().Use($"Build DbConnection", c => {
                 var azureServiceTokenProvider = new AzureServiceTokenProvider();
                 return environmentName.Equals("LOCAL", StringComparison.CurrentCultureIgnoreCase)
