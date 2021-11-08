@@ -15,12 +15,9 @@ namespace SFA.DAS.ProviderRegistrations.DependencyResolution
         
         public DataRegistry()
         {
-            var environmentName = Environment.GetEnvironmentVariable("APPSETTING_EnvironmentName");
             For<DbConnection>().Use($"Build DbConnection", c => {
                 var azureServiceTokenProvider = new AzureServiceTokenProvider();
-                return environmentName.Equals("LOCAL", StringComparison.CurrentCultureIgnoreCase)
-                    ? new SqlConnection(GetConnectionString(c))
-                    : new SqlConnection
+                return new SqlConnection
                     {
                         ConnectionString = GetConnectionString(c),
                         AccessToken = azureServiceTokenProvider.GetAccessTokenAsync(AzureResource).Result
