@@ -12,6 +12,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.20" />
     <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="3.1.20" />
     <PackageReference Include="SFA.DAS.AutoConfiguration" Version="2.2.6" />
+    <PackageReference Include="SFA.DAS.Configuration" Version="3.0.77" />
     <PackageReference Include="SFA.DAS.Http" Version="3.2.62" />
     <PackageReference Include="SFA.DAS.Notifications.Messages" Version="3.0.0" />
     <PackageReference Include="SFA.DAS.NServiceBus" Version="16.0.21" />

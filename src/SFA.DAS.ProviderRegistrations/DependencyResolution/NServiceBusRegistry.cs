@@ -1,4 +1,5 @@
-﻿using NServiceBus;
+﻿using Microsoft.Azure.Services.AppAuthentication;
+using NServiceBus;
 using SFA.DAS.AutoConfiguration;
 using SFA.DAS.NServiceBus.Configuration;
 using SFA.DAS.NServiceBus.Configuration.AzureServiceBus;
@@ -9,6 +10,7 @@ using SFA.DAS.ProviderRegistrations.Configuration;
 using SFA.DAS.ProviderRegistrations.Extensions;
 using SFA.DAS.UnitOfWork.NServiceBus.Configuration;
 using StructureMap;
+using System.Data.Common;
 using System.Data.SqlClient;
 
 namespace SFA.DAS.ProviderRegistrations.DependencyResolution
@@ -16,6 +18,7 @@ namespace SFA.DAS.ProviderRegistrations.DependencyResolution
     public class NServiceBusRegistry : Registry
     {
         private const string ServiceName = "SFA.DAS.ProviderRegistrations";
+        private const string AzureResource = "https://database.windows.net/";
 
         public NServiceBusRegistry()
         {
@@ -26,7 +29,7 @@ namespace SFA.DAS.ProviderRegistrations.DependencyResolution
         {
             var nServiceBusSettings = context.GetInstance<NServiceBusSettings>();
             var providerSettings = context.GetInstance<ProviderRegistrationsSettings>();
-            var environmentService = context.GetInstance<IEnvironmentService>();
+            var environmentService = context.GetInstance<IEnvironmentService>();          
 
             var endpointName = "SFA.DAS.ProviderRegistrations.Web";
             var endpointConfiguration = new EndpointConfiguration(endpointName)
@@ -36,8 +39,8 @@ namespace SFA.DAS.ProviderRegistrations.DependencyResolution
                 .UseMessageConventions()
                 .UseNLogFactory()
                 .UseNewtonsoftJsonSerializer()
-                .UseOutbox(true)
-                .UseSqlServerPersistence(() => new SqlConnection(providerSettings.DatabaseConnectionString))
+                .UseOutbox(true)                
+                .UseSqlServerPersistence(() => GetConnectionString(environmentService, providerSettings))                
                 .UseUnitOfWork()
                 .UseSendOnly();
 
@@ -52,6 +55,18 @@ namespace SFA.DAS.ProviderRegistrations.DependencyResolution
             
             var endpoint = Endpoint.Start(endpointConfiguration).GetAwaiter().GetResult();
             return endpoint;
+        }
+
+        private DbConnection GetConnectionString(IEnvironmentService environmentService, ProviderRegistrationsSettings providerSettings)
+        {
+            var azureServiceTokenProvider = new AzureServiceTokenProvider();
+            return environmentService.IsCurrent(DasEnv.LOCAL)
+                ? new SqlConnection(providerSettings.DatabaseConnectionString)
+                : new SqlConnection
+                {
+                    ConnectionString = providerSettings.DatabaseConnectionString,
+                    AccessToken = azureServiceTokenProvider.GetAccessTokenAsync(AzureResource).Result
+                };
         }
     }
 }
