@@ -1,4 +1,5 @@
 ﻿using Microsoft.Azure.Services.AppAuthentication;
+using Microsoft.Data.SqlClient;
 using NServiceBus;
 using SFA.DAS.AutoConfiguration;
 using SFA.DAS.NServiceBus.Configuration;
@@ -11,13 +12,11 @@ using SFA.DAS.ProviderRegistrations.Extensions;
 using SFA.DAS.UnitOfWork.NServiceBus.Configuration;
 using StructureMap;
 using System.Data.Common;
-using System.Data.SqlClient;
 
 namespace SFA.DAS.ProviderRegistrations.DependencyResolution
 {
     public class NServiceBusRegistry : Registry
     {
-        private const string ServiceName = "SFA.DAS.ProviderRegistrations";
         private const string AzureResource = "https://database.windows.net/";
 
         public NServiceBusRegistry()
