@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using SFA.DAS.ProviderRegistrations.Configuration;
 using StackExchange.Redis;
 
@@ -10,12 +11,11 @@ namespace SFA.DAS.ProviderRegistrations.Web.Extensions
 {
     public static class DataProtectionStartupExtensions
     {
-        public static IServiceCollection AddDataProtection(this IServiceCollection services, IConfiguration configuration, IHostingEnvironment environment)
+        public static IServiceCollection AddDataProtection(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment environment)
         {
             if (!environment.IsDevelopment())
             {
-                var redisConfiguration = configuration.GetSection(ProviderRegistrationsConfigurationKeys.RedisConnectionSettings)
-                    .Get<RedisConnectionSettings>();
+                var redisConfiguration = configuration.GetSection(ProviderRegistrationsConfigurationKeys.RedisConnectionSettings).Get<RedisConnectionSettings>();
 
                 if (redisConfiguration != null)
                 {

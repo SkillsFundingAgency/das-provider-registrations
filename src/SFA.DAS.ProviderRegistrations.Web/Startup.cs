@@ -1,13 +1,14 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Authorization.Mvc.Extensions;
+using SFA.DAS.Provider.Shared.UI.Startup;
 using SFA.DAS.ProviderRegistrations.Extensions;
 using SFA.DAS.ProviderRegistrations.Web.Authentication;
 using SFA.DAS.ProviderRegistrations.Web.Authorization;
@@ -20,14 +21,14 @@ namespace SFA.DAS.ProviderRegistrations.Web
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration, IHostingEnvironment environment)
+        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
             Configuration = configuration;
             Environment = environment;
         }
 
         public IConfiguration Configuration { get; }
-        public IHostingEnvironment Environment { get; }
+        public IWebHostEnvironment Environment { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
@@ -57,8 +58,9 @@ namespace SFA.DAS.ProviderRegistrations.Web
                 .AddCookieBannerSettings(Configuration)
                 .AddControllersAsServices()
                 .AddSessionStateTempDataProvider()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
+            services.AddProviderUiServiceRegistration(Configuration);
             services.AddHealthChecks();
             services.AddApplicationInsightsTelemetry();
             services.AddAuthorizationService();
@@ -69,7 +71,7 @@ namespace SFA.DAS.ProviderRegistrations.Web
             IoC.Initialize(registry);
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
@@ -86,8 +88,15 @@ namespace SFA.DAS.ProviderRegistrations.Web
                 .UseHttpsRedirection()
                 .UseStaticFiles()
                 .UseCookiePolicy()
+                .UseRouting()
                 .UseAuthentication()
-                .UseMvc()
+                .UseAuthorization()
+                .UseEndpoints(builder =>
+                {
+                    builder.MapControllerRoute(
+                        name: "default",
+                        pattern: "{controller=Home}/{action=Index}/{id?}");
+                })
                 .UseHealthChecks("/health");
 
             var logger = loggerFactory.CreateLogger(nameof(Startup));

@@ -20,7 +20,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.UnitTests.Controllers.RegistrationCo
         public async Task ThenAnInvitationIsAdded(
             [Frozen] Mock<IMediator> mediator,
             [Frozen] Mock<IAuthenticationService> authService,
-            RegistrationController controller,
+            [Greedy] RegistrationController controller,
             NewEmployerUserViewModel model,
             string command,
             string providerName)

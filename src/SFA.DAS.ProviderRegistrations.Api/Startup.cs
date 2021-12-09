@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using SFA.DAS.ProviderRegistrations.Api.DependencyResolution;
 using SFA.DAS.ProviderRegistrations.Api.Extensions;
 using SFA.DAS.ProviderRegistrations.Extensions;
@@ -13,14 +14,14 @@ namespace SFA.DAS.ProviderRegistrations.Api
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration, IHostingEnvironment environment)
+        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
             Configuration = configuration;
             Environment = environment;
         }
 
         public IConfiguration Configuration { get; }
-        public IHostingEnvironment Environment { get; }
+        public IWebHostEnvironment Environment { get; }
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -31,7 +32,7 @@ namespace SFA.DAS.ProviderRegistrations.Api
                 {
                     options.Filters.Add(new AuthorizeFilter("default"));
                 }
-            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            }).SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
             services.AddDasDistributedMemoryCache(Configuration, Environment.IsDevelopment());
             services.AddMemoryCache();
@@ -40,7 +41,7 @@ namespace SFA.DAS.ProviderRegistrations.Api
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -52,8 +53,14 @@ namespace SFA.DAS.ProviderRegistrations.Api
                 app.UseAuthentication();
             }
 
+            app.UseRouting();
             app.UseHttpsRedirection();
-            app.UseMvc();
+            app.UseEndpoints(builder =>
+            {
+                builder.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
+            });
             app.UseHealthChecks("/health");
         }
 

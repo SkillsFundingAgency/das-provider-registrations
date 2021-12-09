@@ -6,16 +6,16 @@ using SFA.DAS.ProviderRegistrations.Api.UnitTests.AutoFixture;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoFixture.NUnit3;
 
 namespace SFA.DAS.ProviderRegistrations.Api.UnitTests.Controllers.UnsubscribeControllerUnitTests
 {
     [TestFixture]
-    [Parallelizable]
     public class GetTests
     {
         [Test, DomainAutoData]
         public async Task WhenValidCorrelationIdIsSupplied_ThenShouldReturnOk(
-            UnsubscribeController controller,
+            [Greedy] UnsubscribeController controller,
             Guid correlationId)
         {
             //arrange
@@ -29,7 +29,7 @@ namespace SFA.DAS.ProviderRegistrations.Api.UnitTests.Controllers.UnsubscribeCon
 
         [Test, DomainAutoData]
         public async Task WhenCorrelationIdIsInvalid_ThenShouldReturnBadRequest(
-            UnsubscribeController controller)
+            [Greedy] UnsubscribeController controller)
         {
             //arrange
 

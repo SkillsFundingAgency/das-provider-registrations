@@ -1,10 +1,10 @@
 ﻿using System.Data.Common;
-using System.Data.SqlClient;
 using SFA.DAS.ProviderRegistrations.Configuration;
 using SFA.DAS.ProviderRegistrations.Data;
 using StructureMap;
 using System;
 using Microsoft.Azure.Services.AppAuthentication;
+using Microsoft.Data.SqlClient;
 using SFA.DAS.Configuration;
 
 namespace SFA.DAS.ProviderRegistrations.DependencyResolution

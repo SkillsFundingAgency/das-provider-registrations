@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Internal;
 using Moq;
 using NServiceBus.Testing;
 using NUnit.Framework;
@@ -18,27 +17,6 @@ namespace SFA.DAS.ProviderRegistrations.MessageHandlers.UnitTests.CommandHandler
     [Parallelizable]
     public class RunHealthCheckCommandHandlerTests
     {
-        [Test, DomainAutoData]
-        public async Task Handle_WhenHandlingCommand_ThenShouldLogInformation(
-            [Frozen] Mock<ILogger<RunHealthCheckCommandHandler>> logger,
-            RunHealthCheckCommandHandler handler,
-            RunHealthCheckCommand message,
-            TestableMessageHandlerContext context)
-        {
-            //arrange
-
-            //act
-            await handler.Handle(message, context);
-
-            //assert
-            logger.Verify(l => l.Log(
-                    LogLevel.Information,
-                    It.IsAny<EventId>(),
-                    It.Is<FormattedLogValues>(v => v.ToString().Equals($"Handled {nameof(RunHealthCheckCommand)} with MessageId '{context.MessageId}'")),
-                    It.IsAny<Exception>(),
-                    It.IsAny<Func<object, Exception, string>>()));
-        }
-
         [Test, DomainAutoData]
         public async Task Handle_WhenHandlingCommand_ThenShouldAddMessageIdToDistributedCache(
             [Frozen] Mock<IDistributedCache> distributedCache,
