@@ -31,4 +31,10 @@
     <ProjectReference Include="..\SFA.DAS.ProviderRegistrations\SFA.DAS.ProviderRegistrations.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="appsettings*.json">
+      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>
