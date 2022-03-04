@@ -5,9 +5,8 @@ trigger:
       - "master"
 
 variables:
-- group: BUILD Management Resources
-  buildConfiguration: 'release'
-  buildPlatform: 'anycpu'
+  - name: buildConfiguration
+    value: 'release'
   
 resources:
   repositories:

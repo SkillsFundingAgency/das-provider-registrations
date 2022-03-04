@@ -3,8 +3,10 @@ jobs:
   pool: 
     name: DAS - Continuous Integration Agents
     demands: LATEST_DOTNET_VERSION -equals 3.1
-  workspace: 
-    clean: all 
+  variables:
+  - group: BUILD Management Resources
+  workspace:
+    clean: all
   steps: 
   - template: azure-pipelines-templates/build/step/gitversion.yml@das-platform-building-blocks
   
