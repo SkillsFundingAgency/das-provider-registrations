@@ -14,7 +14,7 @@ namespace SFA.DAS.ProviderRegistrations.Services
 
         public IRestHttpClient CreateRestHttpClient()
         {
-            return new RestHttpClient(new AzureActiveDirectoryHttpClientFactory(_employerApprenticeshipApiClientSettings).CreateHttpClient());
+            return new RestHttpClient(new ManagedIdentityHttpClientFactory(_employerApprenticeshipApiClientSettings).CreateHttpClient());
         }
     }
 }
