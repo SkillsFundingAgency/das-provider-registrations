@@ -1,4 +1,5 @@
 ﻿@using SFA.DAS.ProviderRegistrations.Types
+@using SFA.DAS.ProviderRegistrations.Web.Extensions
 @model SFA.DAS.ProviderRegistrations.Web.ViewModels.InvitationsViewModel
 @{
     ViewData["Title"] = "Manage apprenticeships";
@@ -11,16 +12,29 @@
     <link rel="Stylesheet" href="@Href("~/stylesheets/site.css")" />
 }
 
+<p class="govuk-body govuk-!-margin-bottom-8">    
+    <a id="back-link" class="govuk-back-link" href="@Url.ProviderApprenticeshipServiceLink("/account")">Back</a>
+</p>
+
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-        <h1 class="govuk-heading-xl">Invited employers</h1>
+        <h1 class="govuk-heading-xl govuk-!-margin-bottom-6">
+            Manage employer invitations
+        </h1>
+        <p class="govuk-body">
+            Send email to employers to create their apprenticeship service account.
+        </p>
+
+        <a href="@Url.ProviderAction("StartAccountSetup")" role="button" draggable="false" class="govuk-button" data-module="govuk-button">
+            Send invitation to employer
+        </a>
     </div>
     <div class="govuk-grid-column-full">
-        <table class="govuk-table">
+        <table class="govuk-table das-table--responsive das-table--double-arrows das-table--condensed">
             <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
                     <th scope="col" class="govuk-table__header">
-                        <sfa-sortable-column-header class="approved-sort govuk-link"
+                        <sfa-sortable-column-header class="@(Model.SortColumn == "EmployerOrganisation" ? Model.SortedByHeaderClassName : "das-table__sort")"
                                                     data-sortColumn="@nameof(InvitationSortColumn.EmployerOrganisation)"
                                                     asp-action="InvitedEmployers"
                                                     asp-controller="Registration"
@@ -29,25 +43,25 @@
                                                     sfa-sort-direction="@Model.SortDirection">Employer organisation</sfa-sortable-column-header>
                     </th>
                     <th scope="col" class="govuk-table__header">
-                        <sfa-sortable-column-header class="approved-sort govuk-link"
+                        <sfa-sortable-column-header class="@(Model.SortColumn == "EmployerFirstname" ? Model.SortedByHeaderClassName : "das-table__sort")"
                                                     data-sortColumn="@nameof(InvitationSortColumn.EmployerFirstname)"
                                                     asp-action="InvitedEmployers"
                                                     asp-controller="Registration"
                                                     sfa-sort-column="@nameof(InvitationSortColumn.EmployerFirstname)"
                                                     sfa-table-sort-column="@Model.SortColumn"
-                                                    sfa-sort-direction="@Model.SortDirection">Employer first&nbsp;name</sfa-sortable-column-header>
+                                                    sfa-sort-direction="@Model.SortDirection">Name</sfa-sortable-column-header>
                     </th>
+                    @*<th scope="col" class="govuk-table__header">
+                            <sfa-sortable-column-header class="@(Model.SortColumn == "EmployerLastname" ? Model.SortedByHeaderClassName : "das-table__sort")"
+                                                        data-sortColumn="@nameof(InvitationSortColumn.EmployerLastname)"
+                                                        asp-action="InvitedEmployers"
+                                                        asp-controller="Registration"
+                                                        sfa-sort-column="@nameof(InvitationSortColumn.EmployerLastname)"
+                                                        sfa-table-sort-column="@Model.SortColumn"
+                                                        sfa-sort-direction="@Model.SortDirection">Employer last&nbsp;name</sfa-sortable-column-header>
+                        </th>*@
                     <th scope="col" class="govuk-table__header">
-                        <sfa-sortable-column-header class="approved-sort govuk-link"
-                                                    data-sortColumn="@nameof(InvitationSortColumn.EmployerLastname)"
-                                                    asp-action="InvitedEmployers"
-                                                    asp-controller="Registration"
-                                                    sfa-sort-column="@nameof(InvitationSortColumn.EmployerLastname)"
-                                                    sfa-table-sort-column="@Model.SortColumn"
-                                                    sfa-sort-direction="@Model.SortDirection">Employer last&nbsp;name</sfa-sortable-column-header>
-                    </th>
-                    <th scope="col" class="govuk-table__header">
-                        <sfa-sortable-column-header class="approved-sort govuk-link"
+                        <sfa-sortable-column-header class="@(Model.SortColumn == "EmployerEmail" ? Model.SortedByHeaderClassName : "das-table__sort")"
                                                     data-sortColumn="@nameof(InvitationSortColumn.EmployerEmail)"
                                                     asp-action="InvitedEmployers"
                                                     asp-controller="Registration"
@@ -56,7 +70,7 @@
                                                     sfa-sort-direction="@Model.SortDirection">Employer email</sfa-sortable-column-header>
                     </th>
                     <th scope="col" class="govuk-table__header">
-                        <sfa-sortable-column-header class="approved-sort govuk-link"
+                        <sfa-sortable-column-header class="@(Model.SortColumn == "CreatedDate" ? Model.SortedByHeaderClassName : "das-table__sort")"
                                                     data-sortColumn="@nameof(InvitationSortColumn.CreatedDate)"
                                                     asp-action="InvitedEmployers"
                                                     asp-controller="Registration"
@@ -65,7 +79,7 @@
                                                     sfa-sort-direction="@Model.SortDirection">Date sent</sfa-sortable-column-header>
                     </th>
                     <th scope="col" class="govuk-table__header">
-                        <sfa-sortable-column-header class="approved-sort govuk-link"
+                        <sfa-sortable-column-header class="@(Model.SortColumn == "Status" ? Model.SortedByHeaderClassName : "das-table__sort")"
                                                     data-sortColumn="@nameof(InvitationSortColumn.Status)"
                                                     asp-action="InvitedEmployers"
                                                     asp-controller="Registration"
@@ -80,8 +94,8 @@
                 {
                     <tr class="govuk-table__row">
                         <td class="govuk-table__cell">@invitation.EmployerOrganisation</td>
-                        <td class="govuk-table__cell">@invitation.EmployerFirstName</td>
-                        <td class="govuk-table__cell">@invitation.EmployerLastName</td>
+                        <td class="govuk-table__cell">@invitation.Name</td>
+                        @*<td class="govuk-table__cell">@invitation.EmployerLastName</td>*@
                         <td class="govuk-table__cell wrap-email-address">@invitation.EmployerEmail</td>
                         <td class="govuk-table__cell nowrap">@invitation.SentDate.ToString("dd MMM yy")</td>
                         <td class="govuk-table__cell">@invitation.State</td>

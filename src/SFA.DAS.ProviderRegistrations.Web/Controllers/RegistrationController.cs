@@ -132,6 +132,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.Controllers
             var model = _mapper.Map<InvitationsViewModel>(results);
             model.SortColumn = sortColumn;
             model.SortDirection = sortDirection;
+            model.SortedByHeader();
 
             return View(model);
         }
