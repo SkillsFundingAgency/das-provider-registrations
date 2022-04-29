@@ -8,15 +8,16 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <h1 class="govuk-heading-xl">
-            Start setting up an account for an employer
+            Invite employers to create an account
         </h1>
-        <p class="govuk-body-lead">They will be sent an invitation email, so they can complete the set-up the account.</p>
+        <p class="govuk-body-lead">New employers will be sent an invitation email so they can create an apprenticeship service account.</p>
         <p class="govuk-body-lead">The employer will need to enter some details, then add the PAYE scheme for their organisation and accept the legal agreement.</p>
 
         <h2 class="govuk-heading-m">Before you start</h2>
+        <p class="govuk-body-lead">You will need:</p>
         <ul class="govuk-list govuk-list--bullet">
-            <li>you'll need to have permission from the employer to use their details. Have a conversation with them to let them know to expect the invitation</li>
-            <li>you'll need to know the name and email address of the person you're inviting</li>
+            <li>to have permission from the employer to use their details</li>
+            <li>to know the name and email address of the person you're inviting</li>
         </ul>
         <div class="govuk-warning-text">
             <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
@@ -27,6 +28,11 @@
         </div>
 
         <br>
-        <a href="@Url.ProviderAction("NewEmployerUser")" class="govuk-button govuk-button--start">Start</a>
+        <a class="govuk-button govuk-button--start govuk-!-margin-bottom-0" href="@Url.ProviderAction("NewEmployerUser")" role="button" draggable="false">
+            Start now
+            <svg class="govuk-button__start-icon" xmlns="http://www.w3.org/2000/svg" width="17.5" height="19" viewBox="0 0 33 40" aria-hidden="true" focusable="false">
+                <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z" />
+            </svg>
+        </a>
     </div>
 </div>

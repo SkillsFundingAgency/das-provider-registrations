@@ -18,7 +18,7 @@
             <h1 class="govuk-heading-xl">
                 Check details
             </h1>
-            <p class="govuk-body">Check the details are correct. We will be sending the invitation to complete the set-up of the account to the email address below.</p>
+            <p class="govuk-body">Check the details are correct. We will send the invitation to create the account to the email address below.</p>
             <p class="govuk-body">Once the employer receives the invitation, they will need to enter some details, then add the PAYE scheme for their organisation and accept the legal agreement.</p>
             <br>
             <dl class="govuk-summary-list">
@@ -76,7 +76,7 @@
                 <a target="_blank" class="govuk-link" href="@Url.ProviderAction("EmailPreview")?EmployerName=@(Model.EmployerFirstName + " " + Model.EmployerLastName)&EmployerOrganisation=@Model.EmployerOrganisation"  class="">See a copy of the email the employer will receive</a>&nbsp;(opens in a new tab)
             </p>
 
-            <button type="submit" class="govuk-button">Invite employer</button>
+            <button type="submit" class="govuk-button">Send invitation</button>
         </div>
     </div>
 </form>

@@ -10,11 +10,8 @@
     <div class="govuk-grid-column-two-thirds">
         <div class="govuk-panel govuk-panel--confirmation">
             <h1 class="govuk-panel__title">
-                The employer account is ready for them to complete
+                Invitation sent to employer
             </h1>
-            <div class="govuk-panel__body">
-                The employer has been sent an email invitation with instructions to complete the set-up of the account.
-            </div>
         </div>
         <br>
         <form id="ConfirmInvite" novalidate method="post" action="@Url.ProviderAction("InviteConfirmation")">
@@ -23,7 +20,7 @@
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
                         <h1 class="govuk-fieldset__heading">
-                            What next?
+                            What do you want to do next?
                         </h1>
                     </legend>
                     @if (inError)
@@ -34,7 +31,7 @@
                     <div class="govuk-radios__item">
                         <input class="govuk-radios__input" id="employer-confirmation" name="action" type="radio" value="Invite">
                         <label class="govuk-label govuk-radios__label" for="employer-confirmation">
-                            Set up another account
+                            Invite another employer to create an account
                         </label>
                     </div>
                     <div class="govuk-radios__item">
