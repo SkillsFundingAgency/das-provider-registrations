@@ -39,6 +39,7 @@
                                                     asp-action="InvitedEmployers"
                                                     asp-controller="Registration"
                                                     sfa-sort-column="@nameof(InvitationSortColumn.EmployerOrganisation)"
+                                                    sfa-secondary-sort-column ="@nameof(InvitationSortColumn.EmployerFirstname)"
                                                     sfa-table-sort-column="@Model.SortColumn"
                                                     sfa-sort-direction="@Model.SortDirection">Employer organisation</sfa-sortable-column-header>
                     </th>
@@ -48,6 +49,7 @@
                                                     asp-action="InvitedEmployers"
                                                     asp-controller="Registration"
                                                     sfa-sort-column="@nameof(InvitationSortColumn.EmployerFirstname)"
+                                                    sfa-secondary-sort-column ="@nameof(InvitationSortColumn.EmployerOrganisation)"
                                                     sfa-table-sort-column="@Model.SortColumn"
                                                     sfa-sort-direction="@Model.SortDirection">Name</sfa-sortable-column-header>
                     </th>                   
@@ -57,6 +59,7 @@
                                                     asp-action="InvitedEmployers"
                                                     asp-controller="Registration"
                                                     sfa-sort-column="@nameof(InvitationSortColumn.EmployerEmail)"
+                                                    sfa-secondary-sort-column ="@nameof(InvitationSortColumn.EmployerOrganisation)"
                                                     sfa-table-sort-column="@Model.SortColumn"
                                                     sfa-sort-direction="@Model.SortDirection">Employer email</sfa-sortable-column-header>
                     </th>
@@ -66,6 +69,7 @@
                                                     asp-action="InvitedEmployers"
                                                     asp-controller="Registration"
                                                     sfa-sort-column="@nameof(InvitationSortColumn.CreatedDate)"
+                                                    sfa-secondary-sort-column ="@nameof(InvitationSortColumn.EmployerOrganisation)"
                                                     sfa-table-sort-column="@Model.SortColumn"
                                                     sfa-sort-direction="@Model.SortDirection">Date sent</sfa-sortable-column-header>
                     </th>
@@ -75,6 +79,7 @@
                                                     asp-action="InvitedEmployers"
                                                     asp-controller="Registration"
                                                     sfa-sort-column="@nameof(InvitationSortColumn.Status)"
+                                                    sfa-secondary-sort-column ="@nameof(InvitationSortColumn.EmployerOrganisation)"
                                                     sfa-table-sort-column="@Model.SortColumn"
                                                     sfa-sort-direction="@Model.SortDirection">Status</sfa-sortable-column-header>
                     </th>
