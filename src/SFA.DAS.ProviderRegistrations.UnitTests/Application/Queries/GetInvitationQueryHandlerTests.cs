@@ -23,7 +23,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Queries
             //arrange
             setupContext.Invitations.Add(invitation);
             await setupContext.SaveChangesAsync();
-            var query = new GetInvitationQuery(invitation.Ukprn, invitation.UserRef, "EmployerOrganisation", "Desc");
+            var query = new GetInvitationQuery(invitation.Ukprn, invitation.UserRef, "EmployerOrganisation", "Desc", "EmployerFirstname");
 
             //act
             var result = await handler.Handle(query, new CancellationToken());

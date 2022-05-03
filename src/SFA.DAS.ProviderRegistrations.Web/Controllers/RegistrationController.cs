@@ -123,6 +123,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.Controllers
         public async Task<IActionResult> InvitedEmployers(string sortColumn, string sortDirection, string secondarySortColumn)
         {            
             sortColumn = Enum.GetNames(typeof(InvitationSortColumn)).SingleOrDefault(e => e == sortColumn);
+            secondarySortColumn = Enum.GetNames(typeof(InvitationSortColumn)).SingleOrDefault(e => e == secondarySortColumn);
 
             if (string.IsNullOrWhiteSpace(sortColumn)) sortColumn = Enum.GetNames(typeof(InvitationSortColumn)).First();
             if (string.IsNullOrWhiteSpace(secondarySortColumn)) secondarySortColumn = InvitationSortColumn.EmployerFirstname.ToString();
