@@ -66,20 +66,6 @@ namespace SFA.DAS.ProviderRegistrations.Web.Extensions
         {
             using (var writer = new StringWriter())
             {
-                //if (SfaSortColumn.Equals(SfaTableSortColumn, StringComparison.InvariantCultureIgnoreCase))
-                //{
-                //    var sortDirectionClass = SfaSortDirection == "Asc"
-                //        ? "sorted-ascending"
-                //        : "sorted-descending";
-
-                //    var classes = output.Attributes.FirstOrDefault(a => a.Name == "class")?.Value.ToString();
-
-                //    output.Attributes.SetAttribute("class",
-                //        string.IsNullOrEmpty(classes)
-                //            ? $"{sortDirectionClass}"
-                //            : $"{sortDirectionClass} {classes}");
-                //}
-
                 output.Attributes.Add(DataSortDirectionName, new HtmlString(ToogleSortDirection()));
 
                 var content = (await output.GetChildContentAsync()).GetContent();
