@@ -11,7 +11,7 @@
             Start setting up an account for an employer
         </h1>
         <p class="govuk-body-lead">They will be sent an invitation email, so they can complete the set-up the account.</p>
-        <p class="govuk-body-lead">The employer will need to enter some details, then add the PAYE scheme for their organisation and accept the legal agreement.</p>
+        <p class="govuk-body">The employer will need to enter some details, then add the PAYE scheme for their organisation and accept the legal agreement.</p>
 
         <h2 class="govuk-heading-m">Before you start</h2>
         <ul class="govuk-list govuk-list--bullet">
@@ -26,7 +26,12 @@
             </strong>
         </div>
 
-        <br>
-        <a href="@Url.ProviderAction("NewEmployerUser")" class="govuk-button govuk-button--start">Start</a>
+        <a href="@Url.ProviderAction("NewEmployerUser")" class="govuk-button govuk-button--start">
+            Start
+            <svg class="govuk-button__start-icon" xmlns="http://www.w3.org/2000/svg" width="17.5" height="19" viewBox="0 0 33 40" aria-hidden="true" focusable="false">
+                <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z" />
+            </svg>
+        </a>
+
     </div>
 </div>
