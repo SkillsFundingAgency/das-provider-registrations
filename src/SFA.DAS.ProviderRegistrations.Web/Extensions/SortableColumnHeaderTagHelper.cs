@@ -22,6 +22,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.Extensions
         public const string AspFragmentName = "asp-fragment";
 
         public const string SfaSortColumnName = "sfa-sort-column";
+        public const string SfaSecondarySortColumnName = "sfa-secondary-sort-column";
         public const string SfaSortDirectionName = "sfa-sort-direction";
         public const string SfaTableSortColumnName = "sfa-table-sort-column";
 
@@ -56,6 +57,9 @@ namespace SFA.DAS.ProviderRegistrations.Web.Extensions
         [HtmlAttributeName(SfaSortColumnName)]
         public string SfaSortColumn { get; set; }
 
+        [HtmlAttributeName(SfaSecondarySortColumnName)]
+        public string SfaSecondarySortColumn { get; set; }
+
         [HtmlAttributeName(SfaSortDirectionName)]
         public string SfaSortDirection { get; set; }
 
@@ -66,20 +70,6 @@ namespace SFA.DAS.ProviderRegistrations.Web.Extensions
         {
             using (var writer = new StringWriter())
             {
-                if (SfaSortColumn.Equals(SfaTableSortColumn, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    var sortDirectionClass = SfaSortDirection == "Asc"
-                        ? "sorted-ascending"
-                        : "sorted-descending";
-
-                    var classes = output.Attributes.FirstOrDefault(a => a.Name == "class")?.Value.ToString();
-
-                    output.Attributes.SetAttribute("class",
-                        string.IsNullOrEmpty(classes)
-                            ? $"{sortDirectionClass}"
-                            : $"{sortDirectionClass} {classes}");
-                }
-
                 output.Attributes.Add(DataSortDirectionName, new HtmlString(ToogleSortDirection()));
 
                 var content = (await output.GetChildContentAsync()).GetContent();
@@ -87,7 +77,8 @@ namespace SFA.DAS.ProviderRegistrations.Web.Extensions
                     AspAction, AspController, AspProtocol, AspHost, AspFragment,
                     new {
                         SortColumn = SfaSortColumn,
-                        SortDirection = ToogleSortDirection()
+                        SortDirection = ToogleSortDirection(),
+                        SecondarySortColumn = SfaSecondarySortColumn
                     },
                     GetPassThroughAttributes(output));
 

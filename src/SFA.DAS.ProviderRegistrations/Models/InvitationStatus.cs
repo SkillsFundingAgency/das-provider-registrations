@@ -4,7 +4,7 @@ namespace SFA.DAS.ProviderRegistrations.Models
 {
     public enum InvitationStatus
     {
-        [Display(Name = "Invitation sent")] InvitationSent = 0,
+        [Display(Name = "Account creation not started")] InvitationSent = 0,
 
         [Display(Name = "Account started")] AccountStarted = 1,
 

@@ -13,7 +13,6 @@
                 Invitation sent to employer
             </h1>
         </div>
-        <br>
         <form id="ConfirmInvite" novalidate method="post" action="@Url.ProviderAction("InviteConfirmation")">
             @Html.AntiForgeryToken()
             <div class="govuk-form-group @(inError ? "govuk-form-group--error" : "")">
@@ -35,8 +34,8 @@
                         </label>
                     </div>
                     <div class="govuk-radios__item">
-                        <input class="govuk-radios__input" id="employer-confirmation" name="action" type="radio" value="View">
-                        <label class="govuk-label govuk-radios__label" for="employer-confirmation">
+                        <input class="govuk-radios__input" id="employer-confirmation-3" name="action" type="radio" value="View">
+                        <label class="govuk-label govuk-radios__label" for="employer-confirmation-3">
                             View invited employers
                         </label>
                     </div>

@@ -10,6 +10,8 @@ namespace SFA.DAS.ProviderRegistrations.Web.ViewModels
 
         public string EmployerLastName { get; set; }
 
+        public string Name => $"{EmployerFirstName} {EmployerLastName}";
+
         public string EmployerEmail { get; set; }
 
         public string State { get; set; }

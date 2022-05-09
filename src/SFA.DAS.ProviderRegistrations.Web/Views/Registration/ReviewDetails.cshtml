@@ -20,7 +20,7 @@
             </h1>
             <p class="govuk-body">Check the details are correct. We will send the invitation to create the account to the email address below.</p>
             <p class="govuk-body">Once the employer receives the invitation, they will need to enter some details, then add the PAYE scheme for their organisation and accept the legal agreement.</p>
-            <br>
+   
             <dl class="govuk-summary-list">
                 <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">
@@ -73,7 +73,7 @@
             </dl>
             
             <p class="govuk-body">
-                <a target="_blank" class="govuk-link" href="@Url.ProviderAction("EmailPreview")?EmployerName=@(Model.EmployerFirstName + " " + Model.EmployerLastName)&EmployerOrganisation=@Model.EmployerOrganisation"  class="">See a copy of the email the employer will receive</a>&nbsp;(opens in a new tab)
+                <a target="_blank" class="govuk-link" href="@Url.ProviderAction("EmailPreview")?EmployerName=@(Model.EmployerFirstName + " " + Model.EmployerLastName)&EmployerOrganisation=@Model.EmployerOrganisation">See a copy of the email the employer will receive</a>&nbsp;(opens in a new tab)</a>
             </p>
 
             <button type="submit" class="govuk-button">Send invitation</button>
