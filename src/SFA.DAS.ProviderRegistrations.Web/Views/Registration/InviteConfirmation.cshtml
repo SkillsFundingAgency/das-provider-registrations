@@ -16,15 +16,14 @@
                 The employer has been sent an email invitation with instructions to complete the set-up of the account.
             </div>
         </div>
-        <br>
         <form id="ConfirmInvite" novalidate method="post" action="@Url.ProviderAction("InviteConfirmation")">
             @Html.AntiForgeryToken()
             <div class="govuk-form-group @(inError ? "govuk-form-group--error" : "")">
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-                        <h1 class="govuk-fieldset__heading">
+                        <h2 class="govuk-fieldset__heading">
                             What next?
-                        </h1>
+                        </h2>
                     </legend>
                     @if (inError)
                     {
@@ -38,8 +37,8 @@
                         </label>
                     </div>
                     <div class="govuk-radios__item">
-                        <input class="govuk-radios__input" id="employer-confirmation" name="action" type="radio" value="View">
-                        <label class="govuk-label govuk-radios__label" for="employer-confirmation">
+                        <input class="govuk-radios__input" id="employer-confirmation-3" name="action" type="radio" value="View">
+                        <label class="govuk-label govuk-radios__label" for="employer-confirmation-3">
                             View invited employers
                         </label>
                     </div>

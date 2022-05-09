@@ -26,7 +26,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.UnitTests.Controllers.RegistrationCo
             mediator.Setup(x => x.Send(It.Is<GetInvitationQuery>(s => s.Ukprn == authService.Object.Ukprn), It.IsAny<CancellationToken>())).ReturnsAsync(new GetInvitationQueryResult(new List<InvitationDto>()));
 
             //act
-            await controller.InvitedEmployers(null, null);
+            await controller.InvitedEmployers(null, null, null);
 
             //assert
             mediator.Verify(x => x.Send(It.IsAny<GetInvitationQuery>(), It.IsAny<CancellationToken>()), Times.Once);

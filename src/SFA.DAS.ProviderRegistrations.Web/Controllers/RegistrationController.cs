@@ -120,18 +120,21 @@ namespace SFA.DAS.ProviderRegistrations.Web.Controllers
 
         [HttpGet]
         [Authorize(Policy = nameof(PolicyNames.HasViewerOrAbovePermission))]
-        public async Task<IActionResult> InvitedEmployers(string sortColumn, string sortDirection)
-        {
+        public async Task<IActionResult> InvitedEmployers(string sortColumn, string sortDirection, string secondarySortColumn)
+        {            
             sortColumn = Enum.GetNames(typeof(InvitationSortColumn)).SingleOrDefault(e => e == sortColumn);
+            secondarySortColumn = Enum.GetNames(typeof(InvitationSortColumn)).SingleOrDefault(e => e == secondarySortColumn);
 
             if (string.IsNullOrWhiteSpace(sortColumn)) sortColumn = Enum.GetNames(typeof(InvitationSortColumn)).First();
+            if (string.IsNullOrWhiteSpace(secondarySortColumn)) secondarySortColumn = InvitationSortColumn.EmployerFirstname.ToString();
             if (string.IsNullOrWhiteSpace(sortDirection) || (sortDirection != "Asc" && sortDirection != "Desc")) sortDirection = "Asc";
 
-            var results = await _mediator.Send(new GetInvitationQuery(_authenticationService.Ukprn.GetValueOrDefault(0), null, sortColumn, sortDirection));
+            var results = await _mediator.Send(new GetInvitationQuery(_authenticationService.Ukprn.GetValueOrDefault(0), null, sortColumn, sortDirection, secondarySortColumn));
 
             var model = _mapper.Map<InvitationsViewModel>(results);
             model.SortColumn = sortColumn;
             model.SortDirection = sortDirection;
+            model.SortedByHeader();
 
             return View(model);
         }

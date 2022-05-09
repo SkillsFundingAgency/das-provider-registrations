@@ -28,6 +28,7 @@ namespace SFA.DAS.ProviderRegistrations.Application.Queries.GetInvitationQuery
             var invitations = await _db.Value.Invitations
                 .Where(i => i.Ukprn == request.Ukprn)
                 .OrderBy($"{request.SortColumn} {request.SortDirection}")
+                .ThenBy(request.SecondarySortColumn)
                 .ProjectTo<InvitationDto>(_configurationProvider)
                 .ToListAsync(cancellationToken);
 
