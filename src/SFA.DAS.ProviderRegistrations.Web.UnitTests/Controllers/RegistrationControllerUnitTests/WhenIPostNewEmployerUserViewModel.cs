@@ -8,6 +8,7 @@ using SFA.DAS.ProviderRegistrations.Web.Authentication;
 using SFA.DAS.ProviderRegistrations.Web.Controllers;
 using SFA.DAS.ProviderRegistrations.Web.UnitTests.AutoFixture;
 using SFA.DAS.ProviderRegistrations.Web.ViewModels;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -29,6 +30,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.UnitTests.Controllers.RegistrationCo
             authService.Object.TryGetUserClaimValue(ProviderClaims.DisplayName, out var displayName);
             mediator.Setup(s => s.Send(It.IsAny<GetProviderByUkprnQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new GetProviderByUkprnQueryResult(providerName));
+            model.Reference = Guid.Empty; 
 
             //act
             await controller.InviteEmployeruser(model, command);

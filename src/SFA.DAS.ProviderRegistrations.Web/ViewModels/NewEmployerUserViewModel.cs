@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using SFA.DAS.ProviderRegistrations.Web.Validation;
 
 namespace SFA.DAS.ProviderRegistrations.Web.ViewModels
@@ -30,5 +31,13 @@ namespace SFA.DAS.ProviderRegistrations.Web.ViewModels
         [Unsubscribed(ErrorMessage = "Enter an email address that has not been unsubscribed from invitation emails")]
         [InUse(ErrorMessage = "Enter an email address that is not already being used on an existing account")]
         public string EmployerEmailAddress { get; set; }
+
+        public string ProviderId { get; set; }
+
+        public bool ResendInvitation { get; set; }
+
+        public bool Unsubscribed { get; set; }
+
+        public Guid Reference { get; set; }
     }
 }
