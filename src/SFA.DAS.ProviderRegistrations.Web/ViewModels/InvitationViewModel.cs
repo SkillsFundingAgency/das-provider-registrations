@@ -1,5 +1,6 @@
 ﻿using System;
 using SFA.DAS.ProviderRegistrations.Models;
+using SFA.DAS.ProviderRegistrations.Web.Extensions;
 
 namespace SFA.DAS.ProviderRegistrations.Web.ViewModels
 {
@@ -21,6 +22,6 @@ namespace SFA.DAS.ProviderRegistrations.Web.ViewModels
 
         public DateTime SentDate { get; set; }
 
-        public bool ShowLink => State == "Account creation not started";
+        public bool ShowResendInvitationLink => State == InvitationStatus.InvitationSent.GetDisplayName();
     }
 }

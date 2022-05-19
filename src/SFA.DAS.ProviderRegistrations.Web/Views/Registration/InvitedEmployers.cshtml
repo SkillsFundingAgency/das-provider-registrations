@@ -97,7 +97,6 @@
                                                 sfa-sort-direction="@Model.SortDirection">Status</sfa-sortable-column-header>
                 </th>
                 <th scope="col" class="govuk-table__header"></th>
-                <th scope="col" class="govuk-table__header">Reference</th>
             </tr>
         </thead>
         <tbody class="govuk-table__body">
@@ -127,18 +126,13 @@
                 <td class="govuk-table__cell" data-label="Status">
                     @invitation.State
                 </td>
-                @if (invitation.ShowLink)
+                @if (invitation.ShowResendInvitationLink)
                 {
-                    <td class="govuk-table__cell">                       
-                        <a href="@Url.Action("ReviewDetails", new NewEmployerUserViewModel { ProviderId = Model.ProviderId, EmployerOrganisation = invitation.EmployerOrganisation, EmployerFirstName = invitation.EmployerFirstName,
-                                    EmployerLastName = invitation.EmployerLastName, EmployerEmailAddress = invitation.EmployerEmail, Reference = invitation.Reference })">Resend invitation New</a>
-                    </td>
-                }
-                <td class="govuk-table__cell" data-label="Employer reference">
-                    <span class="das-breakable">
-                        @invitation.Reference
-                    </span>
-                </td>
+            <td class="govuk-table__cell">                
+
+                <a href="@Url.Action("ReviewDetails", new { ProviderId = Model.ProviderId, Reference = invitation.Reference })">Resend invitation</a>
+            </td>
+                }               
             </tr>
             }
         </tbody>
