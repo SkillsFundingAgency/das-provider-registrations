@@ -55,5 +55,14 @@ namespace SFA.DAS.ProviderRegistrations.Models
             Status = status;
             UpdatedDate = updated;
         }
+
+        public void UpdateInvitation(string employerOrganisation, string employerFirstName, string employerLastName, int status, DateTime updated)
+        {
+            EmployerOrganisation = employerOrganisation;
+            EmployerFirstName = employerFirstName;
+            EmployerLastName = employerLastName; 
+            Status = status;
+            UpdatedDate = updated;
+        }
     }
 }

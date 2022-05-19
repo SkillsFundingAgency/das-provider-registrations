@@ -19,8 +19,8 @@ namespace SFA.DAS.ProviderRegistrations.Application.Commands.UpdateInvitationCom
 
         protected override async Task Handle(UpdateInvitationCommand request, CancellationToken cancellationToken)
         {
-            var invitation = await _db.Value.Invitations.SingleOrDefaultAsync(i => i.Reference == Guid.Parse(request.CorrelationId), cancellationToken);
-            invitation?.UpdateStatus((int)InvitationStatus.InvitationSent, DateTime.Now);
+            var invitation = await _db.Value.Invitations.SingleOrDefaultAsync(i => i.Reference == Guid.Parse(request.CorrelationId), cancellationToken);            
+            invitation?.UpdateInvitation(request.EmployerOrganisation, request.EmployerFirstName, request.EmployerLastName, (int)InvitationStatus.InvitationSent, DateTime.Now);
             await _db.Value.SaveChangesAsync(cancellationToken);
         }
     }

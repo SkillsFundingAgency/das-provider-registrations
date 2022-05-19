@@ -40,6 +40,8 @@
        
         <form id="NewEmployerUser" novalidate method="post" action="@Url.ProviderAction("NewEmployerUser")">
             @Html.AntiForgeryToken()
+            @Html.HiddenFor(m => m.Reference)
+            @Html.HiddenFor(m => m.ResendInvitation)
             <div class="govuk-form-group">
                 <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.EmployerOrganisation, "govuk-form-group--error")">
                     <label class="govuk-label" asp-for="EmployerOrganisation">Employer organisation</label>

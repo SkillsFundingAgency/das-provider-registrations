@@ -123,9 +123,12 @@ namespace SFA.DAS.ProviderRegistrations.Web.Controllers
             {
                 correlationId = await _mediator.Send(new AddInvitationCommand(ukprn, userId, provider.ProviderName, providerUserFullName, employerOrganisation, employerFirstName, employerLastName, employerEmail));
             }
-            
-            await _mediator.Send(new SendInvitationEmailCommand(ukprn,provider.ProviderName, providerUserFullName, employerOrganisation, employerFullName, employerEmail, correlationId));
-            await _mediator.Send(new UpdateInvitationCommand(model.Reference.ToString()), new CancellationToken());
+            else
+            {
+                await _mediator.Send(new UpdateInvitationCommand(model.Reference.ToString(), employerOrganisation, employerFirstName, employerLastName), new CancellationToken());
+            }
+
+            await _mediator.Send(new SendInvitationEmailCommand(ukprn,provider.ProviderName, providerUserFullName, employerOrganisation, employerFullName, employerEmail, correlationId));            
             return View("InviteConfirmation");
         }
 
