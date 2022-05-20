@@ -17,7 +17,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
     public class UpdateInvitationCommandHandlerTests
     {
         [Test, ProviderAutoData]
-        public async Task Handle_WhenHandlingUpdateInvitationCommand_ThenShouldUpdateReference(
+        public async Task Handle_WhenHandlingUpdateInvitationCommand_ThenShouldUpdateInvitation(
            ProviderRegistrationsDbContext setupContext,
            ProviderRegistrationsDbContext confirmationContext,
            UpdateInvitationCommandHandler handler,
