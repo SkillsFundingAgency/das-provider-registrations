@@ -77,11 +77,11 @@
                                                 sfa-sort-direction="@Model.SortDirection">Employer email</sfa-sortable-column-header>
                 </th>
                 <th scope="col" class="govuk-table__header">
-                    <sfa-sortable-column-header class="@(Model.SortColumn == "CreatedDate" ? Model.SortedByHeaderClassName : "das-table__sort")"
-                                                data-sortColumn="@nameof(InvitationSortColumn.CreatedDate)"
+                    <sfa-sortable-column-header class="@(Model.SortColumn == "UpdatedDate" ? Model.SortedByHeaderClassName : "das-table__sort")"
+                                                data-sortColumn="@nameof(InvitationSortColumn.UpdatedDate)"
                                                 asp-action="InvitedEmployers"
                                                 asp-controller="Registration"
-                                                sfa-sort-column="@nameof(InvitationSortColumn.CreatedDate)"
+                                                sfa-sort-column="@nameof(InvitationSortColumn.UpdatedDate)"
                                                 sfa-secondary-sort-column="@nameof(InvitationSortColumn.EmployerOrganisation)"
                                                 sfa-table-sort-column="@Model.SortColumn"
                                                 sfa-sort-direction="@Model.SortDirection">Date sent</sfa-sortable-column-header>

@@ -7,6 +7,7 @@
         EmployerLastname,
         EmployerEmail,
         CreatedDate,
+        UpdatedDate,
         Status
     }
 }
