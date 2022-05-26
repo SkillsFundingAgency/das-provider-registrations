@@ -20,7 +20,6 @@ namespace SFA.DAS.ProviderRegistrations.Api.Extensions
                     policy.RequireRole("Default");
                 });
             });
-
             services.AddAuthentication(auth =>
             {
                 auth.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
