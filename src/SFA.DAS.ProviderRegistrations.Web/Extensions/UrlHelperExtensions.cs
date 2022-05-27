@@ -21,7 +21,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.Extensions
             return url.Action(actionName);
         }
 
-        public static string NewEmployerUserAction(this IUrlHelper url, string actionName, Guid? reference)
+        public static string NewEmployerUserAction(this IUrlHelper url, string actionName, Guid? reference, bool? resendInvitation)
         {
             if (url.ActionContext.RouteData.Values.ContainsKey(ProviderIdKey) && url.ActionContext.ActionDescriptor is ControllerActionDescriptor descriptor)
             {
@@ -31,7 +31,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.Extensions
 
                 if (reference != null && reference != Guid.Empty)
                 {
-                    return url.Action(actionName, controllerName, new { ProviderId = providerId, Reference = reference });
+                    return url.Action(actionName, controllerName, new { ProviderId = providerId, Reference = reference, ResendInvitation = resendInvitation });
                 }
                 else
                 {
