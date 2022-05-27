@@ -100,8 +100,8 @@ namespace SFA.DAS.ProviderRegistrations.Web.Controllers
             {
                 return View("NewEmployerUser", model);
             }
-
-            if (!model.ResendInvitation && !ModelState.IsValid)
+            
+            if (!ModelState.IsValid)
             {
                 return View("ReviewDetails", model);
             }
