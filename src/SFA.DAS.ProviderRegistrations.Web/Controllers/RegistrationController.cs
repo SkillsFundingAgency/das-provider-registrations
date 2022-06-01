@@ -9,8 +9,11 @@ using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Provider.Shared.UI.Attributes;
 using SFA.DAS.ProviderRegistrations.Application.Commands.AddInvitationCommand;
 using SFA.DAS.ProviderRegistrations.Application.Commands.SendInvitationEmailCommand;
+using SFA.DAS.ProviderRegistrations.Application.Commands.UpdateInvitationCommand;
+using SFA.DAS.ProviderRegistrations.Application.Queries.GetInvitationByIdQuery;
 using SFA.DAS.ProviderRegistrations.Application.Queries.GetInvitationQuery;
 using SFA.DAS.ProviderRegistrations.Application.Queries.GetProviderByUkprnQuery;
+using SFA.DAS.ProviderRegistrations.Application.Queries.GetUnsubscribedQuery;
 using SFA.DAS.ProviderRegistrations.Configuration;
 using SFA.DAS.ProviderRegistrations.Types;
 using SFA.DAS.ProviderRegistrations.Web.Authentication;
@@ -52,6 +55,27 @@ namespace SFA.DAS.ProviderRegistrations.Web.Controllers
         public IActionResult NewEmployerUser()
         { 
             return View();
+        }      
+
+        [HttpGet]
+        [Authorize(Policy = nameof(PolicyNames.HasContributorOrAbovePermission))]
+        public async Task<IActionResult> ReviewDetails(Guid reference)
+        {
+            var ukprn = _authenticationService.Ukprn.Value;
+            var result = await _mediator.Send(new GetInvitationByIdQuery(reference), new CancellationToken());
+            var model = new NewEmployerUserViewModel
+            {
+                ProviderId = ukprn.ToString(),
+                EmployerFirstName = result.Invitation.EmployerFirstName,
+                EmployerLastName = result.Invitation.EmployerLastName,
+                EmployerEmailAddress = result.Invitation.EmployerEmail,
+                EmployerOrganisation = result.Invitation.EmployerOrganisation,
+                Reference = result.Invitation.Reference
+            };
+            model.Unsubscribed = await _mediator.Send(new GetUnsubscribedQuery(ukprn, model.EmployerEmailAddress), new CancellationToken());
+            model.ResendInvitation = true;
+
+            return View("ReviewDetails", model);
         }
 
         [HttpPost]
@@ -76,7 +100,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.Controllers
             {
                 return View("NewEmployerUser", model);
             }
-
+            
             if (!ModelState.IsValid)
             {
                 return View("ReviewDetails", model);
@@ -92,11 +116,19 @@ namespace SFA.DAS.ProviderRegistrations.Web.Controllers
             var employerFirstName = model.EmployerFirstName.Trim();
             var employerLastName = model.EmployerLastName.Trim();
             var employerEmail = model.EmployerEmailAddress.Trim().ToLower();
-            var employerFullName = string.Concat(employerFirstName, " ", employerLastName);
-            
-            var correlationId = await _mediator.Send(new AddInvitationCommand(ukprn, userId, provider.ProviderName, providerUserFullName, employerOrganisation, employerFirstName, employerLastName, employerEmail));
-            await _mediator.Send(new SendInvitationEmailCommand(ukprn,provider.ProviderName, providerUserFullName, employerOrganisation, employerFullName, employerEmail, correlationId));
+            var employerFullName = string.Concat(employerFirstName, " ", employerLastName);           
 
+            var correlationId = (model.Reference != null && model.Reference != Guid.Empty) ? model.Reference.ToString() : string.Empty;
+            if (string.IsNullOrEmpty(correlationId))
+            {
+                correlationId = await _mediator.Send(new AddInvitationCommand(ukprn, userId, provider.ProviderName, providerUserFullName, employerOrganisation, employerFirstName, employerLastName, employerEmail));
+            }
+            else
+            {
+                await _mediator.Send(new UpdateInvitationCommand(model.Reference.ToString(), employerOrganisation, employerFirstName, employerLastName), new CancellationToken());
+            }
+
+            await _mediator.Send(new SendInvitationEmailCommand(ukprn,provider.ProviderName, providerUserFullName, employerOrganisation, employerFullName, employerEmail, correlationId));            
             return View("InviteConfirmation");
         }
 
@@ -134,6 +166,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.Controllers
             var model = _mapper.Map<InvitationsViewModel>(results);
             model.SortColumn = sortColumn;
             model.SortDirection = sortDirection;
+            model.ProviderId = _authenticationService.Ukprn.GetValueOrDefault(0).ToString();
             model.SortedByHeader();
 
             return View(model);

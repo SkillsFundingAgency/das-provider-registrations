@@ -50,7 +50,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Queries
                 invitation.EmployerEmail,
                 invitation.EmployerOrganisation,
                 invitation.Status,
-                SentDate = invitation.CreatedDate
+                SentDate = invitation.UpdatedDate
             });
         }
     }
