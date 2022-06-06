@@ -112,6 +112,10 @@
         },
         "subnetDelegations": {
             "type": "array"
+        },
+        "utcValue": {
+            "type": "string",
+            "defaultValue": "[utcNow()]"
         }
     },
     "variables": {
@@ -126,7 +130,7 @@
     "resources": [
         {
             "apiVersion": "2017-05-10",
-            "name": "provider-registrations-worker-subnet",
+            "name": "[concat(parameters('subnetObject').name, '-', parameters('utcValue'))]",
             "resourceGroup": "[parameters('sharedEnvResourceGroup')]",
             "type": "Microsoft.Resources/deployments",
             "properties": {
@@ -156,7 +160,7 @@
         },
         {
             "apiVersion": "2021-04-01",
-            "name": "provider-registrations-worker-sql-firewall-rule",
+            "name": "[concat(parameters('subnetObject').name, '-sql-firewall-rule-', parameters('utcValue'))]",
             "resourceGroup": "[parameters('sharedEnvResourceGroup')]",
             "type": "Microsoft.Resources/deployments",
             "properties": {
@@ -170,14 +174,14 @@
                         "value": "[parameters('sharedSQLServerName')]"
                     },
                     "subnetResourceIdList": {
-                        "value": "[createArray(reference('provider-registrations-worker-subnet').outputs.SubnetResourceId.value)]"
+                        "value": "[createArray(reference(concat(parameters('subnetObject').name, '-', parameters('utcValue'))).outputs.SubnetResourceId.value)]"
                     }
                 }
             }
         },
         {
             "apiVersion": "2017-05-10",
-            "name": "webjob-app-service-plan",
+            "name": "[concat(variables('webJobAppServicePlanName'), '-app-service-plan-', parameters('utcValue'))]",
             "type": "Microsoft.Resources/deployments",
             "properties": {
                 "mode": "Incremental",
@@ -203,7 +207,7 @@
         },
         {
             "apiVersion": "2017-05-10",
-            "name": "webjob-application-insights",
+            "name": "[concat(variables('webJobAppServiceName'), '-app-insights-', parameters('utcValue'))]",
             "type": "Microsoft.Resources/deployments",
             "properties": {
                 "mode": "Incremental",
@@ -223,7 +227,7 @@
         },
         {
             "apiVersion": "2017-05-10",
-            "name": "webjob-app-service",
+            "name": "[concat(variables('webJobAppServiceName'), '-', parameters('utcValue'))]",
             "type": "Microsoft.Resources/deployments",
             "properties": {
                 "mode": "Incremental",
@@ -242,7 +246,7 @@
                         "value": "[resourceGroup().name]"
                     },
                     "subnetResourceId": {
-                        "value": "[reference('provider-registrations-worker-subnet').outputs.SubnetResourceId.value]"
+                        "value": "[reference(concat(parameters('subnetObject').name, '-', parameters('utcValue'))).outputs.SubnetResourceId.value]"
                     },
                     "deployStagingSlot": {
                         "value": false
@@ -256,7 +260,7 @@
                                 },
                                 {
                                     "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-                                    "value": "[reference('webJob-application-insights').outputs.InstrumentationKey.value]"
+                                    "value": "[reference(concat(variables('webJobAppServiceName'), '-app-insights-', parameters('utcValue'))).outputs.InstrumentationKey.value]"
                                 },
                                 {
                                     "name": "ASPNETCORE_ENVIRONMENT",
@@ -292,12 +296,12 @@
                 }
             },
             "dependsOn": [
-                "webjob-app-service-plan"
+                "[concat(variables('webJobAppServicePlanName'), '-app-service-plan-', parameters('utcValue'))]"
             ]
         },
         {
             "apiVersion": "2017-05-10",
-            "name": "[concat('role-assignments-', copyIndex())]",
+            "name": "[concat('provider-registrations-role-assignments-', copyIndex())]",
             "type": "Microsoft.Resources/deployments",
             "resourceGroup": "[parameters('sharedResourceGroup')]",
             "properties": {
@@ -308,7 +312,7 @@
                 },
                 "parameters": {
                     "principalId": {
-                        "value": "[createArray(reference('webjob-app-service').outputs.managedServiceIdentityId.value, reference('ui-app-service').outputs.managedServiceIdentityId.value, reference('ui-app-service').outputs.stagingManagedServiceIdentityId.value)[copyIndex()]]"
+                        "value": "[createArray(reference(concat(variables('webJobAppServiceName'), '-', parameters('utcValue'))).outputs.managedServiceIdentityId.value, reference(concat(variables('uiAppServiceName'), '-', parameters('utcValue'))).outputs.managedServiceIdentityId.value, reference(concat(variables('uiAppServiceName'), '-', parameters('utcValue'))).outputs.stagingManagedServiceIdentityId.value)[copyIndex()]]"
                     },
                     "assignmentType": {
                         "value": "ServiceBusOwner"
@@ -321,16 +325,12 @@
             "copy": {
                 "name": "role-assignments",
                 "count": 3
-            },
-            "dependsOn": [
-                "webjob-app-service",
-                "ui-app-service"
-            ]
+            }
         },
         {
             "condition": "[greater(length(parameters('uiCustomHostName')), 0)]",
             "apiVersion": "2017-05-10",
-            "name": "ui-app-service-certificate",
+            "name": "[concat(variables('uiAppServiceName'), '-certificate-',parameters('utcValue'))]",
             "resourceGroup": "[parameters('sharedAppServicePlanResourceGroup')]",
             "type": "Microsoft.Resources/deployments",
             "properties": {
@@ -354,7 +354,7 @@
         },
         {
             "apiVersion": "2017-05-10",
-            "name": "ui-application-insights",
+            "name": "[concat(variables('uiAppServiceName'), '-app-insights-',parameters('utcValue'))]",
             "type": "Microsoft.Resources/deployments",
             "properties": {
                 "mode": "Incremental",
@@ -374,7 +374,7 @@
         },
         {
             "apiVersion": "2017-05-10",
-            "name": "ui-app-service",
+            "name": "[concat(variables('uiAppServiceName'), '-',parameters('utcValue'))]",
             "type": "Microsoft.Resources/deployments",
             "properties": {
                 "mode": "Incremental",
@@ -404,7 +404,7 @@
                                 },
                                 {
                                     "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-                                    "value": "[reference('ui-application-insights').outputs.InstrumentationKey.value]"
+                                    "value": "[reference(concat(variables('uiAppServiceName'), '-app-insights-',parameters('utcValue'))).outputs.InstrumentationKey.value]"
                                 },
                                 {
                                     "name": "ASPNETCORE_ENVIRONMENT",
@@ -425,21 +425,18 @@
                         "value": "[parameters('uiCustomHostName')]"
                     },
                     "certificateThumbprint": {
-                        "value": "[if(greater(length(parameters('uiCustomHostname')), 0), reference('ui-app-service-certificate', '2018-11-01').outputs.certificateThumbprint.value, '')]"
+                        "value": "[reference(concat(variables('uiAppServiceName'), '-certificate-',parameters('utcValue'))).outputs.certificateThumbprint.value]"
                     },
                     "ipSecurityRestrictions": {
                         "value": "[parameters('appServiceAllowedIPs')]"
                     }
                 }
-            },
-            "dependsOn": [
-                "ui-app-service-certificate"
-            ]
+            }
         },
         {
             "condition": "[greater(length(parameters('apiCustomHostName')), 0)]",
             "apiVersion": "2017-05-10",
-            "name": "api-app-service-certificate",
+            "name": "[concat(variables('apiAppServiceName'), '-certificate-',parameters('utcValue'))]",
             "resourceGroup": "[parameters('sharedAppServicePlanResourceGroup')]",
             "type": "Microsoft.Resources/deployments",
             "properties": {
@@ -463,7 +460,7 @@
         },
         {
             "apiVersion": "2017-05-10",
-            "name": "api-application-insights",
+            "name": "[concat(variables('apiAppServiceName'), '-app-insights-',parameters('utcValue'))]",
             "type": "Microsoft.Resources/deployments",
             "properties": {
                 "mode": "Incremental",
@@ -483,7 +480,7 @@
         },
         {
             "apiVersion": "2017-05-10",
-            "name": "api-app-service",
+            "name": "[concat(variables('apiAppServiceName'), '-',parameters('utcValue'))]",
             "type": "Microsoft.Resources/deployments",
             "properties": {
                 "mode": "Incremental",
@@ -517,7 +514,7 @@
                                 },
                                 {
                                     "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-                                    "value": "[reference('api-application-insights').outputs.InstrumentationKey.value]"
+                                    "value": "[reference(concat(variables('apiAppServiceName'), '-app-insights-',parameters('utcValue'))).outputs.InstrumentationKey.value]"
                                 },
                                 {
                                     "name": "ASPNETCORE_ENVIRONMENT",
@@ -534,20 +531,17 @@
                         "value": "[parameters('apiCustomHostName')]"
                     },
                     "certificateThumbprint": {
-                        "value": "[if(greater(length(parameters('apiCustomHostname')), 0), reference('api-app-service-certificate', '2018-11-01').outputs.certificateThumbprint.value, '')]"
+                        "value": "[reference(concat(variables('apiAppServiceName'), '-certificate-',parameters('utcValue'))).outputs.certificateThumbprint.value]"
                     },
                     "ipSecurityRestrictions": {
                         "value": "[parameters('appServiceAllowedIPs')]"
                     }
                 }
-            },
-            "dependsOn": [
-                "api-app-service-certificate"
-            ]
+            }
         },
         {
             "apiVersion": "2017-05-10",
-            "name": "preg-sql-database",
+            "name": "[concat(variables('databaseName'), '-sql-database-',parameters('utcValue'))]",
             "type": "Microsoft.Resources/deployments",
             "resourceGroup": "[parameters('sharedResourceGroup')]",
             "properties": {
