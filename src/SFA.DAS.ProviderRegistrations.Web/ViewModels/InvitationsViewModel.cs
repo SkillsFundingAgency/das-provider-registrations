@@ -4,6 +4,8 @@ namespace SFA.DAS.ProviderRegistrations.Web.ViewModels
 {
     public class InvitationsViewModel
     {
+        public string ProviderId { get; set; }
+
         public string SortColumn { get; set; }
 
         public string SortDirection { get; set; }

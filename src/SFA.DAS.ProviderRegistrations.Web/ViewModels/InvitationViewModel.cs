@@ -1,9 +1,13 @@
 ﻿using System;
+using SFA.DAS.ProviderRegistrations.Models;
+using SFA.DAS.ProviderRegistrations.Web.Extensions;
 
 namespace SFA.DAS.ProviderRegistrations.Web.ViewModels
 {
     public class InvitationViewModel
     {
+        public Guid Reference { get; set; }
+
         public string EmployerOrganisation { get; set; }
 
         public string EmployerFirstName { get; set; }
@@ -17,5 +21,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.ViewModels
         public string State { get; set; }
 
         public DateTime SentDate { get; set; }
+
+        public bool ShowResendInvitationLink => State == InvitationStatus.InvitationSent.GetDisplayName();
     }
 }

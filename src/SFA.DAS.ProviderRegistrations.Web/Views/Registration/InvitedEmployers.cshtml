@@ -1,6 +1,8 @@
 ﻿@using SFA.DAS.ProviderRegistrations.Types
 @using SFA.DAS.ProviderRegistrations.Web.Extensions
+@using SFA.DAS.ProviderRegistrations.Web.ViewModels
 @model SFA.DAS.ProviderRegistrations.Web.ViewModels.InvitationsViewModel
+
 @{
     ViewData["Title"] = "Manage apprenticeships";
     ViewBag.GaData.Vpv = "/registrations/registration/invited-employers";
@@ -29,6 +31,13 @@
         <a href="@Url.ProviderAction("StartAccountSetup")" role="button" draggable="false" class="govuk-button" data-module="govuk-button">
             Send invitation to employer
         </a>
+
+        <h2 class="govuk-heading-m govuk-!-margin-top-6">
+            Invited employers
+        </h2>
+        <div class="govuk-inset-text">
+            The option to resend an invitation will only show if the employer has not yet started to create their account.
+        </div>
     </div>
 </div>
 
@@ -68,11 +77,11 @@
                                                 sfa-sort-direction="@Model.SortDirection">Employer email</sfa-sortable-column-header>
                 </th>
                 <th scope="col" class="govuk-table__header">
-                    <sfa-sortable-column-header class="@(Model.SortColumn == "CreatedDate" ? Model.SortedByHeaderClassName : "das-table__sort")"
-                                                data-sortColumn="@nameof(InvitationSortColumn.CreatedDate)"
+                    <sfa-sortable-column-header class="@(Model.SortColumn == "UpdatedDate" ? Model.SortedByHeaderClassName : "das-table__sort")"
+                                                data-sortColumn="@nameof(InvitationSortColumn.UpdatedDate)"
                                                 asp-action="InvitedEmployers"
                                                 asp-controller="Registration"
-                                                sfa-sort-column="@nameof(InvitationSortColumn.CreatedDate)"
+                                                sfa-sort-column="@nameof(InvitationSortColumn.UpdatedDate)"
                                                 sfa-secondary-sort-column="@nameof(InvitationSortColumn.EmployerOrganisation)"
                                                 sfa-table-sort-column="@Model.SortColumn"
                                                 sfa-sort-direction="@Model.SortDirection">Date sent</sfa-sortable-column-header>
@@ -87,6 +96,7 @@
                                                 sfa-table-sort-column="@Model.SortColumn"
                                                 sfa-sort-direction="@Model.SortDirection">Status</sfa-sortable-column-header>
                 </th>
+                <th scope="col" class="govuk-table__header"></th>
             </tr>
         </thead>
         <tbody class="govuk-table__body">
@@ -116,8 +126,15 @@
                     <td class="govuk-table__cell" data-label="Status">
                         @invitation.State
                     </td>
+                    @if (invitation.ShowResendInvitationLink)
+                    {
+                        <td class="govuk-table__cell">
+
+                            <a href="@Url.Action("ReviewDetails", new { ProviderId = Model.ProviderId, Reference = invitation.Reference })">Resend invitation</a>
+                        </td>
+                    }
                 </tr>
             }
         </tbody>
-    </table>            
+    </table>
 }
