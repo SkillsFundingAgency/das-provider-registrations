@@ -17,9 +17,9 @@ namespace SFA.DAS.ProviderRegistrations.Api.Extensions
                 o.AddPolicy("default", policy =>
                 {
                     policy.RequireAuthenticatedUser();
+                    policy.RequireRole("Default");
                 });
             });
-
             services.AddAuthentication(auth =>
             {
                 auth.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -28,11 +28,7 @@ namespace SFA.DAS.ProviderRegistrations.Api.Extensions
                 auth.Authority = $"https://login.microsoftonline.com/{activeDirectorySettings.Tenant}";
                 auth.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
                 {
-                    ValidAudiences = new List<string>
-                    {
-                        activeDirectorySettings.IdentifierUri,
-                        activeDirectorySettings.AppId
-                    }
+                    ValidAudiences = activeDirectorySettings.IdentifierUri.Split(",")
                 };
             });
         }
