@@ -133,7 +133,7 @@
                         <a href="@Url.Action("ReviewDetails", new { ProviderId = Model.ProviderId, Reference = invitation.Reference, InvitationId = invitation.Id })">Resend invitation</a>
                     </td>
                 }
-                @if (invitation.ViewStatusLink)
+                @if (invitation.ShowViewStatusLink)
                 {
                     <td class="govuk-table__cell">
                         <a href="@Url.Action("ViewStatus", new { ProviderId = Model.ProviderId, InvitationId = invitation.Id })">View Status</a>

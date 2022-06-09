@@ -8,9 +8,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Provider.Shared.UI.Attributes;
 using SFA.DAS.ProviderRegistrations.Application.Commands.AddInvitationCommand;
+using SFA.DAS.ProviderRegistrations.Application.Commands.AddResendInvitationCommand;
 using SFA.DAS.ProviderRegistrations.Application.Commands.SendInvitationEmailCommand;
 using SFA.DAS.ProviderRegistrations.Application.Commands.UpdateInvitationCommand;
-using SFA.DAS.ProviderRegistrations.Application.Commands.UpdateInvitationResentCommand;
 using SFA.DAS.ProviderRegistrations.Application.Queries.GetInvitationByIdQuery;
 using SFA.DAS.ProviderRegistrations.Application.Queries.GetInvitationEventByIdQuery;
 using SFA.DAS.ProviderRegistrations.Application.Queries.GetInvitationQuery;
@@ -66,12 +66,12 @@ namespace SFA.DAS.ProviderRegistrations.Web.Controllers
             var result = await _mediator.Send(new GetInvitationEventByIdQuery(InvitationId), new CancellationToken());
             var model = new InvitationEventsViewModel
             {
-                AccountCreationStartedDate = result.InvitationEvent.AccountCreationStartedDate,
-                InvitationReSentDate = result.InvitationEvent.InvitationReSentDate,
-                AgreementAcceptedDate = result.InvitationEvent.AgreementAcceptedDate,
-                PayeSchemeAddedDate = result.InvitationEvent.PayeSchemeAddedDate,
-                InvitationSentDate = result.InvitationEvent.InvitationSentDate,
-                EmployerOrganisation = result.InvitationEvent.EmployerOrganisation
+                AccountCreationStartedDate = result?.InvitationEvent.AccountCreationStartedDate,
+                InvitationReSentDate = result?.InvitationEvent.InvitationReSentDate,
+                AgreementAcceptedDate = result?.InvitationEvent.AgreementAcceptedDate,
+                PayeSchemeAddedDate = result?.InvitationEvent.PayeSchemeAddedDate,
+                InvitationSentDate = result?.InvitationEvent.InvitationSentDate,
+                EmployerOrganisation = result?.InvitationEvent.EmployerOrganisation
             };
 
             return View(model);
@@ -129,7 +129,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.Controllers
             
             if (model.ResendInvitation)
             {
-                await _mediator.Send(new UpdateInvitationResentCommand(model.InvitationId, DateTime.UtcNow), new CancellationToken());
+                await _mediator.Send(new AddResendInvitationCommand(model.InvitationId, DateTime.UtcNow), new CancellationToken());
             }
 
             var ukprn = _authenticationService.Ukprn.Value;

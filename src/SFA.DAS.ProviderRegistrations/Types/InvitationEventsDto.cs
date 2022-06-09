@@ -16,7 +16,7 @@ namespace SFA.DAS.ProviderRegistrations.Types
 
         public DateTime? AgreementAcceptedDate { get; set; }
 
-        public DateTime InvitationSentDate { get; set; }
+        public DateTime? InvitationSentDate { get; set; }
 
         public string EmployerOrganisation { get; set;}
     }

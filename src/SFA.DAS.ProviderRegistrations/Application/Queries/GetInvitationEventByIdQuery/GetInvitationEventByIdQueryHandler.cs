@@ -24,18 +24,23 @@ namespace SFA.DAS.ProviderRegistrations.Application.Queries.GetInvitationEventBy
 
         public async Task<GetInvitationEventByIdQueryResult> Handle(GetInvitationEventByIdQuery request, CancellationToken cancellationToken)
         {
-            var invitationEvent = await _db.Value.InvitationEvents                
+            var invitationEvent = await _db.Value.InvitationEvents             
                .Where(i => i.InvitationId == request.InvitationId)
                .ProjectTo<InvitationEventsDto>(_configurationProvider)
                .SingleOrDefaultAsync(cancellationToken);
-            
+
+            if (invitationEvent == null)
+            {
+                return null;
+            }
+
             var invitation = await _db.Value.Invitations
                 .Where(i => i.Id == request.InvitationId)
                 .SingleOrDefaultAsync(cancellationToken);
 
-            invitationEvent.EmployerOrganisation = invitation.EmployerOrganisation;
-            invitationEvent.InvitationSentDate = invitation.CreatedDate;
-
+            invitationEvent.EmployerOrganisation = invitation?.EmployerOrganisation;
+            invitationEvent.InvitationSentDate = invitation?.CreatedDate;
+            
             return new GetInvitationEventByIdQueryResult(invitationEvent);
         }
     }

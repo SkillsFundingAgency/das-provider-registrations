@@ -26,7 +26,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.ViewModels
 
         public bool ShowResendInvitationLink => State == InvitationStatus.InvitationSent.GetDisplayName();
 
-        public bool ViewStatusLink => (State == InvitationStatus.AccountStarted.GetDisplayName() ||
+        public bool ShowViewStatusLink => (State == InvitationStatus.AccountStarted.GetDisplayName() ||
             State == InvitationStatus.PayeSchemeAdded.GetDisplayName() ||
             State == InvitationStatus.LegalAgreementSigned.GetDisplayName());            
     }

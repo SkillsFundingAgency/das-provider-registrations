@@ -1,15 +1,15 @@
 ﻿using System;
 using MediatR;
 
-namespace SFA.DAS.ProviderRegistrations.Application.Commands.UpdateInvitationResentCommand
+namespace SFA.DAS.ProviderRegistrations.Application.Commands.AddResendInvitationCommand
 {
-    public class UpdateInvitationResentCommand : IRequest
+    public class AddResendInvitationCommand : IRequest
     {
         public long InvitationId { get; set; }
         public DateTime InvitationReSentDate { get; set; }
         
 
-        public UpdateInvitationResentCommand(long invitationId, DateTime invitationReSentDate)
+        public AddResendInvitationCommand(long invitationId, DateTime invitationReSentDate)
         {
             InvitationId = invitationId;
             InvitationReSentDate = invitationReSentDate;
