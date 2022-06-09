@@ -17,17 +17,19 @@ namespace SFA.DAS.ProviderRegistrations.Services
 
         public async Task<bool> IsEmailAddressInUse(string emailAddress, CancellationToken cancellationToken = default)
         {
-            var employerUserEmailQueryUri = $"/api/user?email={emailAddress}";
+            return await  Task.FromResult(false);
 
-            try
-            {
-                var user = await _httpClient.Get<UserDto>(employerUserEmailQueryUri, null, cancellationToken);
-                return user != null;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
+            //var employerUserEmailQueryUri = $"/api/user?email={emailAddress}";
+
+            //try
+            //{
+            //    var user = await _httpClient.Get<UserDto>(employerUserEmailQueryUri, null, cancellationToken);
+            //    return user != null;
+            //}
+            //catch (Exception)
+            //{
+            //    return false;
+            //}
         }
     }
 }

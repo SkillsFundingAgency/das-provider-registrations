@@ -83,5 +83,27 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             var invite = await confirmationContext.Invitations.FirstAsync();
             invite.Status.Should().Be((int)InvitationStatus.LegalAgreementSigned);
         }
+
+        [Test, ProviderAutoData]
+        public async Task Handle_WhenCommandIsHandled_ThenShouldAddInvitationEvent(
+                ProviderRegistrationsDbContext setupContext,
+                ProviderRegistrationsDbContext confirmationContext,
+                AddedPayeSchemeCommandHandler handler,
+                AddedPayeSchemeCommand command,
+                Invitation invitation)
+        {
+            //arrange
+            invitation.UpdateStatus((int)InvitationStatus.InvitationSent, DateTime.Now);
+            command.CorrelationId = invitation.Reference.ToString();
+            setupContext.Invitations.Add(invitation);
+            await setupContext.SaveChangesAsync();
+
+            //act
+            await ((IRequestHandler<AddedPayeSchemeCommand, Unit>)handler).Handle(command, new CancellationToken());
+
+            //assert
+            var addedInvitationEvent = await confirmationContext.InvitationEvents.SingleAsync(s => s.InvitationId == invitation.Id);
+            addedInvitationEvent.PayeSchemeAddedDate.Should().NotBeNull();
+        }
     }
 }

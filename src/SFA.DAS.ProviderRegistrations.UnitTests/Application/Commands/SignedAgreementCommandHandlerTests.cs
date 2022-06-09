@@ -81,5 +81,27 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             var savedInvite = await confirmationContext.Invitations.FirstAsync(i => i.Reference.ToString() == command.CorrelationId);
             savedInvite.Status.Should().Be((int)InvitationStatus.InvitationComplete);
         }
+
+        [Test, ProviderAutoData]
+        public async Task Handle_WhenCommandIsHandled_ThenShouldAddInvitationEvent(
+            ProviderRegistrationsDbContext setupContext,
+            ProviderRegistrationsDbContext confirmationContext,
+            SignedAgreementCommandHandler handler,
+            SignedAgreementCommand command,
+            Invitation invite)
+        {
+            //arrange
+            command.CorrelationId = invite.Reference.ToString();
+            setupContext.Invitations.Add(invite);
+            invite.UpdateStatus((int)InvitationStatus.AccountStarted, DateTime.Now);
+            await setupContext.SaveChangesAsync();
+
+            //act
+            await ((IRequestHandler<SignedAgreementCommand, Unit>)handler).Handle(command, new CancellationToken());
+
+            //assert
+            var addedInvitationEvent = await confirmationContext.InvitationEvents.SingleAsync(s => s.InvitationId == invite.Id);
+            addedInvitationEvent.AgreementAcceptedDate.Should().NotBeNull();
+        }
     }
 }

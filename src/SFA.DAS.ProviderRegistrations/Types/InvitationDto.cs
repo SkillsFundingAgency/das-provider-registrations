@@ -4,7 +4,8 @@ namespace SFA.DAS.ProviderRegistrations.Types
 {
     public class InvitationDto
     {
-        
+        public long Id { get; set; }
+
         public Guid Reference { get; set; }
 
         public long Ukprn { get; set; }

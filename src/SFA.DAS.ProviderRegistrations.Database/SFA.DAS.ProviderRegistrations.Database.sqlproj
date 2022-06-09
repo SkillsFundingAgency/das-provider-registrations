@@ -68,5 +68,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="SFA.DAS.ProviderRegistrations.Database.publish.xml" />
+    <Build Include="Tables\InvitationEvents.sql" />
   </ItemGroup>
 </Project>

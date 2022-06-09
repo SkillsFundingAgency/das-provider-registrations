@@ -78,5 +78,27 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             var updatedInvite = await confirmationContext.Invitations.SingleAsync(s => s.Reference == invitation.Reference);
             updatedInvite.Status.Should().Be((int)InvitationStatus.InvitationComplete);
         }
+
+        [Test, ProviderAutoData]
+        public async Task Handle_WhenCommandIsHandled_ThenShouldAddInvitationEvent(
+            ProviderRegistrationsDbContext setupContext,
+            ProviderRegistrationsDbContext confirmationContext,
+            UpsertUserCommandHandler handler,
+            Invitation invitation)
+        {
+            //arrange
+            invitation.UpdateStatus((int)InvitationStatus.InvitationSent, DateTime.Now);
+            setupContext.Invitations.Add(invitation);                       
+            await setupContext.SaveChangesAsync();
+            var command = new UpsertUserCommand(invitation.UserRef, DateTime.Now, invitation.Reference.ToString());
+
+            //act
+            await ((IRequestHandler<UpsertUserCommand, Unit>)handler).Handle(command, new CancellationToken());
+
+            //assert
+            var addedInvitationEvent = await confirmationContext.InvitationEvents.SingleAsync(s => s.InvitationId == invitation.Id);
+            addedInvitationEvent.AccountCreationStartedDate.Should().NotBeNull();
+        }
+
     }
 }

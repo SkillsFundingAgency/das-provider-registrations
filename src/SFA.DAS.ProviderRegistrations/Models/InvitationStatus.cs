@@ -6,7 +6,7 @@ namespace SFA.DAS.ProviderRegistrations.Models
     {
         [Display(Name = "Account creation not started")] InvitationSent = 0,
 
-        [Display(Name = "Account started")] AccountStarted = 1,
+        [Display(Name = "Account creation started")] AccountStarted = 1,
 
         [Display(Name = "PAYE scheme added")] PayeSchemeAdded = 2,
 

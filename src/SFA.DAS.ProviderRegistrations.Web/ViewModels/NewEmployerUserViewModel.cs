@@ -38,6 +38,8 @@ namespace SFA.DAS.ProviderRegistrations.Web.ViewModels
 
         public bool Unsubscribed { get; set; }
 
-        public Guid Reference { get; set; }        
+        public Guid Reference { get; set; }
+        
+        public long InvitationId { get; set; }
     }
 }
