@@ -59,12 +59,10 @@ namespace SFA.DAS.ProviderRegistrations.Web.Controllers
             return View();
         }
 
-
         [HttpGet]
         [Authorize(Policy = nameof(PolicyNames.HasContributorOrAbovePermission))]
         public async Task<IActionResult> ViewStatus(long InvitationId)
         {
-
             var result = await _mediator.Send(new GetInvitationEventByIdQuery(InvitationId), new CancellationToken());
             var model = new InvitationEventsViewModel
             {
@@ -96,7 +94,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.Controllers
                 InvitationId = result.Invitation.Id
             };
             model.Unsubscribed = await _mediator.Send(new GetUnsubscribedQuery(ukprn, model.EmployerEmailAddress), new CancellationToken());
-            model.ResendInvitation = true;          
+            model.ResendInvitation = true;
 
             return View("ReviewDetails", model);
         }

@@ -8,7 +8,6 @@ namespace SFA.DAS.ProviderRegistrations.Data
     {
         public DbSet<Invitation> Invitations { get; set; }
         public DbSet<Unsubscribe> Unsubscribed { get; set; }
-
         public DbSet<InvitationEvents> InvitationEvents { get; set; }
 
         public ProviderRegistrationsDbContext(DbContextOptions<ProviderRegistrationsDbContext> options) : base(options)

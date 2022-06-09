@@ -28,9 +28,7 @@ namespace SFA.DAS.ProviderRegistrations.Application.Queries.GetInvitationEventBy
                .Where(i => i.InvitationId == request.InvitationId)
                .ProjectTo<InvitationEventsDto>(_configurationProvider)
                .SingleOrDefaultAsync(cancellationToken);
-
-            //TODO : join the tables
-
+            
             var invitation = await _db.Value.Invitations
                 .Where(i => i.Id == request.InvitationId)
                 .SingleOrDefaultAsync(cancellationToken);
@@ -38,7 +36,7 @@ namespace SFA.DAS.ProviderRegistrations.Application.Queries.GetInvitationEventBy
             invitationEvent.EmployerOrganisation = invitation.EmployerOrganisation;
             invitationEvent.InvitationSentDate = invitation.CreatedDate;
 
-            return invitationEvent == null ? null : new GetInvitationEventByIdQueryResult(invitationEvent);
+            return new GetInvitationEventByIdQueryResult(invitationEvent);
         }
     }
 }
