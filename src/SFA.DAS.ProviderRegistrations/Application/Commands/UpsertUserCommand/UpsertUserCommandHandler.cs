@@ -24,7 +24,7 @@ namespace SFA.DAS.ProviderRegistrations.Application.Commands.UpsertUserCommand
                 var invitation = await _db.Value.Invitations.SingleOrDefaultAsync(i => i.Reference == Guid.Parse(request.CorrelationId) && i.Status < (int) InvitationStatus.AccountStarted, cancellationToken);
                 invitation?.UpdateStatus((int) InvitationStatus.AccountStarted, DateTime.Now);
 
-                var invitationEvents = new InvitationEvents(invitation?.Id, null, DateTime.UtcNow, null, null);
+                var invitationEvents = new InvitationEvent(invitation?.Id, (int)EventType.AccountStarted ,DateTime.UtcNow);
                 _db.Value.InvitationEvents.Add(invitationEvents);
 
                 await _db.Value.SaveChangesAsync(cancellationToken);

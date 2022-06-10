@@ -13,7 +13,8 @@ namespace SFA.DAS.ProviderRegistrations.Mappings
                 .ForMember(d => d.State, opt => opt.MapFrom(EnumerableExpressionHelper.CreateEnumToStringExpression((Invitation d) => ((InvitationStatus) d.Status))))
                 .ForMember(d => d.SentDate, opt => opt.MapFrom(s => s.UpdatedDate));
 
-            CreateMap<InvitationEvents, InvitationEventsDto>();
+            CreateMap<InvitationEvent, InvitationEventDto>()
+                .ForMember(d => d.EventState, opt => opt.MapFrom(EnumerableExpressionHelper.CreateEnumToStringExpression((InvitationEvent d) => ((EventType)d.EventType))));
         }
     }
 }

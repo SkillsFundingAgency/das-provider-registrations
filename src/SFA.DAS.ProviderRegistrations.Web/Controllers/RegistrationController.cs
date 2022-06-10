@@ -63,16 +63,19 @@ namespace SFA.DAS.ProviderRegistrations.Web.Controllers
         [Authorize(Policy = nameof(PolicyNames.HasContributorOrAbovePermission))]
         public async Task<IActionResult> ViewStatus(long InvitationId)
         {
-            var result = await _mediator.Send(new GetInvitationEventByIdQuery(InvitationId), new CancellationToken());
-            var model = new InvitationEventsViewModel
-            {
-                AccountCreationStartedDate = result?.InvitationEvent.AccountCreationStartedDate,
-                InvitationReSentDate = result?.InvitationEvent.InvitationReSentDate,
-                AgreementAcceptedDate = result?.InvitationEvent.AgreementAcceptedDate,
-                PayeSchemeAddedDate = result?.InvitationEvent.PayeSchemeAddedDate,
-                InvitationSentDate = result?.InvitationEvent.InvitationSentDate,
-                EmployerOrganisation = result?.InvitationEvent.EmployerOrganisation
-            };
+            var results = await _mediator.Send(new GetInvitationEventByIdQuery(InvitationId), new CancellationToken());           
+
+            var model = _mapper.Map<InvitationEventsViewModel>(results);
+            model.InvitationSentDate = results?.InvitationSentDate;
+            model.EmployerOrganisation = results?.EmployerOrganisation;
+
+            //var model = new InvitationEventsViewModel
+            //{               
+            //    Date = results?.InvitationEvent.Date,
+            //    EventState = results?.InvitationEvent.EventState,
+            //    InvitationSentDate = results?.InvitationSentDate,
+            //    EmployerOrganisation = results?.EmployerOrganisation
+            //};
 
             return View(model);
         }

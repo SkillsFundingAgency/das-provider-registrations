@@ -18,60 +18,64 @@
             @Model.EmployerOrganisation
         </h2>
 
-        <!-- table start -->
         <dl class="govuk-summary-list">
-
-            @if (!Model.InvitationResent)
+            
+            @foreach (var invitationEvent in Model.InvitationEvents)
             {
-                <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">
-                    Invitation sent:
-                </dt>
-                <dd class="govuk-summary-list__value">
-                    @Model.InvitationSentDate?.ToString("dd MMM yy")
-                </dd>
-        </div>
-    }
-
-            @if (Model.InvitationResent)
-            {
-                <div class="govuk-summary-list__row">
+                @if (!Model.InvitationResent)
+                {
+                    <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">
-                        Invitation last sent:
+                        Invitation sent:
                     </dt>
                     <dd class="govuk-summary-list__value">
-                        @Model.InvitationReSentDate?.ToString("dd MMM yy")
+                        @Model.InvitationSentDate?.ToString("dd MMM yy")
+                    </dd>
+                    </div>
+                }
+
+                @if (Model.InvitationResent)
+                {
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Invitation last sent:
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            @Model.InvitationResentDate?.ToString("dd MMM yy")
+                        </dd>
+                    </div>
+                }
+
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Account creation started:
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.AccountCreationStartedStatus
                     </dd>
                 </div>
+
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        PAYE scheme added:
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.PayeSchemeAddedStatus
+                    </dd>
+                </div>
+
+
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Legal agreement accepted:
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.AgreementAcceptedStatus
+                    </dd>
+                </div>
+
             }
 
-            <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">
-                    Account creation started:
-                </dt>
-                <dd class="govuk-summary-list__value">
-                    @Model.AccountCreationStartedStatus
-                </dd>
-            </div>
-
-            <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">
-                    PAYE scheme added:
-                </dt>
-                <dd class="govuk-summary-list__value">
-                    @Model.PayeSchemeAddedStatus
-                </dd>
-            </div>
-
-
-            <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">
-                    Legal agreement accepted:
-                </dt>
-                <dd class="govuk-summary-list__value">
-                    @Model.AgreementAcceptedStatus
-                </dd>
-            </div>
             </dl>
-            <!-- table end -->
-        </div>
+        
+ </div>

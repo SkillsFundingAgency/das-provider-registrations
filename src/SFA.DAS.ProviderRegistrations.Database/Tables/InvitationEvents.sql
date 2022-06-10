@@ -2,10 +2,8 @@
 (
 	[Id] BIGINT NOT NULL IDENTITY,
 	[InvitationId] BIGINT NOT NULL,    
-    [InvitationReSentDate] DATETIME NULL,
-    [AccountCreationStartedDate] DATETIME NULL, 
-	[PayeSchemeAddedDate] DATETIME NULL,
-    [AgreementAcceptedDate] DATETIME NULL,    
+    [EventType] INT NOT NULL,
+    [Date] DATETIME NULL,    
     CONSTRAINT [PK_InvitationEvents] PRIMARY KEY ([Id])
 )
 GO

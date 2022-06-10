@@ -24,7 +24,7 @@ namespace SFA.DAS.ProviderRegistrations.Application.Commands.AddedPayeSchemeComm
                 var invitation = await _db.Value.Invitations.SingleOrDefaultAsync(i => i.Reference == Guid.Parse(request.CorrelationId) && i.Status < (int) InvitationStatus.PayeSchemeAdded, cancellationToken);
                 invitation?.UpdateStatus((int) InvitationStatus.PayeSchemeAdded, DateTime.Now);
 
-                var invitationEvents = new InvitationEvents(invitation?.Id, null, null, DateTime.UtcNow, null);
+                var invitationEvents = new InvitationEvent(invitation?.Id, (int)EventType.PayeSchemeAdded, DateTime.UtcNow);
                 _db.Value.InvitationEvents.Add(invitationEvents);
 
                 await _db.Value.SaveChangesAsync(cancellationToken);

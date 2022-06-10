@@ -101,7 +101,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
 
             //assert
             var addedInvitationEvent = await confirmationContext.InvitationEvents.SingleAsync(s => s.InvitationId == invite.Id);
-            addedInvitationEvent.AgreementAcceptedDate.Should().NotBeNull();
+            addedInvitationEvent.Date.Should().NotBeNull();
         }
     }
 }
