@@ -8,6 +8,6 @@ namespace SFA.DAS.ProviderRegistrations.Web.ViewModels
 
         public DateTime? Date { get; set; }
 
-        public EventTypeViewModel EventState { get; set; }
+        public EventTypeViewModel EventType { get; set; }
     }
 }
