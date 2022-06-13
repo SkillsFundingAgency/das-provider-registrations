@@ -22,12 +22,14 @@ namespace SFA.DAS.ProviderRegistrations.Web.ViewModels
 
         public string State { get; set; }
 
+        public int Status { get; set; }
+
         public DateTime SentDate { get; set; }
 
-        public bool ShowResendInvitationLink => State == InvitationStatus.InvitationSent.GetDisplayName();
+        public bool ShowResendInvitationLink => Status == (int)InvitationStatus.InvitationSent;
 
-        public bool ShowViewStatusLink => (State == InvitationStatus.AccountStarted.GetDisplayName() ||
-            State == InvitationStatus.PayeSchemeAdded.GetDisplayName() ||
-            State == InvitationStatus.LegalAgreementSigned.GetDisplayName());            
+        public bool ShowViewStatusLink => Status == (int)InvitationStatus.AccountStarted ||
+                                          Status == (int)InvitationStatus.PayeSchemeAdded ||
+                                          Status == (int)InvitationStatus.LegalAgreementSigned;        
     }
 }
