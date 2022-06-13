@@ -1,17 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace SFA.DAS.ProviderRegistrations.Models
+﻿namespace SFA.DAS.ProviderRegistrations.Models
 {
     public enum InvitationStatus
     {
-        [Display(Name = "Account creation not started")] InvitationSent = 0,
-
-        [Display(Name = "Account creation started")] AccountStarted = 1,
-
-        [Display(Name = "PAYE scheme added")] PayeSchemeAdded = 2,
-
-        [Display(Name = "Legal agreement accepted")] LegalAgreementSigned = 3,
-
-        [Display(Name = "Legal agreement accepted")] InvitationComplete = 4
+        InvitationSent = 0,
+        AccountStarted = 1,
+        PayeSchemeAdded = 2,
+        LegalAgreementSigned = 3,
+        InvitationComplete = 4
     }
 }

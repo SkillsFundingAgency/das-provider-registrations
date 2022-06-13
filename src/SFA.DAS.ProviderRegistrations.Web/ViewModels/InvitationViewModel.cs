@@ -1,6 +1,4 @@
 ﻿using System;
-using SFA.DAS.ProviderRegistrations.Models;
-using SFA.DAS.ProviderRegistrations.Web.Extensions;
 
 namespace SFA.DAS.ProviderRegistrations.Web.ViewModels
 {
@@ -18,18 +16,16 @@ namespace SFA.DAS.ProviderRegistrations.Web.ViewModels
 
         public string Name => $"{EmployerFirstName} {EmployerLastName}";
 
-        public string EmployerEmail { get; set; }
+        public string EmployerEmail { get; set; }        
 
-        public string State { get; set; }
-
-        public int Status { get; set; }
+        public InvitationStatusViewModel Status { get; set; }
 
         public DateTime SentDate { get; set; }
 
-        public bool ShowResendInvitationLink => Status == (int)InvitationStatus.InvitationSent;
+        public bool ShowResendInvitationLink => Status == InvitationStatusViewModel.InvitationSent;
 
-        public bool ShowViewStatusLink => Status == (int)InvitationStatus.AccountStarted ||
-                                          Status == (int)InvitationStatus.PayeSchemeAdded ||
-                                          Status == (int)InvitationStatus.LegalAgreementSigned;        
+        public bool ShowViewStatusLink => Status == InvitationStatusViewModel.AccountStarted ||
+                                          Status == InvitationStatusViewModel.PayeSchemeAdded ||
+                                          Status == InvitationStatusViewModel.LegalAgreementSigned;        
     }
 }

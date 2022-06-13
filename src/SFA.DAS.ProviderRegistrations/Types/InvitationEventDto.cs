@@ -18,8 +18,6 @@ namespace SFA.DAS.ProviderRegistrations.Types
 
         public DateTime? Date { get; set; }
 
-        public string EventState { get; set; }      
-
         public DateTime? InvitationSentDate { get; set; }
 
         public string EmployerOrganisation { get; set;}

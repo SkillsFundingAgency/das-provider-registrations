@@ -14,19 +14,19 @@ namespace SFA.DAS.ProviderRegistrations.Web.ViewModels
 
         public string EmployerOrganisation { get; set; }
 
-        public bool InvitationResent => InvitationEvents.Any(x => x.EventState == EventType.InvitationResent.GetDisplayName());
+        public bool InvitationResent => InvitationEvents.Any(x => x.EventState == EventTypeViewModel.InvitationResent);
 
-        public DateTime? InvitationResentDate => InvitationEvents?.Where(x => x.EventState == EventType.InvitationResent.GetDisplayName())?.FirstOrDefault()?.Date;
+        public DateTime? InvitationResentDate => InvitationEvents?.Where(x => x.EventState == EventTypeViewModel.InvitationResent)?.FirstOrDefault()?.Date;
 
-        public DateTime? AgreementAcceptedDate => InvitationEvents?.Where(x => x.EventState == EventType.LegalAgreementSigned.GetDisplayName())?.FirstOrDefault()?.Date;
+        public DateTime? AgreementAcceptedDate => InvitationEvents?.Where(x => x.EventState == EventTypeViewModel.LegalAgreementSigned)?.FirstOrDefault()?.Date;
 
         public string AgreementAcceptedStatus => AgreementAcceptedDate != null ? AgreementAcceptedDate?.ToString("dd MMM yy") : "Legal agreement not accepted";
 
-        public DateTime? AccountCreationStartedDate => InvitationEvents?.Where(x => x.EventState == EventType.AccountStarted.GetDisplayName())?.FirstOrDefault()?.Date;
+        public DateTime? AccountCreationStartedDate => InvitationEvents?.Where(x => x.EventState == EventTypeViewModel.AccountStarted)?.FirstOrDefault()?.Date;
 
         public string AccountCreationStartedStatus => AccountCreationStartedDate != null ? AccountCreationStartedDate?.ToString("dd MMM yy") : "Account creation not started";
 
-        public DateTime? PayeSchemeAddedDate => InvitationEvents?.Where(x => x.EventState == EventType.PayeSchemeAdded.GetDisplayName())?.FirstOrDefault()?.Date;
+        public DateTime? PayeSchemeAddedDate => InvitationEvents?.Where(x => x.EventState == EventTypeViewModel.PayeSchemeAdded)?.FirstOrDefault()?.Date;
 
         public string PayeSchemeAddedStatus => PayeSchemeAddedDate != null ? PayeSchemeAddedDate?.ToString("dd MMM yy") : "PAYE scheme not added";
     }

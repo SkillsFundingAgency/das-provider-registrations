@@ -18,9 +18,7 @@ namespace SFA.DAS.ProviderRegistrations.Types
 
         public string EmployerEmail { get; set; }
 
-        public int Status { get; set; }
-
-        public string State { get; set; }
+        public int Status { get; set; }        
 
         public DateTime SentDate { get; set; }
 

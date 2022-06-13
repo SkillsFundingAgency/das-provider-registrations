@@ -1,6 +1,7 @@
 ﻿@using SFA.DAS.ProviderRegistrations.Types
 @using SFA.DAS.ProviderRegistrations.Web.Extensions
 @using SFA.DAS.ProviderRegistrations.Web.ViewModels
+@using  SFA.DAS.ProviderRegistrations.Models;
 @model SFA.DAS.ProviderRegistrations.Web.ViewModels.InvitationsViewModel
 
 @{
@@ -102,44 +103,44 @@
         <tbody class="govuk-table__body">
             @foreach (var invitation in Model.Invitations)
             {
-            <tr class="govuk-table__row">
-                <td class="govuk-table__cell" data-label="Employer organisation">
-                    <span class="das-breakable">
-                        @invitation.EmployerOrganisation
-                    </span>
-                </td>
-                <td class="govuk-table__cell" data-label="Name">
-                    <span class="das-breakable">
-                        @invitation.Name
-                    </span>
-                </td>
-                <td class="govuk-table__cell" data-label="Employer email">
-                    <span class="das-breakable">
-                        @invitation.EmployerEmail
-                    </span>
-                </td>
-                <td class="govuk-table__cell" data-label="Date sent">
-                    <span class="das-no-wrap">
-                        @invitation.SentDate.ToString("dd MMM yy")
-                    </span>
-                </td>
-                <td class="govuk-table__cell" data-label="Status">
-                    @invitation.State
-                </td>
-                @if (invitation.ShowResendInvitationLink)
-                {
-                    <td class="govuk-table__cell">
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell" data-label="Employer organisation">
+                        <span class="das-breakable">
+                            @invitation.EmployerOrganisation
+                        </span>
+                    </td>
+                    <td class="govuk-table__cell" data-label="Name">
+                        <span class="das-breakable">
+                            @invitation.Name
+                        </span>
+                    </td>
+                    <td class="govuk-table__cell" data-label="Employer email">
+                        <span class="das-breakable">
+                            @invitation.EmployerEmail
+                        </span>
+                    </td>
+                    <td class="govuk-table__cell" data-label="Date sent">
+                        <span class="das-no-wrap">
+                            @invitation.SentDate.ToString("dd MMM yy")
+                        </span>
+                    </td>
+                    <td class="govuk-table__cell" data-label="Status">                        
+                        @invitation.Status.GetDisplayName()
+                    </td>
+                    @if (invitation.ShowResendInvitationLink)
+                    {
+                        <td class="govuk-table__cell">
 
-                        <a href="@Url.Action("ReviewDetails", new { ProviderId = Model.ProviderId, Reference = invitation.Reference, InvitationId = invitation.Id })">Resend invitation</a>
-                    </td>
-                }
-                @if (invitation.ShowViewStatusLink)
-                {
-                    <td class="govuk-table__cell">
-                        <a href="@Url.Action("ViewStatus", new { ProviderId = Model.ProviderId, InvitationId = invitation.Id })">View Status</a>
-                    </td>
-                }
-            </tr>
+                            <a href="@Url.Action("ReviewDetails", new { ProviderId = Model.ProviderId, Reference = invitation.Reference, InvitationId = invitation.Id })">Resend invitation</a>
+                        </td>
+                    }
+                    @if (invitation.ShowViewStatusLink)
+                    {
+                        <td class="govuk-table__cell">
+                            <a href="@Url.Action("ViewStatus", new { ProviderId = Model.ProviderId, InvitationId = invitation.Id })">View Status</a>
+                        </td>
+                    }
+                </tr>
             }
         </tbody>
     </table>
