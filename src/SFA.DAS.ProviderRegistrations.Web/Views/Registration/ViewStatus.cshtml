@@ -1,6 +1,4 @@
-﻿@using SFA.DAS.ProviderRegistrations.Types
-@using SFA.DAS.ProviderRegistrations.Web.Extensions
-@using SFA.DAS.ProviderRegistrations.Web.ViewModels
+﻿@using SFA.DAS.ProviderRegistrations.Web.Extensions
 @model SFA.DAS.ProviderRegistrations.Web.ViewModels.InvitationEventsViewModel
 
 @section breadcrumb
@@ -18,10 +16,8 @@
             @Model.EmployerOrganisation
         </h2>
 
-        <dl class="govuk-summary-list">
-            
-            @foreach (var invitationEvent in Model.InvitationEvents)
-            {
+        <dl class="govuk-summary-list">            
+           
                 @if (!Model.InvitationResent)
                 {
                     <div class="govuk-summary-list__row">
@@ -73,8 +69,6 @@
                         @Model.AgreementAcceptedStatus
                     </dd>
                 </div>
-
-            }
 
             </dl>
         

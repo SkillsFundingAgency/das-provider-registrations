@@ -6,14 +6,14 @@ namespace SFA.DAS.ProviderRegistrations.Application.Queries.GetInvitationEventBy
 {
     public class GetInvitationEventByIdQueryResult
     {
-        public GetInvitationEventByIdQueryResult(List<InvitationEventDto> invitationEvent, string employerOrganisation, DateTime? invitationSentDate)
+        public GetInvitationEventByIdQueryResult(List<InvitationEventDto> invitationEvents, string employerOrganisation, DateTime? invitationSentDate)
         {
-            InvitationEvent = invitationEvent;
+            InvitationEvents = invitationEvents;
             EmployerOrganisation = employerOrganisation;
             InvitationSentDate = invitationSentDate;
         }
 
-        public List<InvitationEventDto> InvitationEvent { get; }
+        public List<InvitationEventDto> InvitationEvents { get; }
         public string EmployerOrganisation { get; }
         public DateTime? InvitationSentDate { get; }
     }

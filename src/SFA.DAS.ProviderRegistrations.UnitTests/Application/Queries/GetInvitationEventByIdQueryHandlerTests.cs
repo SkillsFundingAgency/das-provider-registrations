@@ -49,13 +49,8 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Queries
             var result = await handler.Handle(query, new CancellationToken());
 
             //assert
-            result.InvitationEvent.Should().NotBeNull();
-            //TODO
-            //result.InvitationEvent.Should().BeEquivalentTo(new
-            //{
-            //    invitationEvent.Date,
-            //    invitation.EmployerOrganisation
-            //});
+            result.InvitationEvents.Should().NotBeNull();
+            result.InvitationEvents.Count.Should().Be(2);
         }
     }
 }
