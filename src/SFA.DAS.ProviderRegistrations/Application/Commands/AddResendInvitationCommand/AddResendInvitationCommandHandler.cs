@@ -20,9 +20,9 @@ namespace SFA.DAS.ProviderRegistrations.Application.Commands.AddResendInvitation
         protected override async Task Handle(AddResendInvitationCommand request, CancellationToken cancellationToken)
         {
             var invitation = await _db.Value.Invitations.SingleOrDefaultAsync(i => i.Id == request.InvitationId, cancellationToken);
-                       
-           var invitationEvent = new InvitationEvent(invitation?.Id, (int)EventType.InvitationResent, request.InvitationReSentDate);
-           invitation?.InvitationEvents.Add(invitationEvent);
+            if (invitation == null) throw new NullReferenceException();
+            var invitationEvent = new InvitationEvent(invitation.Id, (int)EventType.InvitationResent, request.InvitationReSentDate);
+            invitation.InvitationEvents.Add(invitationEvent);
 
             await _db.Value.SaveChangesAsync(cancellationToken);
         }

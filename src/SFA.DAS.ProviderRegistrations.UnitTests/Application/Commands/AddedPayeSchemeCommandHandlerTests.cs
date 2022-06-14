@@ -53,51 +53,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             //assert
             var savedInvitation = await confirmationContext.Invitations.FirstAsync();
             savedInvitation.Status.Should().Be((int)InvitationStatus.PayeSchemeAdded);
-        }
-
-        [Test, ProviderAutoData]
-        public async Task Handle_WhenDoesntExistCommandIsHandled_ThenNoChangesAreMade(
-            ProviderRegistrationsDbContext setupContext,
-            ProviderRegistrationsDbContext confirmationContext,
-            AddedPayeSchemeCommandHandler handler,
-            AddedPayeSchemeCommand command)
-        {
-            //arrange
-            setupContext.Invitations.Add(invitation);
-            await setupContext.SaveChangesAsync();
-            var statusBefore = invitation.Status;
-            command.CorrelationId = invitation.Reference.ToString();
-
-            //act
-            await ((IRequestHandler<AddedPayeSchemeCommand, Unit>)handler).Handle(command, new CancellationToken());
-
-            //assert
-            // Confirm nothing has changed.
-            var invite = await confirmationContext.Invitations.FirstAsync();
-            invite.Status.Should().Be(statusBefore);
-        }
-
-        [Test, ProviderAutoData]
-        public async Task Handle_WhenInvalidStatusCommandIsHandled_ThenNoChangesAreMade(
-            ProviderRegistrationsDbContext setupContext,
-            ProviderRegistrationsDbContext confirmationContext,
-            AddedPayeSchemeCommandHandler handler,
-            AddedPayeSchemeCommand command)
-        {
-            //arrange
-            invitation.UpdateStatus((int)InvitationStatus.LegalAgreementSigned, DateTime.Now);
-            setupContext.Invitations.Add(invitation);
-            await setupContext.SaveChangesAsync();
-            command.CorrelationId = invitation.Reference.ToString();
-
-            //act
-            await ((IRequestHandler<AddedPayeSchemeCommand, Unit>)handler).Handle(command, new CancellationToken());
-
-            //assert
-            // Confirm nothing has changed.
-            var invite = await confirmationContext.Invitations.FirstAsync();
-            invite.Status.Should().Be((int)InvitationStatus.LegalAgreementSigned);
-        }
+        }       
 
         [Test, ProviderAutoData]
         public async Task Handle_WhenCommandIsHandled_ThenShouldAddInvitationEvent(

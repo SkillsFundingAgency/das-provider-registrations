@@ -71,27 +71,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             //assert
             var dbInvite = await confirmationContext.Invitations.FirstAsync(f => f.Reference == invitation.Reference);
             dbInvite.Status.Should().Be(statusBefore);
-        }
-
-        [Test, ProviderAutoData]
-        public async Task Handle_WhenInvalidStatusCommandIsHandled_ThenNoChangesAreMade(
-            ProviderRegistrationsDbContext setupContext,
-            ProviderRegistrationsDbContext confirmationContext,
-            UpsertUserCommandHandler handler)
-        {
-            //arrange            
-            invitation.UpdateStatus((int)InvitationStatus.InvitationComplete, DateTime.Now);
-            setupContext.Invitations.Add(invitation);
-            await setupContext.SaveChangesAsync();
-            var command = new UpsertUserCommand(invitation.UserRef, DateTime.Now, invitation.Reference.ToString());
-
-            //act
-            await ((IRequestHandler<UpsertUserCommand, Unit>)handler).Handle(command, new CancellationToken());
-
-            //assert
-            var updatedInvite = await confirmationContext.Invitations.SingleAsync(s => s.Reference == invitation.Reference);
-            updatedInvite.Status.Should().Be((int)InvitationStatus.InvitationComplete);
-        }
+        }        
 
         [Test, ProviderAutoData]
         public async Task Handle_WhenCommandIsHandled_ThenShouldAddInvitationEvent(

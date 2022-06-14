@@ -16,7 +16,7 @@ namespace SFA.DAS.ProviderRegistrations.MessageHandlers.EventHandlers.EmployerAc
         }
 
         public Task Handle(AddedPayeSchemeEvent message, IMessageHandlerContext context)
-        {
+        {   
             return _mediator.Send(new AddedPayeSchemeCommand(message.AccountId, message.UserName, message.UserRef, message.PayeRef, message.Aorn, message.SchemeName, message.CorrelationId));
         }
     }

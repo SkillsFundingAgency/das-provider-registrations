@@ -46,8 +46,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             //act            
             await ((IRequestHandler<AddResendInvitationCommand, Unit>)handler).Handle(command, new CancellationToken());
 
-            //assert
-            //TODO : CHECK confirmationContext.InvitationEvents.Single(s => s.Invitation.Id == command.InvitationId).Date.Should().NotBeNull();
+            //assert            
             confirmationContext.InvitationEvents.FirstOrDefault(s => s.Invitation.Id == command.InvitationId).Date.Should().NotBeNull();
         }
     }

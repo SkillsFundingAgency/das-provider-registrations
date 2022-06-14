@@ -22,10 +22,11 @@ namespace SFA.DAS.ProviderRegistrations.Application.Commands.SignedAgreementComm
             if (!string.IsNullOrWhiteSpace(request.CorrelationId) && Guid.TryParse(request.CorrelationId, out _))
             {
                 var invitation = await _db.Value.Invitations.SingleOrDefaultAsync(i => i.Reference == Guid.Parse(request.CorrelationId) && i.Status < (int) InvitationStatus.LegalAgreementSigned, cancellationToken);
-                invitation?.UpdateStatus((int) InvitationStatus.LegalAgreementSigned, DateTime.Now);
-                
-                var invitationEvent = new InvitationEvent(invitation?.Id, (int)EventType.LegalAgreementSigned, DateTime.UtcNow);
-                invitation?.InvitationEvents.Add(invitationEvent);
+                if (invitation == null) throw new NullReferenceException();
+                invitation.UpdateStatus((int) InvitationStatus.LegalAgreementSigned, DateTime.Now);
+
+                var invitationEvent = new InvitationEvent(invitation.Id, (int)EventType.LegalAgreementSigned, DateTime.UtcNow);
+                invitation.InvitationEvents.Add(invitationEvent);
 
                 await _db.Value.SaveChangesAsync(cancellationToken);
             }

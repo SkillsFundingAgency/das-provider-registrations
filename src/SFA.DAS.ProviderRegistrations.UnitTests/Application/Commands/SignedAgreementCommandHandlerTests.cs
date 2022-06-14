@@ -1,5 +1,4 @@
 using AutoFixture;
-using AutoFixture.NUnit3;
 using FluentAssertions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +11,7 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Assert = NUnit.Framework.Assert;
 
 namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
 {
@@ -74,28 +74,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             //assert
             var savedInvite = await confirmationContext.Invitations.FirstAsync(i => i.Reference == invitation.Reference);
             savedInvite.Status.Should().Be((int)InvitationStatus.InvitationSent);
-        }
-
-        [Test, ProviderAutoData]
-        public async Task Handle_WhenInvalidStatusCommandIsHandled_ThenNoChangesAreMade(
-            ProviderRegistrationsDbContext setupContext,
-            ProviderRegistrationsDbContext confirmationContext,
-            SignedAgreementCommandHandler handler,
-            SignedAgreementCommand command)
-        {
-            //arrange            
-            command.CorrelationId = invitation.Reference.ToString();
-            setupContext.Invitations.Add(invitation);
-            invitation.UpdateStatus((int)InvitationStatus.InvitationComplete, DateTime.Now);
-            await setupContext.SaveChangesAsync();
-
-            //act
-            await ((IRequestHandler<SignedAgreementCommand, Unit>)handler).Handle(command, new CancellationToken());
-
-            //assert
-            var savedInvite = await confirmationContext.Invitations.FirstAsync(i => i.Reference.ToString() == command.CorrelationId);
-            savedInvite.Status.Should().Be((int)InvitationStatus.InvitationComplete);
-        }
+        }      
 
         [Test, ProviderAutoData]
         public async Task Handle_WhenCommandIsHandled_ThenShouldAddInvitationEvent(
