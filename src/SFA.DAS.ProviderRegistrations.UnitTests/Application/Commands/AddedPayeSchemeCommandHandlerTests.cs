@@ -97,7 +97,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             catch (Exception ex)
             {
                 //assert
-                Assert.AreEqual(ex.Message, "Object reference not set to an instance of an object.");
+                Assert.AreEqual(ex.Message, $"No invitation ID found for CorrelationId:{command.CorrelationId}");
             }
         }
 
@@ -122,7 +122,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             catch (Exception ex)
             {
                 //assert
-                Assert.AreEqual(ex.Message, "Object reference not set to an instance of an object.");
+                Assert.AreEqual(ex.Message, $"No invitation ID found for CorrelationId:{command.CorrelationId}") ;
             }
         }
     }

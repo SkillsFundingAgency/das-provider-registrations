@@ -6,6 +6,7 @@ using SFA.DAS.ProviderRegistrations.Application.Commands.AddResendInvitationComm
 using SFA.DAS.ProviderRegistrations.Data;
 using SFA.DAS.ProviderRegistrations.Models;
 using SFA.DAS.ProviderRegistrations.UnitTests.AutoFixture;
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -48,6 +49,29 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
 
             //assert            
             confirmationContext.InvitationEvents.FirstOrDefault(s => s.Invitation.Id == command.InvitationId).Date.Should().NotBeNull();
+        }
+
+        [Test, ProviderAutoData]
+        public async Task Handle_WhenInvalidStatusCommandIsHandled_ThenNoChangesAreMade(
+           ProviderRegistrationsDbContext setupContext,           
+           AddResendInvitationCommandHandler handler)
+        {
+            //arrange            
+            invitation.UpdateStatus((int)InvitationStatus.InvitationComplete, DateTime.Now);
+            setupContext.Invitations.Add(invitation);
+            await setupContext.SaveChangesAsync();
+            var command = new AddResendInvitationCommand(invitation.Id, DateTime.Now);
+
+            //act
+            try
+            {
+                await ((IRequestHandler<AddResendInvitationCommand, Unit>)handler).Handle(command, new CancellationToken());
+            }
+            catch (Exception ex)
+            {
+                //assert
+                Assert.AreEqual(ex.Message, $"No invitation found for InvitationId:{command.InvitationId}");
+            }
         }
     }
 }
