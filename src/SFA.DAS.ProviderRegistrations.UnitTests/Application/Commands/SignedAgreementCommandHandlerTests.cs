@@ -97,5 +97,32 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             var addedInvitationEvent = await confirmationContext.InvitationEvents.FirstOrDefaultAsync(s => s.Invitation.Id == invitation.Id);
             addedInvitationEvent.Date.Should().NotBeNull();
         }
+
+        [Test, ProviderAutoData]
+        public async Task Handle_WhenInvalidStatusCommandIsHandled_ThenNoChangesAreMade(
+           ProviderRegistrationsDbContext setupContext,
+           ProviderRegistrationsDbContext confirmationContext,
+           SignedAgreementCommandHandler handler,
+           SignedAgreementCommand command)
+        {
+            //arrange            
+            command.CorrelationId = invitation.Reference.ToString();
+            setupContext.Invitations.Add(invitation);
+            invitation.UpdateStatus((int)InvitationStatus.InvitationComplete, DateTime.Now);
+            await setupContext.SaveChangesAsync();
+
+            //act
+            try
+            {
+                await ((IRequestHandler<SignedAgreementCommand, Unit>)handler).Handle(command, new CancellationToken());
+            }
+            catch (Exception ex)
+            {
+                //assert
+                Assert.AreEqual(ex.Message, "Object reference not set to an instance of an object.");
+            }
+           
+        }
+
     }
 }

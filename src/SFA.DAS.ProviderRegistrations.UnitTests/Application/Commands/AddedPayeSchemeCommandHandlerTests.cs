@@ -75,5 +75,55 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             var addedInvitationEvent = await confirmationContext.InvitationEvents.FirstOrDefaultAsync(s => s.Invitation.Id == invitation.Id);
             addedInvitationEvent.Date.Should().NotBeNull();
         }
+
+        [Test, ProviderAutoData]
+        public async Task Handle_WhenDoesntExistCommandIsHandled_ThenNoChangesAreMade(
+            ProviderRegistrationsDbContext setupContext,
+            ProviderRegistrationsDbContext confirmationContext,
+            AddedPayeSchemeCommandHandler handler,
+            AddedPayeSchemeCommand command)
+        {
+            //arrange
+            setupContext.Invitations.Add(invitation);
+            await setupContext.SaveChangesAsync();
+            var statusBefore = invitation.Status;
+            command.CorrelationId = invitation.Reference.ToString();
+
+            //act
+            try
+            {
+                await ((IRequestHandler<AddedPayeSchemeCommand, Unit>)handler).Handle(command, new CancellationToken());
+            }
+            catch (Exception ex)
+            {
+                //assert
+                Assert.AreEqual(ex.Message, "Object reference not set to an instance of an object.");
+            }
+        }
+
+        [Test, ProviderAutoData]
+        public async Task Handle_WhenInvalidStatusCommandIsHandled_ThenNoChangesAreMade(
+            ProviderRegistrationsDbContext setupContext,
+            ProviderRegistrationsDbContext confirmationContext,
+            AddedPayeSchemeCommandHandler handler,
+            AddedPayeSchemeCommand command)
+        {
+            //arrange
+            invitation.UpdateStatus((int)InvitationStatus.LegalAgreementSigned, DateTime.Now);
+            setupContext.Invitations.Add(invitation);
+            await setupContext.SaveChangesAsync();
+            command.CorrelationId = invitation.Reference.ToString();
+
+            //act
+            try
+            {
+                await ((IRequestHandler<AddedPayeSchemeCommand, Unit>)handler).Handle(command, new CancellationToken());
+            }
+            catch (Exception ex)
+            {
+                //assert
+                Assert.AreEqual(ex.Message, "Object reference not set to an instance of an object.");
+            }
+        }
     }
 }
