@@ -1,3 +1,4 @@
+using AutoFixture;
 using FluentAssertions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +8,7 @@ using SFA.DAS.ProviderRegistrations.Data;
 using SFA.DAS.ProviderRegistrations.Models;
 using SFA.DAS.ProviderRegistrations.UnitTests.AutoFixture;
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -16,15 +18,30 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
     [Parallelizable]
     public class AddedPayeSchemeCommandHandlerTests
     {
+        private Fixture fixture { get; set; }
+        private Invitation invitation { get; set; }
+
+        [SetUp]
+        public void SetUp()
+        {
+            fixture = new Fixture();
+            fixture.Behaviors
+                .OfType<ThrowingRecursionBehavior>()
+                .ToList()
+                .ForEach(b => fixture.Behaviors.Remove(b));
+            fixture.Behaviors.Add(new OmitOnRecursionBehavior());
+            invitation = fixture.Create<Invitation>();
+        }
+
         [Test, ProviderAutoData]
         public async Task Handle_WhenCommandIsHandled_ThenShouldUpdateInvitationStatus(
                 ProviderRegistrationsDbContext setupContext,
                 ProviderRegistrationsDbContext confirmationContext,
                 AddedPayeSchemeCommandHandler handler,
-                AddedPayeSchemeCommand command,
-                Invitation invitation)
+                AddedPayeSchemeCommand command)
         {
             //arrange
+
             invitation.UpdateStatus((int)InvitationStatus.InvitationSent, DateTime.Now);
             command.CorrelationId = invitation.Reference.ToString();
             setupContext.Invitations.Add(invitation);
@@ -43,8 +60,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             ProviderRegistrationsDbContext setupContext,
             ProviderRegistrationsDbContext confirmationContext,
             AddedPayeSchemeCommandHandler handler,
-            AddedPayeSchemeCommand command,
-            Invitation invitation)
+            AddedPayeSchemeCommand command)
         {
             //arrange
             setupContext.Invitations.Add(invitation);
@@ -66,8 +82,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             ProviderRegistrationsDbContext setupContext,
             ProviderRegistrationsDbContext confirmationContext,
             AddedPayeSchemeCommandHandler handler,
-            AddedPayeSchemeCommand command,
-            Invitation invitation)
+            AddedPayeSchemeCommand command)
         {
             //arrange
             invitation.UpdateStatus((int)InvitationStatus.LegalAgreementSigned, DateTime.Now);
@@ -89,10 +104,9 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
                 ProviderRegistrationsDbContext setupContext,
                 ProviderRegistrationsDbContext confirmationContext,
                 AddedPayeSchemeCommandHandler handler,
-                AddedPayeSchemeCommand command,
-                Invitation invitation)
+                AddedPayeSchemeCommand command)
         {
-            //arrange
+            //arrange            
             invitation.UpdateStatus((int)InvitationStatus.InvitationSent, DateTime.Now);
             command.CorrelationId = invitation.Reference.ToString();
             setupContext.Invitations.Add(invitation);
@@ -102,7 +116,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             await ((IRequestHandler<AddedPayeSchemeCommand, Unit>)handler).Handle(command, new CancellationToken());
 
             //assert
-            var addedInvitationEvent = await confirmationContext.InvitationEvents.SingleAsync(s => s.InvitationId == invitation.Id);
+            var addedInvitationEvent = await confirmationContext.InvitationEvents.FirstOrDefaultAsync(s => s.Invitation.Id == invitation.Id);
             addedInvitationEvent.Date.Should().NotBeNull();
         }
     }

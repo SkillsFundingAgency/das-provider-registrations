@@ -1,9 +1,11 @@
-﻿using FluentAssertions;
+﻿using AutoFixture;
+using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.ProviderRegistrations.Application.Queries.GetInvitationEventByIdQuery;
 using SFA.DAS.ProviderRegistrations.Data;
 using SFA.DAS.ProviderRegistrations.Models;
 using SFA.DAS.ProviderRegistrations.UnitTests.AutoFixture;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,33 +15,34 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Queries
     [Parallelizable]
     public class GetInvitationEventByIdQueryHandlerTests
     {
-        [Test, ProviderAutoData]
-        public async Task Handle_WhenHandlingGetInvitationEventByIdQueryAndInvitationEventIsNotFound_ThenShouldReturnNull(
-           GetInvitationEventByIdQueryHandler handler,
-           GetInvitationEventByIdQuery query)
+        private Fixture fixture { get; set; }
+
+        [SetUp]
+        public void SetUp()
         {
-            //act
-            var result = await handler.Handle(query, new CancellationToken());
-
-            //assert
-            result.Should().BeNull();            
+            fixture = new Fixture();
+            fixture.Behaviors
+                .OfType<ThrowingRecursionBehavior>()
+                .ToList()
+                .ForEach(b => fixture.Behaviors.Remove(b));
+            fixture.Behaviors.Add(new OmitOnRecursionBehavior());
         }
-
 
         [Test, ProviderAutoData]
         public async Task Handle_WhenHandlingGetInvitationEventByIdQueryAndInvitationEventIsFound_ThenShouldReturnGetInvitationEventByIdQueryResult(
-            ProviderRegistrationsDbContext setupContext,
-            InvitationEvent invitationEvent1,
-            InvitationEvent invitationEvent2,
-            Invitation invitation,
+            ProviderRegistrationsDbContext setupContext,             
             GetInvitationEventByIdQueryHandler handler)
         {
             //arrange
+            var invitation = fixture.Create<Invitation>();
             setupContext.Invitations.Add(invitation);
-            invitationEvent1.InvitationId = invitation.Id;
+            invitation.InvitationEvents.Clear();
+            var invitationEvent1 = fixture.Create<InvitationEvent>();
+            invitationEvent1.Invitation = invitation;
             invitationEvent1.EventType = 1;
             setupContext.InvitationEvents.Add(invitationEvent1);
-            invitationEvent2.InvitationId = invitation.Id;
+            var invitationEvent2 = fixture.Create<InvitationEvent>();
+            invitationEvent2.Invitation = invitation;
             invitationEvent2.EventType = 2;
             setupContext.InvitationEvents.Add(invitationEvent2);
             await setupContext.SaveChangesAsync();

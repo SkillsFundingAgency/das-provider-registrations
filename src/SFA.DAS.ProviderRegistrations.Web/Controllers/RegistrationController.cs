@@ -66,10 +66,11 @@ namespace SFA.DAS.ProviderRegistrations.Web.Controllers
             var results = await _mediator.Send(new GetInvitationEventByIdQuery(InvitationId), new CancellationToken());           
 
             var model = _mapper.Map<InvitationEventsViewModel>(results);
+            
             if (model != null)
             {
-                model.InvitationSentDate = results?.InvitationSentDate;
-                model.EmployerOrganisation = results?.EmployerOrganisation;
+                model.EmployerOrganisation = results?.InvitationEvents.FirstOrDefault().InvitationDto.EmployerOrganisation;
+                model.InvitationSentDate = results?.InvitationEvents.FirstOrDefault().InvitationDto.SentDate;                
             }
 
             return View(model);

@@ -1,6 +1,8 @@
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoFixture;
 using FluentAssertions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -16,14 +18,28 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
     [Parallelizable]
     public class UpsertUserCommandHandlerTests
     {
+        private Fixture fixture { get; set; }
+        private Invitation invitation { get; set; }
+
+        [SetUp]
+        public void SetUp()
+        {
+            fixture = new Fixture();
+            fixture.Behaviors
+                .OfType<ThrowingRecursionBehavior>()
+                .ToList()
+                .ForEach(b => fixture.Behaviors.Remove(b));
+            fixture.Behaviors.Add(new OmitOnRecursionBehavior());
+            invitation = fixture.Create<Invitation>();
+        }
+
         [Test, ProviderAutoData]
         public async Task Handle_WhenCommandIsHandled_ThenShouldUpdateInvitationStatus(
             ProviderRegistrationsDbContext setupContext,
             ProviderRegistrationsDbContext confirmationContext,
-            UpsertUserCommandHandler handler,
-            Invitation invitation)
+            UpsertUserCommandHandler handler)
         {
-            //arrange
+            //arrange            
             invitation.UpdateStatus((int)InvitationStatus.InvitationSent, DateTime.Now);
             setupContext.Invitations.Add(invitation);
             await setupContext.SaveChangesAsync();
@@ -41,8 +57,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
         public async Task Handle_WhenDoesntExistCommandIsHandled_ThenNoChangesAreMade(
             ProviderRegistrationsDbContext setupContext,
             ProviderRegistrationsDbContext confirmationContext,
-            UpsertUserCommandHandler handler,
-            Invitation invitation)
+            UpsertUserCommandHandler handler)
         {
             //arrange
             setupContext.Invitations.Add(invitation);
@@ -62,10 +77,9 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
         public async Task Handle_WhenInvalidStatusCommandIsHandled_ThenNoChangesAreMade(
             ProviderRegistrationsDbContext setupContext,
             ProviderRegistrationsDbContext confirmationContext,
-            UpsertUserCommandHandler handler,
-            Invitation invitation)
+            UpsertUserCommandHandler handler)
         {
-            //arrange
+            //arrange            
             invitation.UpdateStatus((int)InvitationStatus.InvitationComplete, DateTime.Now);
             setupContext.Invitations.Add(invitation);
             await setupContext.SaveChangesAsync();
@@ -83,10 +97,9 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
         public async Task Handle_WhenCommandIsHandled_ThenShouldAddInvitationEvent(
             ProviderRegistrationsDbContext setupContext,
             ProviderRegistrationsDbContext confirmationContext,
-            UpsertUserCommandHandler handler,
-            Invitation invitation)
+            UpsertUserCommandHandler handler)
         {
-            //arrange
+            //arrange            
             invitation.UpdateStatus((int)InvitationStatus.InvitationSent, DateTime.Now);
             setupContext.Invitations.Add(invitation);                       
             await setupContext.SaveChangesAsync();
@@ -96,9 +109,8 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             await ((IRequestHandler<UpsertUserCommand, Unit>)handler).Handle(command, new CancellationToken());
 
             //assert
-            var addedInvitationEvent = await confirmationContext.InvitationEvents.SingleAsync(s => s.InvitationId == invitation.Id);
+            var addedInvitationEvent = await confirmationContext.InvitationEvents.FirstOrDefaultAsync(s => s.Invitation.Id == invitation.Id);
             addedInvitationEvent.Date.Should().NotBeNull();
         }
-
     }
 }

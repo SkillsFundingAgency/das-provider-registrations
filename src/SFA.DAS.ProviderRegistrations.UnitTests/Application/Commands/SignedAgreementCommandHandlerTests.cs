@@ -1,3 +1,4 @@
+using AutoFixture;
 using AutoFixture.NUnit3;
 using FluentAssertions;
 using MediatR;
@@ -8,6 +9,7 @@ using SFA.DAS.ProviderRegistrations.Data;
 using SFA.DAS.ProviderRegistrations.Models;
 using SFA.DAS.ProviderRegistrations.UnitTests.AutoFixture;
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -17,18 +19,33 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
     [Parallelizable]
     public class SignedAgreementCommandHandlerTests
     {
+        private Fixture fixture { get; set; }
+        private Invitation invitation { get; set; }
+
+        [SetUp]
+        public void SetUp()
+        {
+            fixture = new Fixture();
+            fixture.Behaviors
+                .OfType<ThrowingRecursionBehavior>()
+                .ToList()
+                .ForEach(b => fixture.Behaviors.Remove(b));
+            fixture.Behaviors.Add(new OmitOnRecursionBehavior());
+            invitation = fixture.Create<Invitation>();
+        }
+
+
         [Test, ProviderAutoData]
         public async Task Handle_WhenCommandIsHandled_ThenShouldUpdateInvitationStatus(
             ProviderRegistrationsDbContext setupContext,
             ProviderRegistrationsDbContext confirmationContext,
             SignedAgreementCommandHandler handler,
-            SignedAgreementCommand command,
-            Invitation invite)
+            SignedAgreementCommand command)
         {
-            //arrange
-            command.CorrelationId = invite.Reference.ToString();
-            setupContext.Invitations.Add(invite);
-            invite.UpdateStatus((int)InvitationStatus.AccountStarted, DateTime.Now);
+            //arrange            
+            command.CorrelationId = invitation.Reference.ToString();
+            setupContext.Invitations.Add(invitation);
+            invitation.UpdateStatus((int)InvitationStatus.AccountStarted, DateTime.Now);
             await setupContext.SaveChangesAsync();
 
             //act
@@ -44,19 +61,18 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             ProviderRegistrationsDbContext db,
             ProviderRegistrationsDbContext confirmationContext,
             SignedAgreementCommandHandler handler,
-            SignedAgreementCommand command,
-            Invitation invite)
+            SignedAgreementCommand command)
         {
-            //arrange
-            db.Invitations.Add(invite);
-            invite.UpdateStatus((int)InvitationStatus.InvitationSent, DateTime.Now);
+            //arrange            
+            db.Invitations.Add(invitation);
+            invitation.UpdateStatus((int)InvitationStatus.InvitationSent, DateTime.Now);
             await db.SaveChangesAsync();
 
             //act
             await ((IRequestHandler<SignedAgreementCommand, Unit>)handler).Handle(command, new CancellationToken());
 
             //assert
-            var savedInvite = await confirmationContext.Invitations.FirstAsync(i => i.Reference == invite.Reference);
+            var savedInvite = await confirmationContext.Invitations.FirstAsync(i => i.Reference == invitation.Reference);
             savedInvite.Status.Should().Be((int)InvitationStatus.InvitationSent);
         }
 
@@ -65,13 +81,12 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             ProviderRegistrationsDbContext setupContext,
             ProviderRegistrationsDbContext confirmationContext,
             SignedAgreementCommandHandler handler,
-            SignedAgreementCommand command,
-            Invitation invite)
+            SignedAgreementCommand command)
         {
-            //arrange
-            command.CorrelationId = invite.Reference.ToString();
-            setupContext.Invitations.Add(invite);
-            invite.UpdateStatus((int)InvitationStatus.InvitationComplete, DateTime.Now);
+            //arrange            
+            command.CorrelationId = invitation.Reference.ToString();
+            setupContext.Invitations.Add(invitation);
+            invitation.UpdateStatus((int)InvitationStatus.InvitationComplete, DateTime.Now);
             await setupContext.SaveChangesAsync();
 
             //act
@@ -87,20 +102,20 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             ProviderRegistrationsDbContext setupContext,
             ProviderRegistrationsDbContext confirmationContext,
             SignedAgreementCommandHandler handler,
-            SignedAgreementCommand command,
-            Invitation invite)
+            SignedAgreementCommand command)
         {
             //arrange
-            command.CorrelationId = invite.Reference.ToString();
-            setupContext.Invitations.Add(invite);
-            invite.UpdateStatus((int)InvitationStatus.AccountStarted, DateTime.Now);
+            var invitation = fixture.Create<Invitation>();
+            command.CorrelationId = invitation.Reference.ToString();
+            setupContext.Invitations.Add(invitation);
+            invitation.UpdateStatus((int)InvitationStatus.AccountStarted, DateTime.Now);
             await setupContext.SaveChangesAsync();
 
             //act
             await ((IRequestHandler<SignedAgreementCommand, Unit>)handler).Handle(command, new CancellationToken());
 
-            //assert
-            var addedInvitationEvent = await confirmationContext.InvitationEvents.SingleAsync(s => s.InvitationId == invite.Id);
+            //assert            
+            var addedInvitationEvent = await confirmationContext.InvitationEvents.FirstOrDefaultAsync(s => s.Invitation.Id == invitation.Id);
             addedInvitationEvent.Date.Should().NotBeNull();
         }
     }

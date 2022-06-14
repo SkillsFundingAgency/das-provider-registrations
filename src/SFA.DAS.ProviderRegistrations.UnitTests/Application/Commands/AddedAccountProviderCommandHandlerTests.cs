@@ -1,3 +1,4 @@
+using AutoFixture;
 using FluentAssertions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +8,7 @@ using SFA.DAS.ProviderRegistrations.Data;
 using SFA.DAS.ProviderRegistrations.Models;
 using SFA.DAS.ProviderRegistrations.UnitTests.AutoFixture;
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -16,15 +18,28 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
     [Parallelizable]
     public class AddedAccountProviderCommandTests
     {
+        private Fixture fixture { get; set; }
+        private Invitation invitation { get; set; }
+
+        [SetUp]
+        public void SetUp()
+        {
+            fixture = new Fixture();
+            fixture.Behaviors
+                .OfType<ThrowingRecursionBehavior>()
+                .ToList()
+                .ForEach(b => fixture.Behaviors.Remove(b));
+            fixture.Behaviors.Add(new OmitOnRecursionBehavior());
+            invitation = fixture.Create<Invitation>();
+        }
 
         [Test, ProviderAutoData]
         public async Task Handle_WhenCommandIsHandled_ThenShouldUpdateInvitationStatus(
             ProviderRegistrationsDbContext setupContext,
             ProviderRegistrationsDbContext confirmationContext,
-            AddedAccountProviderCommandHandler handler,
-            Invitation invitation)
+            AddedAccountProviderCommandHandler handler)
         {
-            //Arrange
+            //Arrange            
             var command = new AddedAccountProviderCommand(invitation.Ukprn, Guid.NewGuid(), invitation.Reference.ToString());
             invitation.UpdateStatus((int)InvitationStatus.InvitationSent, DateTime.Now);
             setupContext.Invitations.Add(invitation);
@@ -43,10 +58,9 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
         public async Task Handle_WhenDoesntExistCommandIsHandled_ThenNoChangesAreMade(
             ProviderRegistrationsDbContext setupContext,
             ProviderRegistrationsDbContext confirmationContext,
-            AddedAccountProviderCommandHandler handler,
-            Invitation invitation)
+            AddedAccountProviderCommandHandler handler)
         {
-            //Arrange
+            //Arrange            
             var command = new AddedAccountProviderCommand(12345, Guid.NewGuid(), Guid.NewGuid().ToString());
             setupContext.Invitations.Add(invitation);
             await setupContext.SaveChangesAsync();
@@ -67,13 +81,11 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             ProviderRegistrationsDbContext setupContext,
             ProviderRegistrationsDbContext confirmationContext,
             AddedAccountProviderCommandHandler handler,
-            AddedAccountProviderCommand command,
-            Invitation invitation)
+            AddedAccountProviderCommand command)
         {
-            //Arrange
+            //Arrange            
             setupContext.Invitations.Add(invitation);
             await setupContext.SaveChangesAsync();
-
             var statusBefore = invitation.Status;
 
             //act

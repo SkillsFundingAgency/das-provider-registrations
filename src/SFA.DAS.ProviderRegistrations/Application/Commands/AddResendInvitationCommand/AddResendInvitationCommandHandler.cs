@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SFA.DAS.ProviderRegistrations.Data;
 using SFA.DAS.ProviderRegistrations.Models;
 
@@ -18,8 +19,11 @@ namespace SFA.DAS.ProviderRegistrations.Application.Commands.AddResendInvitation
 
         protected override async Task Handle(AddResendInvitationCommand request, CancellationToken cancellationToken)
         {
-            var invitationEvents = new InvitationEvent(request.InvitationId, (int)EventType.InvitationResent ,request.InvitationReSentDate);
-            _db.Value.InvitationEvents.Add(invitationEvents);
+            var invitation = await _db.Value.Invitations.SingleOrDefaultAsync(i => i.Id == request.InvitationId, cancellationToken);
+                       
+           var invitationEvent = new InvitationEvent(invitation?.Id, (int)EventType.InvitationResent, request.InvitationReSentDate);
+           invitation?.InvitationEvents.Add(invitationEvent);
+
             await _db.Value.SaveChangesAsync(cancellationToken);
         }
     }

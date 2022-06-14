@@ -6,6 +6,8 @@ namespace SFA.DAS.ProviderRegistrations.Models
     {
         public long Id { get; set; }
 
+        public virtual Invitation Invitation { get; set; }
+
         public long? InvitationId { get; set; }
 
         public int EventType { get; set; }

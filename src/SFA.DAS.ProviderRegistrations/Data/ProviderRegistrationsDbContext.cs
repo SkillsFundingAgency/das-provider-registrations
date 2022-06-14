@@ -26,7 +26,8 @@ namespace SFA.DAS.ProviderRegistrations.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new InvitationConfiguration());
-            modelBuilder.ApplyConfiguration(new UnsubscribeConfiguration());
+            modelBuilder.ApplyConfiguration(new InvitationEventConfiguration());
+            modelBuilder.ApplyConfiguration(new UnsubscribeConfiguration());            
         }
     }
 }
