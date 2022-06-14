@@ -1,20 +1,18 @@
 ﻿using System;
-using System.Linq;
-using System.Collections.Generic;
 using SFA.DAS.ProviderRegistrations.Types;
 
 namespace SFA.DAS.ProviderRegistrations.Application.Queries.GetInvitationEventByIdQuery
 {
     public class GetInvitationEventByIdQueryResult
     {
-        public GetInvitationEventByIdQueryResult(List<InvitationEventDto> invitationEvents)
+        public GetInvitationEventByIdQueryResult(InvitationDto invitation)
         {
-            InvitationEvents = invitationEvents;
-            EmployerOrganisation = invitationEvents?.FirstOrDefault().InvitationDto.EmployerOrganisation;
-            InvitationSentDate = invitationEvents?.FirstOrDefault().InvitationDto.SentDate;
+            Invitation = invitation;
+            EmployerOrganisation = Invitation?.EmployerOrganisation;
+            InvitationSentDate = Invitation?.SentDate;
         }
 
-        public List<InvitationEventDto> InvitationEvents { get; }
+        public InvitationDto Invitation { get; }
         public string EmployerOrganisation { get; }
         public DateTime? InvitationSentDate { get; }
     }

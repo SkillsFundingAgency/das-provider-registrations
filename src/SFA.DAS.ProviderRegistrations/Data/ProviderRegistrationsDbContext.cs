@@ -27,7 +27,8 @@ namespace SFA.DAS.ProviderRegistrations.Data
         {
             modelBuilder.ApplyConfiguration(new InvitationConfiguration());
             modelBuilder.ApplyConfiguration(new InvitationEventConfiguration());
-            modelBuilder.ApplyConfiguration(new UnsubscribeConfiguration());            
+            modelBuilder.ApplyConfiguration(new UnsubscribeConfiguration());
+            modelBuilder.Entity<Invitation>().HasMany(a => a.InvitationEvents).WithOne(a => a.Invitation);            
         }
     }
 }

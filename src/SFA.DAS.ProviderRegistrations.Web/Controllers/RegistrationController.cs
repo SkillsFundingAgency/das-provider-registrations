@@ -69,8 +69,8 @@ namespace SFA.DAS.ProviderRegistrations.Web.Controllers
             
             if (model != null)
             {
-                model.EmployerOrganisation = results?.InvitationEvents.FirstOrDefault().InvitationDto.EmployerOrganisation;
-                model.InvitationSentDate = results?.InvitationEvents.FirstOrDefault().InvitationDto.SentDate;                
+                model.EmployerOrganisation = results?.EmployerOrganisation;
+                model.InvitationSentDate = results?.InvitationSentDate;                
             }
 
             return View(model);
