@@ -4,6 +4,7 @@ using MediatR;
 using NUnit.Framework;
 using SFA.DAS.ProviderRegistrations.Application.Commands.AddResendInvitationCommand;
 using SFA.DAS.ProviderRegistrations.Data;
+using SFA.DAS.ProviderRegistrations.Exceptions;
 using SFA.DAS.ProviderRegistrations.Models;
 using SFA.DAS.ProviderRegistrations.UnitTests.AutoFixture;
 using System;
@@ -67,7 +68,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             {
                 await ((IRequestHandler<AddResendInvitationCommand, Unit>)handler).Handle(command, new CancellationToken());
             }
-            catch (Exception ex)
+            catch (InvalidInvitationException ex)
             {
                 //assert
                 Assert.AreEqual(ex.Message, $"No invitation found for InvitationId:{command.InvitationId}");

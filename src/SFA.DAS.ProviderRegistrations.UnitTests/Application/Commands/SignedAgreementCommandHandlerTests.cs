@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 using SFA.DAS.ProviderRegistrations.Application.Commands.SignedAgreementCommand;
 using SFA.DAS.ProviderRegistrations.Data;
+using SFA.DAS.ProviderRegistrations.Exceptions;
 using SFA.DAS.ProviderRegistrations.Models;
 using SFA.DAS.ProviderRegistrations.UnitTests.AutoFixture;
 using System;
@@ -116,7 +117,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             {
                 await ((IRequestHandler<SignedAgreementCommand, Unit>)handler).Handle(command, new CancellationToken());
             }
-            catch (Exception ex)
+            catch (InvalidInvitationException ex)
             {
                 //assert
                 Assert.AreEqual(ex.Message, $"No invitation ID found for CorrelationId:{command.CorrelationId}");
