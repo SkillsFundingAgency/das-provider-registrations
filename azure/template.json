@@ -93,10 +93,11 @@
             "type": "string",
             "defaultValue": "Basic"
         },
-        "appServiceAllowedIPs": {
-            "type": "array",
-            "defaultValue": [
-            ]
+        "backEndAccessRestrictions": {
+            "type": "array"
+        },
+        "frontEndAccessRestrictions": {
+            "type": "array"
         },
         "sharedEnvResourceGroup": {
             "type": "string"
@@ -428,7 +429,7 @@
                         "value": "[reference(concat(variables('uiAppServiceName'), '-certificate-',parameters('utcValue'))).outputs.certificateThumbprint.value]"
                     },
                     "ipSecurityRestrictions": {
-                        "value": "[parameters('appServiceAllowedIPs')]"
+                        "value": "[parameters('frontEndAccessRestrictions')]"
                     }
                 }
             }
@@ -534,7 +535,7 @@
                         "value": "[reference(concat(variables('apiAppServiceName'), '-certificate-',parameters('utcValue'))).outputs.certificateThumbprint.value]"
                     },
                     "ipSecurityRestrictions": {
-                        "value": "[parameters('appServiceAllowedIPs')]"
+                        "value": "[parameters('backEndAccessRestrictions')]"
                     }
                 }
             }
