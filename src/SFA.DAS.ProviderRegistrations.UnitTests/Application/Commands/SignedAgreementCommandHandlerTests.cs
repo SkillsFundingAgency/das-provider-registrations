@@ -95,8 +95,8 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             await ((IRequestHandler<SignedAgreementCommand, Unit>)handler).Handle(command, new CancellationToken());
 
             //assert            
-            var addedInvitationEvent = await confirmationContext.InvitationEvents.FirstOrDefaultAsync(s => s.Invitation.Id == invitation.Id);
-            addedInvitationEvent.Date.Should().NotBeNull();
+            var addedInvitationEvent = await confirmationContext.InvitationEvents.FirstOrDefaultAsync(s => s.Invitation.Id == invitation.Id && s.EventType == (int)EventType.LegalAgreementSigned);
+            addedInvitationEvent.Date.Date.Should().Be(DateTime.UtcNow.Date);
         }
 
         [Test, ProviderAutoData]

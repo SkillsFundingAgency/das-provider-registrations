@@ -64,7 +64,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
                 AddedPayeSchemeCommand command)
         {
             //arrange            
-            invitation.UpdateStatus((int)InvitationStatus.InvitationSent, DateTime.Now);
+            invitation.UpdateStatus((int)InvitationStatus.InvitationSent, DateTime.UtcNow);
             command.CorrelationId = invitation.Reference.ToString();
             setupContext.Invitations.Add(invitation);
             await setupContext.SaveChangesAsync();
@@ -73,8 +73,8 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             await ((IRequestHandler<AddedPayeSchemeCommand, Unit>)handler).Handle(command, new CancellationToken());
 
             //assert
-            var addedInvitationEvent = await confirmationContext.InvitationEvents.FirstOrDefaultAsync(s => s.Invitation.Id == invitation.Id);
-            addedInvitationEvent.Date.Should().NotBeNull();
+            var addedInvitationEvent = await confirmationContext.InvitationEvents.FirstOrDefaultAsync(s => s.Invitation.Id == invitation.Id && s.EventType == (int)EventType.PayeSchemeAdded);
+            addedInvitationEvent.Date.Date.Should().Be(DateTime.UtcNow.Date);
         }
 
         [Test, ProviderAutoData]

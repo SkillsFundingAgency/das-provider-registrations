@@ -3,7 +3,7 @@
 	[Id] BIGINT NOT NULL IDENTITY,
 	[InvitationId] BIGINT NOT NULL,    
     [EventType] INT NOT NULL,
-    [Date] DATETIME NULL,    
+    [Date] DATETIME NOT NULL,    
     CONSTRAINT [PK_InvitationEvents] PRIMARY KEY ([Id])
 )
 GO

@@ -12,9 +12,9 @@ namespace SFA.DAS.ProviderRegistrations.Models
 
         public int EventType { get; set; }
 
-        public DateTime? Date { get; set; }
+        public DateTime Date { get; set; }
         
-        public InvitationEvent(long? invitationId, int eventType, DateTime? date)
+        public InvitationEvent(long? invitationId, int eventType, DateTime date)
         {
             InvitationId = invitationId;
             EventType = eventType;

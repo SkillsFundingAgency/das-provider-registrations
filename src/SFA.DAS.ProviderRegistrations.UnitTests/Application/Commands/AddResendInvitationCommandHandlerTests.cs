@@ -44,12 +44,13 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             setupContext.Invitations.Add(invitation);
             await setupContext.SaveChangesAsync();
             command.InvitationId = invitation.Id;
+            command.InvitationReSentDate = DateTime.UtcNow;
 
             //act            
             await ((IRequestHandler<AddResendInvitationCommand, Unit>)handler).Handle(command, new CancellationToken());
 
-            //assert            
-            confirmationContext.InvitationEvents.FirstOrDefault(s => s.Invitation.Id == command.InvitationId).Date.Should().NotBeNull();
+            //assert
+            confirmationContext.InvitationEvents.FirstOrDefault(s => s.Invitation.Id == command.InvitationId && s.Date == command.InvitationReSentDate).Date.Date.Should().Be(DateTime.UtcNow.Date);            
         }
 
         [Test, ProviderAutoData]
