@@ -18,7 +18,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.Authentication
     {
         public static IServiceCollection AddProviderIdamsAuthentication(this IServiceCollection services, IConfiguration config)
         {
-            if (config["UseAuthenictationStub"] != null && bool.Parse(config["UseAuthenictationStub"]))
+            if (config["UseAuthenticationStub"] != null && bool.Parse(config["UseAuthenticationStub"]))
             {
                 services.AddProviderStubAuthentication();
             }
