@@ -26,6 +26,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.ViewModels
 
         public bool ShowViewStatusLink => Status == InvitationStatusViewModel.AccountStarted ||
                                           Status == InvitationStatusViewModel.PayeSchemeAdded ||
-                                          Status == InvitationStatusViewModel.LegalAgreementSigned;        
+                                          Status == InvitationStatusViewModel.LegalAgreementSigned ||
+                                          Status == InvitationStatusViewModel.InvitationComplete;        
     }
 }

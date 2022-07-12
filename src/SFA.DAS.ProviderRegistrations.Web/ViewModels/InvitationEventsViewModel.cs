@@ -10,6 +10,8 @@ namespace SFA.DAS.ProviderRegistrations.Web.ViewModels
     {
         public List<InvitationEventViewModel> InvitationEvents { get; set; }
 
+        public InvitationViewModel Invitation { get; set; }
+
         public DateTime? InvitationSentDate { get; set; }
 
         public string EmployerOrganisation { get; set; }
@@ -20,14 +22,64 @@ namespace SFA.DAS.ProviderRegistrations.Web.ViewModels
 
         public DateTime? AgreementAcceptedDate => InvitationEvents?.Where(x => x.EventType == EventTypeViewModel.LegalAgreementSigned)?.FirstOrDefault()?.Date;
 
-        public string AgreementAcceptedStatus => AgreementAcceptedDate != null ? AgreementAcceptedDate?.ToString("dd MMM yy") : "Legal agreement not accepted";
+        public string AgreementAcceptedStatus => AgreementAcceptedDate != null ? AgreementAcceptedDate?.ToString("dd MMM yy") : GetAgreementAcceptedText();
 
         public DateTime? AccountCreationStartedDate => InvitationEvents?.Where(x => x.EventType == EventTypeViewModel.AccountStarted)?.FirstOrDefault()?.Date;
 
-        public string AccountCreationStartedStatus => AccountCreationStartedDate != null ? AccountCreationStartedDate?.ToString("dd MMM yy") : "Account creation not started";
+        public string AccountCreationStartedStatus => AccountCreationStartedDate != null ? AccountCreationStartedDate?.ToString("dd MMM yy") : GetAccountCreationStartedText();
 
         public DateTime? PayeSchemeAddedDate => InvitationEvents?.Where(x => x.EventType == EventTypeViewModel.PayeSchemeAdded)?.FirstOrDefault()?.Date;
 
-        public string PayeSchemeAddedStatus => PayeSchemeAddedDate != null ? PayeSchemeAddedDate?.ToString("dd MMM yy") : "PAYE scheme not added";
+        public string PayeSchemeAddedStatus => PayeSchemeAddedDate != null ? PayeSchemeAddedDate?.ToString("dd MMM yy") : GetPaymentSchemeText() ;
+
+        private string GetAccountCreationStartedText()
+        {
+            if (Status.HasValue)
+            {
+                switch (Status)
+                {
+                    case InvitationStatusViewModel.PayeSchemeAdded:
+                    case InvitationStatusViewModel.LegalAgreementSigned:
+                    case InvitationStatusViewModel.InvitationComplete:
+                    case InvitationStatusViewModel.AccountStarted:
+                        return "Started";
+                }
+            }
+
+            return "Account creation not started";
+        }
+
+        private string GetAgreementAcceptedText()
+        {
+            if (Status.HasValue)
+            {
+                switch (Status)
+                {
+                    case InvitationStatusViewModel.LegalAgreementSigned:
+                    case InvitationStatusViewModel.InvitationComplete:
+                        return "Added";
+                }
+            }
+
+            return "Legal agreement not accepted";
+        }
+
+        private string GetPaymentSchemeText()
+        {
+            if (Status.HasValue)
+            {
+                switch (Status)
+                {
+                    case InvitationStatusViewModel.PayeSchemeAdded:
+                    case InvitationStatusViewModel.LegalAgreementSigned:
+                    case InvitationStatusViewModel.InvitationComplete:
+                        return "Added";
+                }
+            }
+
+            return "PAYE scheme not added";
+        }
+
+        public InvitationStatusViewModel? Status => Invitation?.Status; 
     }
 }
