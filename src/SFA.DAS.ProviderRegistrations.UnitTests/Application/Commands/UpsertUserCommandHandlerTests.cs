@@ -16,7 +16,6 @@ using SFA.DAS.ProviderRegistrations.UnitTests.AutoFixture;
 namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
 {
     [TestFixture]
-    [Parallelizable]
     public class UpsertUserCommandHandlerTests
     {
         private Fixture fixture { get; set; }
