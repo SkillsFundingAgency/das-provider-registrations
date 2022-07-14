@@ -22,15 +22,15 @@ namespace SFA.DAS.ProviderRegistrations.Web.ViewModels
 
         public DateTime? AgreementAcceptedDate => InvitationEvents?.Where(x => x.EventType == EventTypeViewModel.LegalAgreementSigned)?.FirstOrDefault()?.Date;
 
-        public string AgreementAcceptedStatus => AgreementAcceptedDate != null ? AgreementAcceptedDate?.ToString("dd MMM yy") : GetAgreementAcceptedText();
+        public string AgreementAcceptedStatus => AgreementAcceptedDate != null ? AgreementAcceptedDate?.ToString("D") : GetAgreementAcceptedText();
 
         public DateTime? AccountCreationStartedDate => InvitationEvents?.Where(x => x.EventType == EventTypeViewModel.AccountStarted)?.FirstOrDefault()?.Date;
 
-        public string AccountCreationStartedStatus => AccountCreationStartedDate != null ? AccountCreationStartedDate?.ToString("dd MMM yy") : GetAccountCreationStartedText();
+        public string AccountCreationStartedStatus => AccountCreationStartedDate != null ? AccountCreationStartedDate?.ToString("D") : GetAccountCreationStartedText();
 
         public DateTime? PayeSchemeAddedDate => InvitationEvents?.Where(x => x.EventType == EventTypeViewModel.PayeSchemeAdded)?.FirstOrDefault()?.Date;
 
-        public string PayeSchemeAddedStatus => PayeSchemeAddedDate != null ? PayeSchemeAddedDate?.ToString("dd MMM yy") : GetPaymentSchemeText() ;
+        public string PayeSchemeAddedStatus => PayeSchemeAddedDate != null ? PayeSchemeAddedDate?.ToString("D") : GetPaymentSchemeText() ;
 
         private string GetAccountCreationStartedText()
         {

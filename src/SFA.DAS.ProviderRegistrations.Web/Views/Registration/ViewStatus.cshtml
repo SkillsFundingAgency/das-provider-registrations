@@ -25,7 +25,7 @@
                         Invitation sent:
                     </dt>
                     <dd class="govuk-summary-list__value">
-                        @Model.InvitationSentDate?.ToString("dd MMM yy")
+                        @Model.InvitationSentDate?.ToString("D")
                     </dd>
                     </div>
                 }
@@ -37,7 +37,7 @@
                             Invitation last sent:
                         </dt>
                         <dd class="govuk-summary-list__value">
-                            @Model.InvitationResentDate?.ToString("dd MMM yy")
+                            @Model.InvitationResentDate?.ToString("D")
                         </dd>
                     </div>
                 }
