@@ -79,11 +79,11 @@ namespace SFA.DAS.ProviderRegistrations.Web.UnitTests.ViewModels
             Assert.AreEqual(viewModel.AgreementAcceptedStatus, dateTimeNow.ToString("dd MMM yy"));
         }
 
-        [TestCase(InvitationStatusViewModel.InvitationSent, "Account creation not started")]
-        [TestCase(InvitationStatusViewModel.AccountStarted, "Started")]
-        [TestCase(InvitationStatusViewModel.PayeSchemeAdded, "Started")]
-        [TestCase(InvitationStatusViewModel.LegalAgreementSigned, "Started")]
-        [TestCase(InvitationStatusViewModel.InvitationComplete, "Started")]
+        [TestCase(InvitationStatusViewModel.InvitationSent, "Legal agreement not accepted")]
+        [TestCase(InvitationStatusViewModel.AccountStarted, "Legal agreement not accepted")]
+        [TestCase(InvitationStatusViewModel.PayeSchemeAdded, "Legal agreement not accepted")]
+        [TestCase(InvitationStatusViewModel.LegalAgreementSigned, "Accepted")]
+        [TestCase(InvitationStatusViewModel.InvitationComplete, "Accepted")]
         public void AgreementAcceptedText_Is_Shown_Correctly_When_LegalAgreementSigned_Event_Is_Not_Received(InvitationStatusViewModel status, string textToDisplay)
         {
             var viewModel = new InvitationEventsViewModel();
@@ -92,7 +92,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.UnitTests.ViewModels
                 Status = status
             };
 
-            Assert.AreEqual(viewModel.AccountCreationStartedStatus, textToDisplay);
+            Assert.AreEqual(viewModel.AgreementAcceptedStatus, textToDisplay);
         }
     }
 }

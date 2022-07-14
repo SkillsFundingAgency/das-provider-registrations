@@ -57,7 +57,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.ViewModels
                 {
                     case InvitationStatusViewModel.LegalAgreementSigned:
                     case InvitationStatusViewModel.InvitationComplete:
-                        return "Added";
+                        return "Accepted";
                 }
             }
 
