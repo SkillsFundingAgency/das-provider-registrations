@@ -1,4 +1,5 @@
 ﻿@using SFA.DAS.ProviderRegistrations.Web.Extensions
+@using SFA.DAS.ProviderRegistrations.Web.ViewModels
 @model SFA.DAS.ProviderRegistrations.Web.ViewModels.InvitationEventsViewModel
 
 @section breadcrumb
@@ -25,7 +26,7 @@
                         Invitation sent:
                     </dt>
                     <dd class="govuk-summary-list__value">
-                        @Model.InvitationSentDate?.ToString("D")
+                        @Model.InvitationSentDate?.ToString(InvitationEventsViewModel.DateFormat)
                     </dd>
                     </div>
                 }
@@ -37,7 +38,7 @@
                             Invitation last sent:
                         </dt>
                         <dd class="govuk-summary-list__value">
-                            @Model.InvitationResentDate?.ToString("D")
+                            @Model.InvitationResentDate?.ToString(InvitationEventsViewModel.DateFormat)
                         </dd>
                     </div>
                 }

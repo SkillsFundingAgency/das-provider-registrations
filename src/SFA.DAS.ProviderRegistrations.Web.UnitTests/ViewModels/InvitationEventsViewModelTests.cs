@@ -17,7 +17,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.UnitTests.ViewModels
                 new InvitationEventViewModel{ EventType = EventTypeViewModel.PayeSchemeAdded, Date = dateTimeNow}
             };
 
-            Assert.AreEqual(viewModel.PayeSchemeAddedStatus, dateTimeNow.ToString("D"));
+            Assert.AreEqual(viewModel.PayeSchemeAddedStatus, dateTimeNow.ToString(InvitationEventsViewModel.DateFormat));
         }
 
         [TestCase(InvitationStatusViewModel.InvitationSent, "PAYE scheme not added")]
@@ -47,7 +47,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.UnitTests.ViewModels
                 new InvitationEventViewModel{ EventType = EventTypeViewModel.AccountStarted, Date = dateTimeNow}
             };
 
-            Assert.AreEqual(viewModel.AccountCreationStartedStatus, dateTimeNow.ToString("D"));
+            Assert.AreEqual(viewModel.AccountCreationStartedStatus, dateTimeNow.ToString(InvitationEventsViewModel.DateFormat));
         }
 
         [TestCase(InvitationStatusViewModel.InvitationSent, "Account creation not started")]
@@ -76,7 +76,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.UnitTests.ViewModels
                 new InvitationEventViewModel{ EventType = EventTypeViewModel.LegalAgreementSigned, Date = dateTimeNow}
             };
 
-            Assert.AreEqual(viewModel.AgreementAcceptedStatus, dateTimeNow.ToString("D"));
+            Assert.AreEqual(viewModel.AgreementAcceptedStatus, dateTimeNow.ToString(InvitationEventsViewModel.DateFormat));
         }
 
         [TestCase(InvitationStatusViewModel.InvitationSent, "Legal agreement not accepted")]

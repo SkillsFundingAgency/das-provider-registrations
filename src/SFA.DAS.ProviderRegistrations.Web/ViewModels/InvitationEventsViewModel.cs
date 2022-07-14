@@ -8,6 +8,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.ViewModels
 {
     public class InvitationEventsViewModel
     {
+        public const string DateFormat = "dd MMMM yyyy";
         public List<InvitationEventViewModel> InvitationEvents { get; set; }
 
         public InvitationViewModel Invitation { get; set; }
@@ -22,15 +23,15 @@ namespace SFA.DAS.ProviderRegistrations.Web.ViewModels
 
         public DateTime? AgreementAcceptedDate => InvitationEvents?.Where(x => x.EventType == EventTypeViewModel.LegalAgreementSigned)?.FirstOrDefault()?.Date;
 
-        public string AgreementAcceptedStatus => AgreementAcceptedDate != null ? AgreementAcceptedDate?.ToString("D") : GetAgreementAcceptedText();
+        public string AgreementAcceptedStatus => AgreementAcceptedDate != null ? AgreementAcceptedDate?.ToString(DateFormat) : GetAgreementAcceptedText();
 
         public DateTime? AccountCreationStartedDate => InvitationEvents?.Where(x => x.EventType == EventTypeViewModel.AccountStarted)?.FirstOrDefault()?.Date;
 
-        public string AccountCreationStartedStatus => AccountCreationStartedDate != null ? AccountCreationStartedDate?.ToString("D") : GetAccountCreationStartedText();
+        public string AccountCreationStartedStatus => AccountCreationStartedDate != null ? AccountCreationStartedDate?.ToString(DateFormat) : GetAccountCreationStartedText();
 
         public DateTime? PayeSchemeAddedDate => InvitationEvents?.Where(x => x.EventType == EventTypeViewModel.PayeSchemeAdded)?.FirstOrDefault()?.Date;
 
-        public string PayeSchemeAddedStatus => PayeSchemeAddedDate != null ? PayeSchemeAddedDate?.ToString("D") : GetPaymentSchemeText() ;
+        public string PayeSchemeAddedStatus => PayeSchemeAddedDate != null ? PayeSchemeAddedDate?.ToString(DateFormat) : GetPaymentSchemeText() ;
 
         private string GetAccountCreationStartedText()
         {
