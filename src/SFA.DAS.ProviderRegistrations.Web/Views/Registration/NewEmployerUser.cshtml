@@ -4,16 +4,17 @@
     ViewData["Title"] = "Manage apprenticeships";
     ViewBag.GaData.Vpv = "/registrations/registration/new-employer-user";
     ViewBag.ZenDeskLabel = "preg-Enter-the-employer-details";
+    var isEdit = Model?.InvitationId > 0;
 }
 
 @section breadcrumb
-{
+    {
     <a href="@Url.ProviderAction("StartAccountSetup")" class="govuk-back-link">Back</a>
 }
 
-<div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-        @if (!ViewData.ModelState.IsValid)
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            @if (!ViewData.ModelState.IsValid)
         {
             <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="govuk-error-summary">
                 <h2 class="govuk-error-summary__title" id="error-summary-title">
@@ -37,9 +38,9 @@
         </h1>
 
         <p>Enter the details for the employer. Once the account is created, the employer will be able to add other users.</p>
-       
+
         <form id="NewEmployerUser" novalidate method="post" action="@Url.NewEmployerUserAction("NewEmployerUser", Model?.Reference, Model?.ResendInvitation)">
-            @Html.AntiForgeryToken()          
+            @Html.AntiForgeryToken()
             <div class="govuk-form-group">
                 <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.EmployerOrganisation, "govuk-form-group--error")">
                     <label class="govuk-label" asp-for="EmployerOrganisation">Employer organisation</label>
@@ -56,16 +57,29 @@
                     @Html.ValidationMessageFor(m => m.EmployerLastName, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.EmployerLastName) })
                     <input class="govuk-input" asp-for="EmployerLastName">
                 </div>
-               
-                <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.EmployerEmailAddress, "govuk-form-group--error")">
-                    <label class="govuk-label" asp-for="EmployerEmailAddress">Employer email address</label>
-                    <span id="email-hint" class="govuk-hint">
-                        We'll send an email to the employer to confirm their identity.
-                    </span>
-                    @Html.ValidationMessageFor(m => m.EmployerEmailAddress, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.EmployerEmailAddress) })
-                    <input class="govuk-input" readonly="@Model?.ResendInvitation"  asp-for="EmployerEmailAddress">
-                </div>
-                
+
+                @if (isEdit)
+                {
+                    @Html.HiddenFor(x => x.EmployerEmailAddress)
+                    <div class="govuk-inset-text">
+                        <p>This cannot be changed for an email re-send</p>
+                        <p>
+                            @Model.EmployerEmailAddress
+                        </p>
+                    </div>
+                }
+                else
+                {
+                    <div class="govuk-form-group @Html.AddClassIfPropertyInError(x => x.EmployerEmailAddress, "govuk-form-group--error")">
+                        <label class="govuk-label" asp-for="EmployerEmailAddress">Employer email address</label>
+                        <span id="email-hint" class="govuk-hint">
+                            We'll send an email to the employer to confirm their identity.
+                        </span>
+                        @Html.ValidationMessageFor(m => m.EmployerEmailAddress, null, new { @class = "govuk-error-message", id = "error-message-" + Html.IdFor(m => m.EmployerEmailAddress) })
+                        <input class="govuk-input" readonly="@Model?.ResendInvitation" asp-for="EmployerEmailAddress">
+                    </div>
+                }
+
             </div>
             <button type="submit" class="govuk-button">Continue</button>
         </form>
