@@ -3,6 +3,7 @@ using MediatR;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.ProviderRegistrations.Application.Commands.AddInvitationCommand;
+using SFA.DAS.ProviderRegistrations.Application.Commands.AddResendInvitationCommand;
 using SFA.DAS.ProviderRegistrations.Application.Commands.SendInvitationEmailCommand;
 using SFA.DAS.ProviderRegistrations.Application.Commands.UpdateInvitationCommand;
 using SFA.DAS.ProviderRegistrations.Application.Queries.GetProviderByUkprnQuery;
@@ -96,6 +97,28 @@ namespace SFA.DAS.ProviderRegistrations.Web.UnitTests.Controllers.RegistrationCo
             //assert           
             mediator.Verify(x => x.Send(It.Is<UpdateInvitationCommand>(s =>           
             s.CorrelationId == model.Reference.ToString()), It.IsAny<CancellationToken>()), Times.Once);
+        }
+
+        [Test, DomainAutoData]
+        public async Task ThenAddResendInvitation(
+            [Frozen] Mock<IMediator> mediator,
+            [Frozen] Mock<IAuthenticationService> authService,
+            [Greedy] RegistrationController controller,
+            NewEmployerUserViewModel model,
+            string command,
+            string providerName)
+        {
+            //arrange
+            authService.Object.TryGetUserClaimValue(ProviderClaims.DisplayName, out var displayName);
+            mediator.Setup(s => s.Send(It.IsAny<GetProviderByUkprnQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new GetProviderByUkprnQueryResult(providerName));
+
+            //act
+            await controller.InviteEmployeruser(model, command);
+
+            //assert           
+            mediator.Verify(x => x.Send(It.Is<AddResendInvitationCommand>(s =>
+            s.InvitationId == model.InvitationId), It.IsAny<CancellationToken>()), Times.Once);
         }
     }
 }

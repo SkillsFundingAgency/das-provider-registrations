@@ -1,9 +1,11 @@
-﻿using FluentAssertions;
+﻿using AutoFixture;
+using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.ProviderRegistrations.Application.Queries.GetInvitationByIdQuery;
 using SFA.DAS.ProviderRegistrations.Data;
 using SFA.DAS.ProviderRegistrations.Models;
 using SFA.DAS.ProviderRegistrations.UnitTests.AutoFixture;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,6 +15,19 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Queries
     [Parallelizable]
     public class GetInvitationByIdQueryHandlerTests
     {
+        private Fixture fixture { get; set; }
+
+        [SetUp]
+        public void SetUp()
+        {
+            fixture = new Fixture();
+            fixture.Behaviors
+                .OfType<ThrowingRecursionBehavior>()
+                .ToList()
+                .ForEach(b => fixture.Behaviors.Remove(b));
+            fixture.Behaviors.Add(new OmitOnRecursionBehavior());
+        }
+
         [Test, ProviderAutoData]
         public async Task Handle_WhenHandlingGetInvitationByIdQueryAndInvitationIsNotFound_ThenShouldReturnNull(
             GetInvitationByIdQueryHandler handler,
@@ -27,12 +42,11 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Queries
 
         [Test, ProviderAutoData]
         public async Task Handle_WhenHandlingGetInvitationByIdQueryAndInvitationIsFound_ThenShouldReturnGetInvitationByIdQueryResult(
-            ProviderRegistrationsDbContext setupContext,
-            Invitation invitation,
-            GetInvitationByIdQueryHandler handler
-        )
+            ProviderRegistrationsDbContext setupContext,            
+            GetInvitationByIdQueryHandler handler)
         {
             //arrange
+            var invitation = fixture.Create<Invitation>();
             setupContext.Invitations.Add(invitation);
             await setupContext.SaveChangesAsync();
             var query = new GetInvitationByIdQuery(invitation.Reference);

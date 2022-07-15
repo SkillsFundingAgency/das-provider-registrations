@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using AutoFixture;
+using FluentAssertions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
@@ -7,6 +8,7 @@ using SFA.DAS.ProviderRegistrations.Data;
 using SFA.DAS.ProviderRegistrations.Models;
 using SFA.DAS.ProviderRegistrations.UnitTests.AutoFixture;
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -16,15 +18,29 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
     [Parallelizable]
     public class UpdateInvitationCommandHandlerTests
     {
+        private Fixture fixture { get; set; }
+
+        [SetUp]
+        public void SetUp()
+        {
+            fixture = new Fixture();
+            fixture.Behaviors
+                .OfType<ThrowingRecursionBehavior>()
+                .ToList()
+                .ForEach(b => fixture.Behaviors.Remove(b));
+            fixture.Behaviors.Add(new OmitOnRecursionBehavior());
+        }
+
+
         [Test, ProviderAutoData]
         public async Task Handle_WhenHandlingUpdateInvitationCommand_ThenShouldUpdateInvitation(
            ProviderRegistrationsDbContext setupContext,
            ProviderRegistrationsDbContext confirmationContext,
            UpdateInvitationCommandHandler handler,
-           UpdateInvitationCommand command,
-           Invitation invitation)
+           UpdateInvitationCommand command)
         {
             //arrange
+            var invitation = fixture.Create<Invitation>();
             invitation.UpdateInvitation(invitation.EmployerOrganisation, invitation.EmployerFirstName, invitation.EmployerLastName, (int)InvitationStatus.InvitationSent, DateTime.Now);
             setupContext.Invitations.Add(invitation);
             await setupContext.SaveChangesAsync();
