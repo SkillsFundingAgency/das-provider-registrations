@@ -42,6 +42,6 @@ namespace SFA.DAS.ProviderRegistrations.Web.ViewModels
 
         public bool IsEmailInUse { get; internal set; }
 
-        public bool EditAndResentEnabled => !Unsubscribed && !IsEmailInUse;
+        public bool EditAndResendEnabled => !Unsubscribed && !IsEmailInUse;
     }
 }
