@@ -10,6 +10,7 @@ using SFA.DAS.Provider.Shared.UI.Attributes;
 using SFA.DAS.ProviderRegistrations.Application.Commands.AddInvitationCommand;
 using SFA.DAS.ProviderRegistrations.Application.Commands.SendInvitationEmailCommand;
 using SFA.DAS.ProviderRegistrations.Application.Commands.UpdateInvitationCommand;
+using SFA.DAS.ProviderRegistrations.Application.Queries.GetEmailAddressInUseQuery;
 using SFA.DAS.ProviderRegistrations.Application.Queries.GetInvitationByIdQuery;
 using SFA.DAS.ProviderRegistrations.Application.Queries.GetInvitationQuery;
 using SFA.DAS.ProviderRegistrations.Application.Queries.GetProviderByUkprnQuery;
@@ -72,8 +73,11 @@ namespace SFA.DAS.ProviderRegistrations.Web.Controllers
                 EmployerOrganisation = result.Invitation.EmployerOrganisation,
                 Reference = result.Invitation.Reference
             };
+
+            var emailNowInUse = await _mediator.Send(new GetEmailAddressInUseQuery(model.EmployerEmailAddress?.Trim().ToLower()));
             model.Unsubscribed = await _mediator.Send(new GetUnsubscribedQuery(ukprn, model.EmployerEmailAddress), new CancellationToken());
             model.ResendInvitation = true;
+            model.IsEmailInUse = emailNowInUse;
 
             return View("ReviewDetails", model);
         }

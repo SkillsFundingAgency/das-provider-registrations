@@ -19,4 +19,20 @@ namespace SFA.DAS.ProviderRegistrations.Web.UnitTests.AutoFixture
         {
         }
     }
+
+    public class DomainInlineAutoDataAttribute : InlineAutoDataAttribute
+    {
+        public DomainInlineAutoDataAttribute(params object[] arguments) : base(() =>
+        {
+            var fixture = new Fixture();
+
+            fixture
+                .Customize(new DomainCustomizations())
+                .Customize<BindingInfo>(c => c.OmitAutoProperties());
+
+            return fixture;
+        }, arguments)
+        {
+        }
+    }
 }
