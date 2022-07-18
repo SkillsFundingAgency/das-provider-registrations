@@ -30,6 +30,16 @@
                         This employer has unsubscribed from invitations emails. You cannot resend their invitation.
                     </strong>
                 </div>
+            } 
+            else if (Model.IsEmailInUse)
+            {
+                <div class="govuk-warning-text">
+                    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                    <strong class="govuk-warning-text__text">
+                        <span class="govuk-warning-text__assistive">Warning</span>
+                        This employer already has an account on the Apprenticeship service. You cannot resend their invitation.
+                    </strong>
+                </div>
             }
             else
             {
