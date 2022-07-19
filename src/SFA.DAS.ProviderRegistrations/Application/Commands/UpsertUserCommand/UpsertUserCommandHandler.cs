@@ -26,7 +26,7 @@ namespace SFA.DAS.ProviderRegistrations.Application.Commands.UpsertUserCommand
                 if (invitation == null) throw new InvalidInvitationException($"No invitation ID found for CorrelationId:{ request.CorrelationId}");
                 invitation.UpdateStatus((int) InvitationStatus.AccountStarted, DateTime.Now);
 
-                var invitationEvent = new InvitationEvent(invitation.Id, (int)EventType.AccountStarted, DateTime.UtcNow);
+                var invitationEvent = new InvitationEvent(invitation.Id, (int)EventType.AccountStarted, request.EventDateTime);
                 invitation.InvitationEvents.Add(invitationEvent);
 
                 await _db.Value.SaveChangesAsync(cancellationToken);
