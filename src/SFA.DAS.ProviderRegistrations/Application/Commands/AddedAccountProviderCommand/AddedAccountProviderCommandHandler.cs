@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SFA.DAS.ProviderRegistrations.Data;
+using SFA.DAS.ProviderRegistrations.Exceptions;
 using SFA.DAS.ProviderRegistrations.Models;
 
 namespace SFA.DAS.ProviderRegistrations.Application.Commands.AddedAccountProviderCommand
@@ -21,8 +22,13 @@ namespace SFA.DAS.ProviderRegistrations.Application.Commands.AddedAccountProvide
         {
             if (!string.IsNullOrWhiteSpace(request.CorrelationId) && Guid.TryParse(request.CorrelationId, out _))
             {
-                var invitation = await _db.Value.Invitations.SingleOrDefaultAsync(i => i.Reference == Guid.Parse(request.CorrelationId) && i.Status < (int) InvitationStatus.InvitationComplete, cancellationToken);
-                invitation?.UpdateStatus((int) InvitationStatus.InvitationComplete, DateTime.Now);
+                var invitation = await _db.Value.Invitations.SingleOrDefaultAsync(i => i.Reference == Guid.Parse(request.CorrelationId) && i.Status < (int)InvitationStatus.InvitationComplete, cancellationToken);
+                if (invitation == null) throw new InvalidInvitationException($"No invitation ID found for CorrelationId:{request.CorrelationId}");
+                invitation.UpdateStatus((int)InvitationStatus.InvitationComplete, DateTime.Now);
+
+                var invitationEvent = new InvitationEvent(invitation.Id, (int)EventType.AccountProviderAdded, request.EventDateTime);
+                invitation.InvitationEvents.Add(invitationEvent);
+
                 await _db.Value.SaveChangesAsync(cancellationToken);
             }
         }

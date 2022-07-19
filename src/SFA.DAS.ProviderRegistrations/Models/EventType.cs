@@ -11,5 +11,6 @@ namespace SFA.DAS.ProviderRegistrations.Models
         PayeSchemeAdded = 2,
 
         LegalAgreementSigned = 3,
+        AccountProviderAdded = 4,
     }
 }
