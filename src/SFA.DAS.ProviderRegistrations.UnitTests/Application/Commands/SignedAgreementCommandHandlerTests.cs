@@ -41,7 +41,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             ProviderRegistrationsDbContext setupContext,
             ProviderRegistrationsDbContext confirmationContext,
             SignedAgreementCommandHandler handler,
-            TestSignedAgreementCommandDetails commandDetails)
+            SignedAgreementCommand commandDetails)
         {
             //arrange            
             var command = GetSignedAgreementCommand(commandDetails, invitation.Reference.ToString());
@@ -62,7 +62,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             ProviderRegistrationsDbContext db,
             ProviderRegistrationsDbContext confirmationContext,
             SignedAgreementCommandHandler handler,
-            TestSignedAgreementCommandDetails commandDetails)
+            SignedAgreementCommand commandDetails)
         {
             //arrange            
             var command = GetSignedAgreementCommand(commandDetails, string.Empty);
@@ -83,7 +83,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             ProviderRegistrationsDbContext setupContext,
             ProviderRegistrationsDbContext confirmationContext,
             SignedAgreementCommandHandler handler,
-            TestSignedAgreementCommandDetails commandDetails)
+            SignedAgreementCommand commandDetails)
         {
             //arrange
             var updateDate = DateTime.Now;
@@ -105,7 +105,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
         public async Task Handle_WhenInvalidStatusCommandIsHandled_ThenNoChangesAreMade(
            ProviderRegistrationsDbContext setupContext,
            SignedAgreementCommandHandler handler,
-           TestSignedAgreementCommandDetails commandDetails)
+           SignedAgreementCommand commandDetails)
         {
             //arrange            
             var command = GetSignedAgreementCommand(commandDetails, invitation.Reference.ToString());
@@ -125,7 +125,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             }           
         }
 
-        private SignedAgreementCommand GetSignedAgreementCommand(TestSignedAgreementCommandDetails details, string correlationId, DateTime? eventDate = null)
+        private SignedAgreementCommand GetSignedAgreementCommand(SignedAgreementCommand details, string correlationId, DateTime? eventDate = null)
         {
             return new SignedAgreementCommand(
                 details.AccountId,
@@ -137,25 +137,6 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
                 details.UserName,
                 details.UserRef,
                 correlationId);
-        }
-
-        public class TestSignedAgreementCommandDetails
-        {
-            public long AccountId { get; }
-            public DateTime EventDateTime { get; }
-            public string OrganisationName { get; }
-
-            public long AgreementId { get; }
-
-            public long LegalEntityId { get; }
-
-            public bool CohortCreated { get; }
-
-            public string UserName { get; }
-
-            public Guid UserRef { get; }
-
-            public string CorrelationId { get; }
         }
     }
 }
