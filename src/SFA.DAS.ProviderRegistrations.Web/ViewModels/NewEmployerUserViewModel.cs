@@ -40,6 +40,6 @@ namespace SFA.DAS.ProviderRegistrations.Web.ViewModels
 
         public Guid Reference { get; set; }
         
-        public long InvitationId { get; set; }
+        public long? InvitationId { get; set; }
     }
 }

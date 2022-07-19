@@ -128,7 +128,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.Controllers
             
             if (model.ResendInvitation)
             {
-                await _mediator.Send(new AddResendInvitationCommand(model.InvitationId, DateTime.UtcNow), new CancellationToken());
+                await _mediator.Send(new AddResendInvitationCommand(model.InvitationId.Value, DateTime.UtcNow), new CancellationToken());
             }
 
             var ukprn = _authenticationService.Ukprn.Value;
