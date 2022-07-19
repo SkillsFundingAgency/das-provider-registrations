@@ -5,25 +5,26 @@ namespace SFA.DAS.ProviderRegistrations.Application.Commands.SignedAgreementComm
 {
     public class SignedAgreementCommand : IRequest
     {
-        public long AccountId { get; set; }
+        public long AccountId { get; }
+        public DateTime EventDateTime { get; }
+        public string OrganisationName { get; }
 
-        public string OrganisationName { get; protected set; }
+        public long AgreementId { get; }
 
-        public long AgreementId { get; protected set; }
+        public long LegalEntityId { get; }
 
-        public long LegalEntityId { get; protected set; }
+        public bool CohortCreated { get; }
 
-        public bool CohortCreated { get; protected set; }
+        public string UserName { get; }
 
-        public string UserName { get; set; }
+        public Guid UserRef { get; }
 
-        public Guid UserRef { get; set; }
+        public string CorrelationId { get; }
 
-        public string CorrelationId { get; set; }
-
-        public SignedAgreementCommand(long accountId, long agreementId, string organisationName, long legalEntityId, bool cohortCreated, string userName, Guid userRef, string correlationId)
+        public SignedAgreementCommand(long accountId, DateTime eventDateTime, long agreementId, string organisationName, long legalEntityId, bool cohortCreated, string userName, Guid userRef, string correlationId)
         {
             AccountId = accountId;
+            EventDateTime = eventDateTime;
             AgreementId = agreementId;
             OrganisationName = organisationName;
             UserName = userName;
