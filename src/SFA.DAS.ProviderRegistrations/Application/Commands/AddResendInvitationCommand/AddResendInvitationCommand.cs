@@ -5,8 +5,8 @@ namespace SFA.DAS.ProviderRegistrations.Application.Commands.AddResendInvitation
 {
     public class AddResendInvitationCommand : IRequest
     {
-        public long InvitationId { get; set; }
-        public DateTime InvitationReSentDate { get; set; }
+        public long InvitationId { get; }
+        public DateTime InvitationReSentDate { get; }
         
 
         public AddResendInvitationCommand(long invitationId, DateTime invitationReSentDate)

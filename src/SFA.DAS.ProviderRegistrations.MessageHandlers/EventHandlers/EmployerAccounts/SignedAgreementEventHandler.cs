@@ -17,7 +17,7 @@ namespace SFA.DAS.ProviderRegistrations.MessageHandlers.EventHandlers.EmployerAc
 
         public Task Handle(SignedAgreementEvent message, IMessageHandlerContext context)
         {
-            return _mediator.Send(new SignedAgreementCommand(message.AccountId, message.AgreementId, message.OrganisationName, message.LegalEntityId, message.CohortCreated, message.UserName, message.UserRef, message.CorrelationId));
+            return _mediator.Send(new SignedAgreementCommand(message.AccountId, message.Created, message.AgreementId, message.OrganisationName, message.LegalEntityId, message.CohortCreated, message.UserName, message.UserRef, message.CorrelationId));
         }
     }
 }

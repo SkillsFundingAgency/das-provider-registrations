@@ -24,9 +24,9 @@ namespace SFA.DAS.ProviderRegistrations.Application.Commands.SignedAgreementComm
             {
                 var invitation = await _db.Value.Invitations.SingleOrDefaultAsync(i => i.Reference == Guid.Parse(request.CorrelationId) && i.Status < (int) InvitationStatus.LegalAgreementSigned, cancellationToken);
                 if (invitation == null) throw new InvalidInvitationException($"No invitation ID found for CorrelationId:{ request.CorrelationId}");
-                invitation.UpdateStatus((int) InvitationStatus.LegalAgreementSigned, DateTime.Now);
+                invitation.UpdateStatus((int) InvitationStatus.LegalAgreementSigned, request.EventDateTime);
 
-                var invitationEvent = new InvitationEvent(invitation.Id, (int)EventType.LegalAgreementSigned, DateTime.UtcNow);
+                var invitationEvent = new InvitationEvent(invitation.Id, (int)EventType.LegalAgreementSigned, request.EventDateTime);
                 invitation.InvitationEvents.Add(invitationEvent);
 
                 await _db.Value.SaveChangesAsync(cancellationToken);

@@ -79,18 +79,19 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             ProviderRegistrationsDbContext confirmationContext,
             UpsertUserCommandHandler handler)
         {
-            //arrange            
-            invitation.UpdateStatus((int)InvitationStatus.InvitationSent, DateTime.Now);
+            //arrange
+            var updatedDate = DateTime.Now;
+            invitation.UpdateStatus((int)InvitationStatus.InvitationSent, DateTime.Now.AddHours(-1));
             setupContext.Invitations.Add(invitation);                       
             await setupContext.SaveChangesAsync();
-            var command = new UpsertUserCommand(invitation.UserRef, DateTime.Now, invitation.Reference.ToString());
+            var command = new UpsertUserCommand(invitation.UserRef, updatedDate, invitation.Reference.ToString());
 
             //act
             await ((IRequestHandler<UpsertUserCommand, Unit>)handler).Handle(command, new CancellationToken());
 
             //assert
             var addedInvitationEvent = await confirmationContext.InvitationEvents.FirstOrDefaultAsync(s => s.Invitation.Id == invitation.Id && s.EventType == (int)EventType.AccountStarted);          
-            addedInvitationEvent.Date.Date.Should().Be(DateTime.UtcNow.Date);
+            addedInvitationEvent.Date.Should().Be(updatedDate);
         }
 
         [Test, ProviderAutoData]
