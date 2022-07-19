@@ -37,20 +37,19 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
         public async Task Handle_WhenHandlingAddResendInvitationCommand_ThenShouldAddResendInvitation(
             ProviderRegistrationsDbContext setupContext,
             ProviderRegistrationsDbContext confirmationContext,
-            AddResendInvitationCommandHandler handler,
-            AddResendInvitationCommand command)
+            AddResendInvitationCommandHandler handler)
         {
-            //arrange            
+            //arrange
+            var updatedDate = DateTime.Now;
             setupContext.Invitations.Add(invitation);
             await setupContext.SaveChangesAsync();
-            command.InvitationId = invitation.Id;
-            command.InvitationReSentDate = DateTime.UtcNow;
+            var command = new AddResendInvitationCommand(invitation.Id, updatedDate);
 
             //act            
             await ((IRequestHandler<AddResendInvitationCommand, Unit>)handler).Handle(command, new CancellationToken());
 
             //assert
-            confirmationContext.InvitationEvents.FirstOrDefault(s => s.Invitation.Id == command.InvitationId && s.Date == command.InvitationReSentDate).Date.Date.Should().Be(DateTime.UtcNow.Date);            
+            confirmationContext.InvitationEvents.Should().ContainSingle(s => s.InvitationId == command.InvitationId && s.Date == updatedDate);            
         }
 
         [Test, ProviderAutoData]
