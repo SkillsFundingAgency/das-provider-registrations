@@ -39,12 +39,11 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
                 ProviderRegistrationsDbContext setupContext,
                 ProviderRegistrationsDbContext confirmationContext,
                 AddedPayeSchemeCommandHandler handler,
-                AddedPayeSchemeCommand command)
+                AddedPayeSchemeCommand commandDetails)
         {
             //arrange
-
             invitation.UpdateStatus((int)InvitationStatus.InvitationSent, DateTime.Now);
-            command.CorrelationId = invitation.Reference.ToString();
+            var command = GeAddedPayeSchemeCommand(commandDetails, invitation.Reference.ToString());
             setupContext.Invitations.Add(invitation);
             await setupContext.SaveChangesAsync();
 
@@ -61,11 +60,12 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
                 ProviderRegistrationsDbContext setupContext,
                 ProviderRegistrationsDbContext confirmationContext,
                 AddedPayeSchemeCommandHandler handler,
-                AddedPayeSchemeCommand command)
+                AddedPayeSchemeCommand commandDetails)
         {
             //arrange            
-            invitation.UpdateStatus((int)InvitationStatus.InvitationSent, DateTime.UtcNow);
-            command.CorrelationId = invitation.Reference.ToString();
+            var updatedDate = DateTime.Now;
+            invitation.UpdateStatus((int)InvitationStatus.InvitationSent, DateTime.Now.AddHours(-1));
+            var command = GeAddedPayeSchemeCommand(commandDetails, invitation.Reference.ToString(), updatedDate);
             setupContext.Invitations.Add(invitation);
             await setupContext.SaveChangesAsync();
 
@@ -74,21 +74,20 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
 
             //assert
             var addedInvitationEvent = await confirmationContext.InvitationEvents.FirstOrDefaultAsync(s => s.Invitation.Id == invitation.Id && s.EventType == (int)EventType.PayeSchemeAdded);
-            addedInvitationEvent.Date.Date.Should().Be(DateTime.UtcNow.Date);
+            addedInvitationEvent.Date.Should().Be(updatedDate);
         }
 
         [Test, ProviderAutoData]
         public async Task Handle_WhenDoesntExistCommandIsHandled_ThenNoChangesAreMade(
             ProviderRegistrationsDbContext setupContext,
-            ProviderRegistrationsDbContext confirmationContext,
             AddedPayeSchemeCommandHandler handler,
-            AddedPayeSchemeCommand command)
+            AddedPayeSchemeCommand commandDetails)
         {
             //arrange
             setupContext.Invitations.Add(invitation);
             await setupContext.SaveChangesAsync();
             var statusBefore = invitation.Status;
-            command.CorrelationId = invitation.Reference.ToString();
+            var command = GeAddedPayeSchemeCommand(commandDetails, invitation.Reference.ToString());
 
             //act
             try
@@ -105,15 +104,14 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
         [Test, ProviderAutoData]
         public async Task Handle_WhenInvalidStatusCommandIsHandled_ThenNoChangesAreMade(
             ProviderRegistrationsDbContext setupContext,
-            ProviderRegistrationsDbContext confirmationContext,
             AddedPayeSchemeCommandHandler handler,
-            AddedPayeSchemeCommand command)
+            AddedPayeSchemeCommand commandDetails)
         {
             //arrange
             invitation.UpdateStatus((int)InvitationStatus.LegalAgreementSigned, DateTime.Now);
             setupContext.Invitations.Add(invitation);
             await setupContext.SaveChangesAsync();
-            command.CorrelationId = invitation.Reference.ToString();
+            var command = GeAddedPayeSchemeCommand(commandDetails, invitation.Reference.ToString());
 
             //act
             try
@@ -125,6 +123,19 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
                 //assert
                 Assert.AreEqual(ex.Message, $"No invitation ID found for CorrelationId:{command.CorrelationId}") ;
             }
+        }
+
+        private AddedPayeSchemeCommand GeAddedPayeSchemeCommand(AddedPayeSchemeCommand details, string correlationId, DateTime? eventDate = null)
+        {
+            return new AddedPayeSchemeCommand(
+                details.AccountId,
+                details.UserName,
+                details.UserRef,
+                details.PayeRef,
+                details.Aorn,
+                details.SchemeName,
+                correlationId,
+                eventDate.HasValue ? eventDate.Value : details.EventDateTime);
         }
     }
 }

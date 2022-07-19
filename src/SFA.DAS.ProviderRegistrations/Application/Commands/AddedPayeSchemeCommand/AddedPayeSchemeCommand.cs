@@ -5,21 +5,23 @@ namespace SFA.DAS.ProviderRegistrations.Application.Commands.AddedPayeSchemeComm
 {
     public class AddedPayeSchemeCommand : IRequest
     {
-        public long AccountId { get; set; }
+        public long AccountId { get; }
 
-        public string UserName { get; set; }
+        public string UserName { get; }
 
-        public Guid UserRef { get; set; }
+        public Guid UserRef { get; }
 
-        public string PayeRef { get; set; }
+        public string PayeRef { get; }
 
-        public string Aorn { get; set; }
+        public string Aorn { get; }
 
-        public string SchemeName { get; set; }
+        public string SchemeName { get; }
 
-        public string CorrelationId { get; set; }
+        public string CorrelationId { get; }
 
-        public AddedPayeSchemeCommand(long accountId, string userName, Guid userRef, string payeRef, string aorn, string schemeName, string correlationId)
+        public DateTime EventDateTime { get; }
+
+        public AddedPayeSchemeCommand(long accountId, string userName, Guid userRef, string payeRef, string aorn, string schemeName, string correlationId, DateTime eventDateTime)
         {
             AccountId = accountId;
             UserName = userName;
@@ -28,6 +30,7 @@ namespace SFA.DAS.ProviderRegistrations.Application.Commands.AddedPayeSchemeComm
             Aorn = aorn;
             SchemeName = schemeName;
             CorrelationId = correlationId;
+            EventDateTime = eventDateTime;
         }
     }
 }

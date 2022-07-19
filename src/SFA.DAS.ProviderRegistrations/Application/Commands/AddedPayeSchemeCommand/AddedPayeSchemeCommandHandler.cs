@@ -26,7 +26,7 @@ namespace SFA.DAS.ProviderRegistrations.Application.Commands.AddedPayeSchemeComm
                 if (invitation == null) throw new InvalidInvitationException($"No invitation ID found for CorrelationId:{ request.CorrelationId}");
                 invitation.UpdateStatus((int) InvitationStatus.PayeSchemeAdded, DateTime.Now);
 
-                var invitationEvent = new InvitationEvent(invitation.Id, (int)EventType.PayeSchemeAdded, DateTime.UtcNow);
+                var invitationEvent = new InvitationEvent(invitation.Id, (int)EventType.PayeSchemeAdded, request.EventDateTime);
                 invitation.InvitationEvents.Add(invitationEvent);
               
                 await _db.Value.SaveChangesAsync(cancellationToken);
