@@ -11,11 +11,14 @@ namespace SFA.DAS.ProviderRegistrations.Application.Commands.AddedAccountProvide
 
         public string CorrelationId { get; }
 
-        public AddedAccountProviderCommand(long ukprn, Guid userRef, string correlationId)
+        public DateTime EventDateTime { get; }
+
+        public AddedAccountProviderCommand(long ukprn, Guid userRef, string correlationId, DateTime eventDateTime)
         {
             Ukprn = ukprn;
             UserRef = userRef;
             CorrelationId = correlationId;
+            EventDateTime = eventDateTime;
         }
     }
 }

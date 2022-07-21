@@ -8,6 +8,7 @@ namespace SFA.DAS.ProviderRegistrations.Data
     {
         public DbSet<Invitation> Invitations { get; set; }
         public DbSet<Unsubscribe> Unsubscribed { get; set; }
+        public DbSet<InvitationEvent> InvitationEvents { get; set; }
 
         public ProviderRegistrationsDbContext(DbContextOptions<ProviderRegistrationsDbContext> options) : base(options)
         {
@@ -25,7 +26,9 @@ namespace SFA.DAS.ProviderRegistrations.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new InvitationConfiguration());
+            modelBuilder.ApplyConfiguration(new InvitationEventConfiguration());
             modelBuilder.ApplyConfiguration(new UnsubscribeConfiguration());
+            modelBuilder.Entity<Invitation>().HasMany(a => a.InvitationEvents).WithOne(a => a.Invitation);            
         }
     }
 }

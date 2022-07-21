@@ -21,6 +21,19 @@ namespace SFA.DAS.ProviderRegistrations.Web.Extensions
             return url.Action(actionName);
         }
 
+        public static string InviteEmployeruserAction(this IUrlHelper url, string actionName, long? invitationId)
+        {
+            if (url.ActionContext.RouteData.Values.ContainsKey(ProviderIdKey) && url.ActionContext.ActionDescriptor is ControllerActionDescriptor descriptor)
+            {
+                var controllerActionDescriptor = descriptor;
+                var controllerName = controllerActionDescriptor.ControllerName;
+                var providerId = url.ActionContext.RouteData.Values[ProviderIdKey].ToString();
+                return url.Action(actionName, controllerName, new { ProviderId = providerId, InvitationId = invitationId });
+            }
+
+            return url.Action(actionName);
+        }
+
         public static string NewEmployerUserAction(this IUrlHelper url, string actionName, Guid? reference, bool? resendInvitation)
         {
             if (url.ActionContext.RouteData.Values.ContainsKey(ProviderIdKey) && url.ActionContext.ActionDescriptor is ControllerActionDescriptor descriptor)

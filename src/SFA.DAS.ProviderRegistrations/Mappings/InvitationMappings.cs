@@ -9,9 +9,10 @@ namespace SFA.DAS.ProviderRegistrations.Mappings
     {
         public InvitationMappings()
         {
-            CreateMap<Invitation, InvitationDto>()
-                .ForMember(d => d.State, opt => opt.MapFrom(EnumerableExpressionHelper.CreateEnumToStringExpression((Invitation d) => ((InvitationStatus) d.Status))))
+            CreateMap<Invitation, InvitationDto>()                
                 .ForMember(d => d.SentDate, opt => opt.MapFrom(s => s.UpdatedDate));
+
+            CreateMap<InvitationEvent, InvitationEventDto>();                
         }
     }
 }

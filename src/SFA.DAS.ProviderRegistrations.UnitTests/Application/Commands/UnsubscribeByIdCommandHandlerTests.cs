@@ -1,3 +1,4 @@
+using AutoFixture;
 using FluentAssertions;
 using MediatR;
 using NUnit.Framework;
@@ -15,14 +16,27 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
     [Parallelizable]
     public class UnsubscribeByIdCommandHandlerTests
     {
+        private Fixture fixture { get; set; }
+
+        [SetUp]
+        public void SetUp()
+        {
+            fixture = new Fixture();
+            fixture.Behaviors
+                .OfType<ThrowingRecursionBehavior>()
+                .ToList()
+                .ForEach(b => fixture.Behaviors.Remove(b));
+            fixture.Behaviors.Add(new OmitOnRecursionBehavior());
+        }
+
         [Test, ProviderAutoData]
         public async Task Handle_WhenCommandIsHandled_ThenShouldUpdateInvitationStatus(
            ProviderRegistrationsDbContext setupContext,
            ProviderRegistrationsDbContext confirmationContext,
-           UnsubscribeByIdCommandHandler handler,
-           Invitation invitation)
+           UnsubscribeByIdCommandHandler handler)
         {
             //arrange
+            var invitation = fixture.Create<Invitation>();
             setupContext.Invitations.Add(invitation);
             await setupContext.SaveChangesAsync();
             var command = new UnsubscribeByIdCommand(invitation.Reference);

@@ -9,12 +9,12 @@ namespace SFA.DAS.ProviderRegistrations.Application.Commands.UpsertUserCommand
 
         public string CorrelationId { get; }
 
-        public DateTime Created { get; }
+        public DateTime EventDateTime { get; }
 
         public UpsertUserCommand(string userRef, DateTime created, string correlationId)
         {
             UserRef = userRef;
-            Created = created;
+            EventDateTime = created;
             CorrelationId = correlationId;
         }
     }

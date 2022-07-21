@@ -1,3 +1,4 @@
+using AutoFixture;
 using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.ProviderRegistrations.Application.Queries.GetInvitationQuery;
@@ -14,13 +15,26 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Queries
     [Parallelizable]
     public class GetInvitationQueryHandlerTests
     {
+        private Fixture fixture { get; set; }
+
+        [SetUp]
+        public void SetUp()
+        {
+            fixture = new Fixture();
+            fixture.Behaviors
+                .OfType<ThrowingRecursionBehavior>()
+                .ToList()
+                .ForEach(b => fixture.Behaviors.Remove(b));
+            fixture.Behaviors.Add(new OmitOnRecursionBehavior());
+        }
+
         [Test, ProviderAutoData]
         public async Task Handle_WhenHandlingGetInvitationQueryAndProviderIsFound_ThenShouldReturnGetInvitationQueryResult(
             ProviderRegistrationsDbContext setupContext,
-            GetInvitationQueryHandler handler,
-            Invitation invitation)
+            GetInvitationQueryHandler handler)
         {
             //arrange
+            var invitation = fixture.Create<Invitation>();
             setupContext.Invitations.Add(invitation);
             await setupContext.SaveChangesAsync();
             var query = new GetInvitationQuery(invitation.Ukprn, invitation.UserRef, "EmployerOrganisation", "Desc", "EmployerFirstname");
