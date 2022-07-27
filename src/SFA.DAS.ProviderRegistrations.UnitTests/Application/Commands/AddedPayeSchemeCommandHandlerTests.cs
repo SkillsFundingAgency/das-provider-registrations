@@ -1,4 +1,6 @@
-using AutoFixture;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 using FluentAssertions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -8,11 +10,6 @@ using SFA.DAS.ProviderRegistrations.Data;
 using SFA.DAS.ProviderRegistrations.Exceptions;
 using SFA.DAS.ProviderRegistrations.Models;
 using SFA.DAS.ProviderRegistrations.UnitTests.AutoFixture;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
 {
@@ -20,30 +17,13 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
     [Parallelizable]
     public class AddedPayeSchemeCommandHandlerTests
     {
-        private Fixture fixture { get; set; }
-        private Invitation invitation { get; set; }
-
-        [SetUp]
-        public void SetUp()
-        {
-            fixture = new Fixture();
-            fixture.Behaviors
-                .OfType<ThrowingRecursionBehavior>()
-                .ToList()
-                .ForEach(b => fixture.Behaviors.Remove(b));
-            fixture.Behaviors.Add(new OmitOnRecursionBehavior());
-            invitation = fixture
-                .Build<Invitation>()
-                .With(i => i.InvitationEvents, new List<InvitationEvent>())
-                .Create();
-        }
-
         [Test, ProviderAutoData]
         public async Task Handle_WhenCommandIsHandled_ThenShouldUpdateInvitationStatus(
                 ProviderRegistrationsDbContext setupContext,
                 ProviderRegistrationsDbContext confirmationContext,
                 AddedPayeSchemeCommandHandler handler,
-                AddedPayeSchemeCommand commandDetails)
+                AddedPayeSchemeCommand commandDetails,
+                Invitation invitation)
         {
             //arrange
             invitation.UpdateStatus((int)InvitationStatus.InvitationSent, DateTime.Now);
@@ -57,14 +37,15 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             //assert
             var savedInvitation = await confirmationContext.Invitations.FirstAsync();
             savedInvitation.Status.Should().Be((int)InvitationStatus.PayeSchemeAdded);
-        }       
+        }
 
         [Test, ProviderAutoData]
         public async Task Handle_WhenCommandIsHandled_ThenShouldAddInvitationEvent(
                 ProviderRegistrationsDbContext setupContext,
                 ProviderRegistrationsDbContext confirmationContext,
                 AddedPayeSchemeCommandHandler handler,
-                AddedPayeSchemeCommand commandDetails)
+                AddedPayeSchemeCommand commandDetails,
+                Invitation invitation)
         {
             //arrange            
             var updatedDate = DateTime.Now;
@@ -83,10 +64,11 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
 
         [Test, ProviderAutoData]
         public async Task Handle_WhenInvalidStatusCommandIsHandled_ThenNoChangesAreMade(
-            ProviderRegistrationsDbContext setupContext,
-            ProviderRegistrationsDbContext confirmationContext,
-            AddedPayeSchemeCommandHandler handler,
-            AddedPayeSchemeCommand commandDetails)
+                ProviderRegistrationsDbContext setupContext,
+                ProviderRegistrationsDbContext confirmationContext,
+                AddedPayeSchemeCommandHandler handler,
+                AddedPayeSchemeCommand commandDetails,
+                Invitation invitation)
         {
             //arrange
             invitation.UpdateStatus((int)InvitationStatus.InvitationComplete, DateTime.Now);
@@ -103,9 +85,10 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
 
         [Test, ProviderAutoData]
         public async Task Handle_WhenInvitationDoesNotExist_ThenErrorIsThrown(
-           ProviderRegistrationsDbContext setupContext,
-            AddedPayeSchemeCommandHandler handler,
-            AddedPayeSchemeCommand commandDetails)
+                ProviderRegistrationsDbContext setupContext,
+                AddedPayeSchemeCommandHandler handler,
+                AddedPayeSchemeCommand commandDetails,
+                Invitation invitation)
         {
             //arrange            
             invitation.UpdateStatus((int)InvitationStatus.InvitationComplete, DateTime.Now);
