@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using SFA.DAS.ProviderRegistrations.Data;
 using SFA.DAS.ProviderRegistrations.Exceptions;
 using SFA.DAS.ProviderRegistrations.Models;
@@ -12,9 +13,11 @@ namespace SFA.DAS.ProviderRegistrations.Application.Commands.UpsertUserCommand
     public class UpsertUserCommandHandler : AsyncRequestHandler<UpsertUserCommand>
     {
         private readonly Lazy<ProviderRegistrationsDbContext> _db;
+        private readonly ILogger<UpsertUserCommandHandler> _logger;
 
-        public UpsertUserCommandHandler(Lazy<ProviderRegistrationsDbContext> db)
+        public UpsertUserCommandHandler(Lazy<ProviderRegistrationsDbContext> db, ILogger<UpsertUserCommandHandler> logger)
         {
+            _logger = logger;
             _db = db;
         }
 
@@ -22,14 +25,22 @@ namespace SFA.DAS.ProviderRegistrations.Application.Commands.UpsertUserCommand
         {
             if (!string.IsNullOrWhiteSpace(request.CorrelationId) && Guid.TryParse(request.CorrelationId, out _))
             {
-                var invitation = await _db.Value.Invitations.SingleOrDefaultAsync(i => i.Reference == Guid.Parse(request.CorrelationId) && i.Status < (int) InvitationStatus.AccountStarted, cancellationToken);
+                var invitation = await _db.Value.Invitations.SingleOrDefaultAsync(i => i.Reference == Guid.Parse(request.CorrelationId), cancellationToken);
                 if (invitation == null) throw new InvalidInvitationException($"No invitation ID found for CorrelationId:{ request.CorrelationId}");
-                invitation.UpdateStatus((int) InvitationStatus.AccountStarted, DateTime.Now);
 
-                var invitationEvent = new InvitationEvent(invitation.Id, (int)EventType.AccountStarted, request.EventDateTime);
-                invitation.InvitationEvents.Add(invitationEvent);
+                if (invitation.Status < (int)InvitationStatus.AccountStarted)
+                {
+                    invitation.UpdateStatus((int)InvitationStatus.AccountStarted, DateTime.Now);
 
-                await _db.Value.SaveChangesAsync(cancellationToken);
+                    var invitationEvent = new InvitationEvent(invitation.Id, (int)EventType.AccountStarted, request.EventDateTime);
+                    invitation.InvitationEvents.Add(invitationEvent);
+
+                    await _db.Value.SaveChangesAsync(cancellationToken);
+                }
+                else
+                {
+                    _logger.LogWarning($"Invitation status already: {((InvitationStatus)invitation.Status)} not going to store {InvitationStatus.AccountStarted} event");
+                }
             }
         }
     }
