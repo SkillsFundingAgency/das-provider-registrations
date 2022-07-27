@@ -9,6 +9,7 @@ using SFA.DAS.ProviderRegistrations.Exceptions;
 using SFA.DAS.ProviderRegistrations.Models;
 using SFA.DAS.ProviderRegistrations.UnitTests.AutoFixture;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -32,7 +33,10 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
                 .ToList()
                 .ForEach(b => fixture.Behaviors.Remove(b));
             fixture.Behaviors.Add(new OmitOnRecursionBehavior());
-            invitation = fixture.Create<Invitation>();
+            invitation = fixture
+                 .Build<Invitation>()
+                 .With(i => i.InvitationEvents, new List<InvitationEvent>())
+                 .Create();
         }
 
 
@@ -104,6 +108,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
         [Test, ProviderAutoData]
         public async Task Handle_WhenInvalidStatusCommandIsHandled_ThenNoChangesAreMade(
            ProviderRegistrationsDbContext setupContext,
+           ProviderRegistrationsDbContext confirmationContext,
            SignedAgreementCommandHandler handler,
            SignedAgreementCommand commandDetails)
         {
@@ -114,6 +119,27 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             await setupContext.SaveChangesAsync();
 
             //act
+            await ((IRequestHandler<SignedAgreementCommand, Unit>)handler).Handle(command, new CancellationToken());
+
+            // assert
+            (await confirmationContext.InvitationEvents.FirstOrDefaultAsync(s => s.Invitation.Id == invitation.Id)).Should().BeNull();
+        }
+
+        [Test, ProviderAutoData]
+        public async Task Handle_WhenInvitationDoesNotExist_ThenErrorIsThrown(
+           ProviderRegistrationsDbContext setupContext,
+           SignedAgreementCommandHandler handler,
+           SignedAgreementCommand commandDetails)
+        {
+            //arrange            
+            invitation.UpdateStatus((int)InvitationStatus.InvitationComplete, DateTime.Now);
+            setupContext.Invitations.Add(invitation);
+            await setupContext.SaveChangesAsync();
+
+            var differentInvitationCorrelationId = Guid.NewGuid();
+            var command = GetSignedAgreementCommand(commandDetails, invitation.Reference.ToString());
+
+            //act
             try
             {
                 await ((IRequestHandler<SignedAgreementCommand, Unit>)handler).Handle(command, new CancellationToken());
@@ -122,7 +148,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             {
                 //assert
                 Assert.AreEqual(ex.Message, $"No invitation ID found for CorrelationId:{command.CorrelationId}");
-            }           
+            }
         }
 
         private SignedAgreementCommand GetSignedAgreementCommand(SignedAgreementCommand details, string correlationId, DateTime? eventDate = null)
