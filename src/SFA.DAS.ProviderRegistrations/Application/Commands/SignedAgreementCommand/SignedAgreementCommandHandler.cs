@@ -23,9 +23,9 @@ namespace SFA.DAS.ProviderRegistrations.Application.Commands.SignedAgreementComm
 
         protected override async Task Handle(SignedAgreementCommand request, CancellationToken cancellationToken)
         {
-            if (!string.IsNullOrWhiteSpace(request.CorrelationId) && Guid.TryParse(request.CorrelationId, out _))
+            if (!string.IsNullOrWhiteSpace(request.CorrelationId) && Guid.TryParse(request.CorrelationId, out var correlationId))
             {
-                var invitation = await _db.Value.Invitations.SingleOrDefaultAsync(i => i.Reference == Guid.Parse(request.CorrelationId), cancellationToken);
+                var invitation = await _db.Value.Invitations.SingleOrDefaultAsync(i => i.Reference == correlationId, cancellationToken);
                 if (invitation == null) throw new InvalidInvitationException($"No invitation ID found for CorrelationId:{request.CorrelationId}");
 
                 if (invitation.Status < (int)InvitationStatus.LegalAgreementSigned)
@@ -39,7 +39,7 @@ namespace SFA.DAS.ProviderRegistrations.Application.Commands.SignedAgreementComm
                 }
                 else
                 {
-                    _logger.LogWarning($"Invitation status already: {((InvitationStatus)invitation.Status)} not going to store {InvitationStatus.LegalAgreementSigned} event");
+                    _logger.LogWarning($"Invitation status already: {((InvitationStatus)invitation.Status)} not going to store {EventType.LegalAgreementSigned} event");
                 }
             }
         }
