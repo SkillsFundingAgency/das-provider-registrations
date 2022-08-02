@@ -28,7 +28,7 @@ namespace SFA.DAS.ProviderRegistrations.Application.Commands.AddedPayeSchemeComm
                 var invitation = await _db.Value.Invitations.SingleOrDefaultAsync(i => i.Reference == correlationId, cancellationToken);
                 if (invitation == null) throw new InvalidInvitationException($"No invitation ID found for CorrelationId:{ request.CorrelationId}");
 
-                if (invitation.Status < (int)InvitationStatus.AccountStarted)
+                if (invitation.Status < (int)InvitationStatus.PayeSchemeAdded)
                 {
                     invitation.UpdateStatus((int)InvitationStatus.PayeSchemeAdded, DateTime.Now);
 
@@ -39,7 +39,7 @@ namespace SFA.DAS.ProviderRegistrations.Application.Commands.AddedPayeSchemeComm
                 }
                 else
                 {
-                    _logger.LogWarning($"Invitation status already: {((InvitationStatus)invitation.Status)} not going to store {EventType.AccountStarted} event");
+                    _logger.LogWarning($"Invitation status already: {((InvitationStatus)invitation.Status)} not going to store {EventType.PayeSchemeAdded} event");
                 }                
             }
         }

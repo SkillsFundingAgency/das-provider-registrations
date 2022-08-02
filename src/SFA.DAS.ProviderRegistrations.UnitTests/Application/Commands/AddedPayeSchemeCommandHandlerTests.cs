@@ -26,7 +26,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
                 Invitation invitation)
         {
             //arrange
-            invitation.UpdateStatus((int)InvitationStatus.InvitationSent, DateTime.Now);
+            invitation.UpdateStatus((int)InvitationStatus.AccountStarted, DateTime.Now);
             var command = GetAddedPayeSchemeCommand(commandDetails, invitation.Reference.ToString());
             setupContext.Invitations.Add(invitation);
             await setupContext.SaveChangesAsync();
@@ -49,7 +49,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
         {
             //arrange            
             var updatedDate = DateTime.Now;
-            invitation.UpdateStatus((int)InvitationStatus.InvitationSent, DateTime.Now.AddHours(-1));
+            invitation.UpdateStatus((int)InvitationStatus.AccountStarted, DateTime.Now.AddHours(-1));
             var command = GetAddedPayeSchemeCommand(commandDetails, invitation.Reference.ToString(), updatedDate);
             setupContext.Invitations.Add(invitation);
             await setupContext.SaveChangesAsync();
