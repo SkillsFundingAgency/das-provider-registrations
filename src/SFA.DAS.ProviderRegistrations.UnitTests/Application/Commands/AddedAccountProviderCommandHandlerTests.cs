@@ -1,16 +1,15 @@
-using AutoFixture;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 using FluentAssertions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 using SFA.DAS.ProviderRegistrations.Application.Commands.AddedAccountProviderCommand;
 using SFA.DAS.ProviderRegistrations.Data;
+using SFA.DAS.ProviderRegistrations.Exceptions;
 using SFA.DAS.ProviderRegistrations.Models;
 using SFA.DAS.ProviderRegistrations.UnitTests.AutoFixture;
-using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
 {
@@ -18,26 +17,12 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
     [Parallelizable]
     public class AddedAccountProviderCommandTests
     {
-        private Fixture fixture { get; set; }
-        private Invitation invitation { get; set; }
-
-        [SetUp]
-        public void SetUp()
-        {
-            fixture = new Fixture();
-            fixture.Behaviors
-                .OfType<ThrowingRecursionBehavior>()
-                .ToList()
-                .ForEach(b => fixture.Behaviors.Remove(b));
-            fixture.Behaviors.Add(new OmitOnRecursionBehavior());
-            invitation = fixture.Create<Invitation>();
-        }
-
         [Test, ProviderAutoData]
         public async Task Handle_WhenCommandIsHandled_ThenShouldUpdateInvitationStatus(
             ProviderRegistrationsDbContext setupContext,
             ProviderRegistrationsDbContext confirmationContext,
-            AddedAccountProviderCommandHandler handler)
+            AddedAccountProviderCommandHandler handler,
+            Invitation invitation)
         {
             //Arrange            
             var command = new AddedAccountProviderCommand(invitation.Ukprn, Guid.NewGuid(), invitation.Reference.ToString(), DateTime.Now);
@@ -56,9 +41,10 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
 
         [Test, ProviderAutoData]
         public async Task Handle_WhenCommandIsHandled_ThenShouldAddInvitationEvent(
-                ProviderRegistrationsDbContext setupContext,
-                ProviderRegistrationsDbContext confirmationContext,
-                AddedAccountProviderCommandHandler handler)
+            ProviderRegistrationsDbContext setupContext,
+            ProviderRegistrationsDbContext confirmationContext,
+            AddedAccountProviderCommandHandler handler,
+            Invitation invitation)
         {
             //arrange
             var updateDate = DateTime.Now;
@@ -76,50 +62,46 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
         }
 
         [Test, ProviderAutoData]
-        public async Task Handle_WhenDoesntExistCommandIsHandled_ThenNoChangesAreMade(
+        public async Task Handle_WhenInvalidStatusCommandIsHandled_ThenNoChangesAreMade(
             ProviderRegistrationsDbContext setupContext,
             ProviderRegistrationsDbContext confirmationContext,
-            AddedAccountProviderCommandHandler handler)
+            AddedAccountProviderCommandHandler handler,
+            Invitation invitation)
         {
-            //Arrange            
+            //arrange
+            var command = new AddedAccountProviderCommand(invitation.Ukprn, Guid.NewGuid(), invitation.Reference.ToString(), DateTime.Now);
+            invitation.UpdateStatus((int)InvitationStatus.InvitationComplete, DateTime.Now);
+            setupContext.Invitations.Add(invitation);
+            await setupContext.SaveChangesAsync();
+
+            //act
+            await ((IRequestHandler<AddedAccountProviderCommand, Unit>)handler).Handle(command, new CancellationToken());
+
+            // assert
+            (await confirmationContext.InvitationEvents.FirstOrDefaultAsync(s => s.Invitation.Id == invitation.Id)).Should().BeNull();
+        }
+
+        [Test, ProviderAutoData]
+        public async Task Handle_WhenInvitationDoesNotExist_ThenErrorIsThrown(
+            ProviderRegistrationsDbContext setupContext,
+            AddedAccountProviderCommandHandler handler,
+            Invitation invitation)
+        {
+            //arrange            
             var command = new AddedAccountProviderCommand(12345, Guid.NewGuid(), Guid.NewGuid().ToString(), DateTime.Now);
             setupContext.Invitations.Add(invitation);
             await setupContext.SaveChangesAsync();
-            var statusBefore = invitation.Status;
 
             //act
             try
             {
                 await ((IRequestHandler<AddedAccountProviderCommand, Unit>)handler).Handle(command, new CancellationToken());
             }
-            catch (Exception ex)
+            catch (InvalidInvitationException ex)
             {
                 //assert
                 Assert.AreEqual(ex.Message, $"No invitation ID found for CorrelationId:{command.CorrelationId}");
-                var invite = await confirmationContext.Invitations.FirstAsync();
-                invite.Status.Should().Be(statusBefore);
             }
-        }
-
-        [Test, ProviderAutoData]
-        public async Task Handle_WhenInvalidStatusCommandIsHandled_ThenNoChangesAreMade(
-            ProviderRegistrationsDbContext setupContext,
-            ProviderRegistrationsDbContext confirmationContext,
-            AddedAccountProviderCommandHandler handler,
-            AddedAccountProviderCommand command)
-        {
-            //Arrange            
-            setupContext.Invitations.Add(invitation);
-            await setupContext.SaveChangesAsync();
-            var statusBefore = invitation.Status;
-
-            //act
-            await ((IRequestHandler<AddedAccountProviderCommand, Unit>)handler).Handle(command, new CancellationToken());
-            
-            //assert
-            // Confirm nothing has changed.
-            var invite = await confirmationContext.Invitations.FirstAsync();
-            invite.Status.Should().Be(statusBefore);
         }
     }
 }
