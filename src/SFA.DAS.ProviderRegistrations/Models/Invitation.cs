@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace SFA.DAS.ProviderRegistrations.Models
 {
@@ -30,7 +31,10 @@ namespace SFA.DAS.ProviderRegistrations.Models
 
         public string ProviderUserFullName { get; private set; }
 
-        public Invitation(Guid reference, long ukprn, string userRef, string employerOrganisation, string employerFirstName, string employerLastName, string employerEmail, int status, DateTime createdDate, DateTime updatedDate, string providerOrgName, string providerUserFullName)
+        public virtual ICollection<InvitationEvent> InvitationEvents { get; set; } = new List<InvitationEvent>();
+
+        public Invitation(Guid reference, long ukprn, string userRef, string employerOrganisation, string employerFirstName, string employerLastName, string employerEmail, int status, 
+            DateTime createdDate, DateTime updatedDate, string providerOrgName, string providerUserFullName, List<InvitationEvent> invitationEvents)
         {
             Reference = reference;
             Ukprn = ukprn;
@@ -44,6 +48,7 @@ namespace SFA.DAS.ProviderRegistrations.Models
             UpdatedDate = updatedDate;
             ProviderOrganisationName = providerOrgName;
             ProviderUserFullName = providerUserFullName;
+            InvitationEvents = invitationEvents;
         }
 
         private Invitation()

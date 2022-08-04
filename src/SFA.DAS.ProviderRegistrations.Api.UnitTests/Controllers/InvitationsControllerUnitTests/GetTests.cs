@@ -11,17 +11,33 @@ using SFA.DAS.ProviderRegistrations.Application.Queries.GetInvitationByIdQuery;
 using SFA.DAS.ProviderRegistrations.Types;
 using SFA.DAS.ProviderRegistrations.Api.UnitTests.AutoFixture;
 using AutoFixture.NUnit3;
+using AutoFixture;
+using System.Linq;
 
 namespace SFA.DAS.ProviderRegistrations.Api.UnitTests.Controllers.InvitationsControllerUnitTests
 {
     [TestFixture]
     public class GetTests
     {
+        private Fixture Fixture { get; set; }
+        private GetInvitationByIdQueryResult queryResult { get; set; }
+
+        [SetUp]
+        public void SetUp()
+        {
+            Fixture = new Fixture();
+            Fixture.Behaviors
+                .OfType<ThrowingRecursionBehavior>()
+                .ToList()
+                .ForEach(b => Fixture.Behaviors.Remove(b));
+            Fixture.Behaviors.Add(new OmitOnRecursionBehavior());
+            queryResult = Fixture.Create<GetInvitationByIdQueryResult>();
+        }
+
         [Test, DomainAutoData]
         public async Task WhenValidCorrelationIdIsSupplied_ThenShouldReturnInvitationFromQuery(
             [Frozen] Mock<IMediator> mediator,
-            [Greedy] InvitationsController controller,
-            GetInvitationByIdQueryResult queryResult,
+            [Greedy] InvitationsController controller,            
             Guid correlationId)
         {
             //arrange

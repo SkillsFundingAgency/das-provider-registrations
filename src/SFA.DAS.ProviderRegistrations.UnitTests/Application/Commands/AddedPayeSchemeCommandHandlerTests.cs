@@ -1,14 +1,15 @@
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 using FluentAssertions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 using SFA.DAS.ProviderRegistrations.Application.Commands.AddedPayeSchemeCommand;
 using SFA.DAS.ProviderRegistrations.Data;
+using SFA.DAS.ProviderRegistrations.Exceptions;
 using SFA.DAS.ProviderRegistrations.Models;
 using SFA.DAS.ProviderRegistrations.UnitTests.AutoFixture;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
 {
@@ -21,12 +22,12 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
                 ProviderRegistrationsDbContext setupContext,
                 ProviderRegistrationsDbContext confirmationContext,
                 AddedPayeSchemeCommandHandler handler,
-                AddedPayeSchemeCommand command,
+                AddedPayeSchemeCommand commandDetails,
                 Invitation invitation)
         {
             //arrange
-            invitation.UpdateStatus((int)InvitationStatus.InvitationSent, DateTime.Now);
-            command.CorrelationId = invitation.Reference.ToString();
+            invitation.UpdateStatus((int)InvitationStatus.AccountStarted, DateTime.Now);
+            var command = GetAddedPayeSchemeCommand(commandDetails, invitation.Reference.ToString());
             setupContext.Invitations.Add(invitation);
             await setupContext.SaveChangesAsync();
 
@@ -39,49 +40,87 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
         }
 
         [Test, ProviderAutoData]
-        public async Task Handle_WhenDoesntExistCommandIsHandled_ThenNoChangesAreMade(
-            ProviderRegistrationsDbContext setupContext,
-            ProviderRegistrationsDbContext confirmationContext,
-            AddedPayeSchemeCommandHandler handler,
-            AddedPayeSchemeCommand command,
-            Invitation invitation)
+        public async Task Handle_WhenCommandIsHandled_ThenShouldAddInvitationEvent(
+                ProviderRegistrationsDbContext setupContext,
+                ProviderRegistrationsDbContext confirmationContext,
+                AddedPayeSchemeCommandHandler handler,
+                AddedPayeSchemeCommand commandDetails,
+                Invitation invitation)
         {
-            //arrange
+            //arrange            
+            var updatedDate = DateTime.Now;
+            invitation.UpdateStatus((int)InvitationStatus.AccountStarted, DateTime.Now.AddHours(-1));
+            var command = GetAddedPayeSchemeCommand(commandDetails, invitation.Reference.ToString(), updatedDate);
             setupContext.Invitations.Add(invitation);
             await setupContext.SaveChangesAsync();
-            var statusBefore = invitation.Status;
-            command.CorrelationId = invitation.Reference.ToString();
 
             //act
             await ((IRequestHandler<AddedPayeSchemeCommand, Unit>)handler).Handle(command, new CancellationToken());
 
             //assert
-            // Confirm nothing has changed.
-            var invite = await confirmationContext.Invitations.FirstAsync();
-            invite.Status.Should().Be(statusBefore);
+            var addedInvitationEvent = await confirmationContext.InvitationEvents.FirstOrDefaultAsync(s => s.Invitation.Id == invitation.Id && s.EventType == (int)EventType.PayeSchemeAdded);
+            addedInvitationEvent.Date.Should().Be(updatedDate);
         }
 
         [Test, ProviderAutoData]
         public async Task Handle_WhenInvalidStatusCommandIsHandled_ThenNoChangesAreMade(
-            ProviderRegistrationsDbContext setupContext,
-            ProviderRegistrationsDbContext confirmationContext,
-            AddedPayeSchemeCommandHandler handler,
-            AddedPayeSchemeCommand command,
-            Invitation invitation)
+                ProviderRegistrationsDbContext setupContext,
+                ProviderRegistrationsDbContext confirmationContext,
+                AddedPayeSchemeCommandHandler handler,
+                AddedPayeSchemeCommand commandDetails,
+                Invitation invitation)
         {
             //arrange
-            invitation.UpdateStatus((int)InvitationStatus.LegalAgreementSigned, DateTime.Now);
+            invitation.UpdateStatus((int)InvitationStatus.InvitationComplete, DateTime.Now);
             setupContext.Invitations.Add(invitation);
             await setupContext.SaveChangesAsync();
-            command.CorrelationId = invitation.Reference.ToString();
+            var command = GetAddedPayeSchemeCommand(commandDetails, invitation.Reference.ToString());
 
             //act
             await ((IRequestHandler<AddedPayeSchemeCommand, Unit>)handler).Handle(command, new CancellationToken());
 
-            //assert
-            // Confirm nothing has changed.
-            var invite = await confirmationContext.Invitations.FirstAsync();
-            invite.Status.Should().Be((int)InvitationStatus.LegalAgreementSigned);
+            // assert
+            (await confirmationContext.InvitationEvents.FirstOrDefaultAsync(s => s.Invitation.Id == invitation.Id)).Should().BeNull();
+        }
+
+        [Test, ProviderAutoData]
+        public async Task Handle_WhenInvitationDoesNotExist_ThenErrorIsThrown(
+                ProviderRegistrationsDbContext setupContext,
+                AddedPayeSchemeCommandHandler handler,
+                AddedPayeSchemeCommand commandDetails,
+                Invitation invitation)
+        {
+            //arrange            
+            invitation.UpdateStatus((int)InvitationStatus.InvitationComplete, DateTime.Now);
+            setupContext.Invitations.Add(invitation);
+            await setupContext.SaveChangesAsync();
+
+            var differentInvitationCorrelationId = Guid.NewGuid();
+            var command = GetAddedPayeSchemeCommand(commandDetails, differentInvitationCorrelationId.ToString());
+
+            //act
+            try
+            {
+                await ((IRequestHandler<AddedPayeSchemeCommand, Unit>)handler).Handle(command, new CancellationToken());
+            }
+            catch (InvalidInvitationException ex)
+            {
+                //assert
+                Assert.AreEqual(ex.Message, $"No invitation ID found for CorrelationId:{command.CorrelationId}");
+            }
+        }
+
+        private AddedPayeSchemeCommand GetAddedPayeSchemeCommand(AddedPayeSchemeCommand details, string correlationId, DateTime? eventDate = null)
+        {
+            return new AddedPayeSchemeCommand(
+                details.AccountId,
+                details.UserName,
+                details.UserRef,
+                details.PayeRef,
+                details.Aorn,
+                details.SchemeName,
+                correlationId,
+                eventDate.HasValue ? eventDate.Value : details.EventDateTime);
         }
     }
 }

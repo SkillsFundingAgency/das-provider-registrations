@@ -1,4 +1,5 @@
-﻿using AutoFixture.NUnit3;
+﻿using AutoFixture;
+using AutoFixture.NUnit3;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -11,6 +12,7 @@ using SFA.DAS.ProviderRegistrations.Web.Controllers;
 using SFA.DAS.ProviderRegistrations.Web.UnitTests.AutoFixture;
 using SFA.DAS.ProviderRegistrations.Web.ViewModels;
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -19,11 +21,26 @@ namespace SFA.DAS.ProviderRegistrations.Web.UnitTests.Controllers.RegistrationCo
     [TestFixture]
     public class WhenIReviewEmployerDetails
     {
+        private Fixture fixture { get; set; }
+        private GetInvitationByIdQueryResult queryResult { get; set; }
+
+        [SetUp]
+        public void SetUp()
+        {
+            fixture = new Fixture();
+            fixture.Behaviors
+                .OfType<ThrowingRecursionBehavior>()
+                .ToList()
+                .ForEach(b => fixture.Behaviors.Remove(b));
+            fixture.Behaviors.Add(new OmitOnRecursionBehavior());
+            queryResult = fixture.Create<GetInvitationByIdQueryResult>();
+        }
+
+
         [Test, DomainAutoData]
         public async Task ThenIReviewDetails(            
             [Frozen] Mock<IMediator> mediator,
-            [Greedy] RegistrationController controller,
-            GetInvitationByIdQueryResult queryResult,
+            [Greedy] RegistrationController controller,            
             Guid correlationId)
         {
             //arrange
@@ -42,8 +59,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.UnitTests.Controllers.RegistrationCo
         public async Task ThenCheckForUnsubscribed(
            [Frozen] Mock<IAuthenticationService> authService,
            [Frozen] Mock<IMediator> mediator,
-           [Greedy] RegistrationController controller,
-           GetInvitationByIdQueryResult queryResult,
+           [Greedy] RegistrationController controller,           
            Guid correlationId)
         {
             //arrange

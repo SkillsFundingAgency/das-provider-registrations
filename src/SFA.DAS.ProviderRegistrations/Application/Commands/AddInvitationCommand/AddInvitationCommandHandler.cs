@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -32,7 +33,8 @@ namespace SFA.DAS.ProviderRegistrations.Application.Commands.AddInvitationComman
                 DateTime.Now,
                 DateTime.Now,
                 request.ProviderOrganisationName,
-                request.ProviderUserFullName);
+                request.ProviderUserFullName,
+                new List<InvitationEvent>());
 
             _db.Value.Invitations.Add(invitation);
             await _db.Value.SaveChangesAsync(cancellationToken);

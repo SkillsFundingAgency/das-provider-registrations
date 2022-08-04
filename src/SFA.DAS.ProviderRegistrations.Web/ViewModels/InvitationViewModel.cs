@@ -1,11 +1,11 @@
 ﻿using System;
-using SFA.DAS.ProviderRegistrations.Models;
-using SFA.DAS.ProviderRegistrations.Web.Extensions;
 
 namespace SFA.DAS.ProviderRegistrations.Web.ViewModels
 {
     public class InvitationViewModel
     {
+        public long Id { get; set; }
+
         public Guid Reference { get; set; }
 
         public string EmployerOrganisation { get; set; }
@@ -16,12 +16,17 @@ namespace SFA.DAS.ProviderRegistrations.Web.ViewModels
 
         public string Name => $"{EmployerFirstName} {EmployerLastName}";
 
-        public string EmployerEmail { get; set; }
+        public string EmployerEmail { get; set; }        
 
-        public string State { get; set; }
+        public InvitationStatusViewModel Status { get; set; }
 
         public DateTime SentDate { get; set; }
 
-        public bool ShowResendInvitationLink => State == InvitationStatus.InvitationSent.GetDisplayName();
+        public bool ShowResendInvitationLink => Status == InvitationStatusViewModel.InvitationSent;
+
+        public bool ShowViewStatusLink => Status == InvitationStatusViewModel.AccountStarted ||
+                                          Status == InvitationStatusViewModel.PayeSchemeAdded ||
+                                          Status == InvitationStatusViewModel.LegalAgreementSigned ||
+                                          Status == InvitationStatusViewModel.InvitationComplete;        
     }
 }

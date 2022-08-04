@@ -7,13 +7,13 @@ using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 using SFA.DAS.ProviderRegistrations.Application.Commands.UpsertUserCommand;
 using SFA.DAS.ProviderRegistrations.Data;
+using SFA.DAS.ProviderRegistrations.Exceptions;
 using SFA.DAS.ProviderRegistrations.Models;
 using SFA.DAS.ProviderRegistrations.UnitTests.AutoFixture;
 
 namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
 {
     [TestFixture]
-    [Parallelizable]
     public class UpsertUserCommandHandlerTests
     {
         [Test, ProviderAutoData]
@@ -23,7 +23,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             UpsertUserCommandHandler handler,
             Invitation invitation)
         {
-            //arrange
+            //arrange            
             invitation.UpdateStatus((int)InvitationStatus.InvitationSent, DateTime.Now);
             setupContext.Invitations.Add(invitation);
             await setupContext.SaveChangesAsync();
@@ -59,6 +59,29 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
         }
 
         [Test, ProviderAutoData]
+        public async Task Handle_WhenCommandIsHandled_ThenShouldAddInvitationEvent(
+            ProviderRegistrationsDbContext setupContext,
+            ProviderRegistrationsDbContext confirmationContext,
+            UpsertUserCommandHandler handler,
+            Invitation invitation)
+        {
+            //arrange
+            confirmationContext.InvitationEvents.RemoveRange(confirmationContext.InvitationEvents);
+            var updatedDate = DateTime.Now;
+            invitation.UpdateStatus((int)InvitationStatus.InvitationSent, DateTime.Now.AddHours(-1));
+            setupContext.Invitations.Add(invitation);
+            await setupContext.SaveChangesAsync();
+            var command = new UpsertUserCommand(invitation.UserRef, updatedDate, invitation.Reference.ToString());
+
+            //act
+            await ((IRequestHandler<UpsertUserCommand, Unit>)handler).Handle(command, new CancellationToken());
+
+            //assert
+            var addedInvitationEvent = await confirmationContext.InvitationEvents.FirstOrDefaultAsync(s => s.Invitation.Id == invitation.Id && s.EventType == (int)EventType.AccountStarted);
+            addedInvitationEvent.Date.Should().Be(updatedDate);
+        }
+
+        [Test, ProviderAutoData]
         public async Task Handle_WhenInvalidStatusCommandIsHandled_ThenNoChangesAreMade(
             ProviderRegistrationsDbContext setupContext,
             ProviderRegistrationsDbContext confirmationContext,
@@ -74,9 +97,34 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             //act
             await ((IRequestHandler<UpsertUserCommand, Unit>)handler).Handle(command, new CancellationToken());
 
-            //assert
-            var updatedInvite = await confirmationContext.Invitations.SingleAsync(s => s.Reference == invitation.Reference);
-            updatedInvite.Status.Should().Be((int)InvitationStatus.InvitationComplete);
+            // assert
+            (await confirmationContext.InvitationEvents.FirstOrDefaultAsync(s => s.Invitation.Id == invitation.Id)).Should().BeNull();
+        }
+
+        [Test, ProviderAutoData]
+        public async Task Handle_WhenInvitationDoesNotExist_ThenErrorIsThrown(
+            ProviderRegistrationsDbContext setupContext,
+            UpsertUserCommandHandler handler,
+            Invitation invitation)
+        {
+            //arrange            
+            invitation.UpdateStatus((int)InvitationStatus.InvitationComplete, DateTime.Now);
+            setupContext.Invitations.Add(invitation);
+            await setupContext.SaveChangesAsync();
+
+            var differentInvitationCorrelationId= Guid.NewGuid();
+            var command = new UpsertUserCommand(invitation.UserRef, DateTime.Now, differentInvitationCorrelationId.ToString());
+
+            //act
+            try
+            {
+                await ((IRequestHandler<UpsertUserCommand, Unit>)handler).Handle(command, new CancellationToken());
+            }
+            catch (InvalidInvitationException ex)
+            {
+                //assert
+                Assert.AreEqual(ex.Message, $"No invitation ID found for CorrelationId:{command.CorrelationId}");
+            }
         }
     }
 }

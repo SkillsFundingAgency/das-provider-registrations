@@ -30,7 +30,7 @@ namespace SFA.DAS.ProviderRegistrations.MessageHandlers.UnitTests.EventHandlers.
 
             //assert
             mediator.Verify(s => s.Send(It.Is<UpsertUserCommand>(c =>
-                c.Created == message.Created &&
+                c.EventDateTime == message.Created &&
                 c.CorrelationId == message.CorrelationId &&
                 c.UserRef == message.UserRef), It.IsAny<CancellationToken>()));
         }

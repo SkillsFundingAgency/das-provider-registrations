@@ -11,7 +11,7 @@
     <link rel="Stylesheet" href="@Href("~/stylesheets/site.css")" />
 }
 
-<form id="InviteEmployerUser" novalidate method="post" action="@Url.ProviderAction("InviteEmployeruser")">
+<form id="InviteEmployerUser" novalidate method="post" action="@Url.InviteEmployeruserAction("InviteEmployeruser", Model?.InvitationId)">
     @Html.AntiForgeryToken()
     @Html.HiddenFor(m => m.Reference)
     @Html.HiddenFor(m => m.ResendInvitation)

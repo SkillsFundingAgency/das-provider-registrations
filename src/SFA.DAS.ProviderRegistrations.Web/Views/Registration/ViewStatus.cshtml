@@ -1,0 +1,76 @@
+﻿@using SFA.DAS.ProviderRegistrations.Web.Extensions
+@using SFA.DAS.ProviderRegistrations.Web.ViewModels
+@model SFA.DAS.ProviderRegistrations.Web.ViewModels.InvitationEventsViewModel
+
+@section breadcrumb
+{
+    <a id="back-link" class="govuk-back-link" href="@Url.ProviderAction("InvitedEmployers")">Back</a>
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-xl">
+            Employer account status
+        </h1>
+
+        <h2 class="govuk-heading-l govuk-!-margin-bottom-9">
+            @Model.EmployerOrganisation
+        </h2>
+
+        <dl class="govuk-summary-list">            
+           
+                @if (!Model.InvitationResent)
+                {
+                    <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Invitation sent:
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.InvitationSentDate?.ToString(InvitationEventsViewModel.DateFormat)
+                    </dd>
+                    </div>
+                }
+
+                @if (Model.InvitationResent)
+                {
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            Invitation last sent:
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            @Model.InvitationResentDate?.ToString(InvitationEventsViewModel.DateFormat)
+                        </dd>
+                    </div>
+                }
+
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Account creation started:
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.AccountCreationStartedStatus
+                    </dd>
+                </div>
+
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        PAYE scheme added:
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.PayeSchemeAddedStatus
+                    </dd>
+                </div>
+
+
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Legal agreement accepted:
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.AgreementAcceptedStatus
+                    </dd>
+                </div>
+
+            </dl>
+        
+ </div>
