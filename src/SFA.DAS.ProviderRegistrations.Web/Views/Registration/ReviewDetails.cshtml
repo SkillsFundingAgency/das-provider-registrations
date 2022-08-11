@@ -27,7 +27,17 @@
                     <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
                     <strong class="govuk-warning-text__text">
                         <span class="govuk-warning-text__assistive">Warning</span>
-                        This employer has unsubscribed from invitations emails. You cannot resend their invitation.
+                        This employer has unsubscribed from invitation emails. You cannot resend their invitation.
+                    </strong>
+                </div>
+            } 
+            else if (Model.IsEmailInUse)
+            {
+                <div class="govuk-warning-text">
+                    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                    <strong class="govuk-warning-text__text">
+                        <span class="govuk-warning-text__assistive">Warning</span>
+                        This employer already has an account on the Apprenticeship service. You cannot resend their invitation.
                     </strong>
                 </div>
             }
@@ -47,7 +57,7 @@
                     @Html.HiddenFor(m => m.EmployerOrganisation)
                 </dd>
                 <dd class="govuk-summary-list__actions">
-                    @if (!Model.Unsubscribed)
+                    @if (Model.EditAndResendEnabled)
                     {
                         <input class="govuk-link govuk-button--looks-like-link" type="submit" value="Change" name="command" />
                     }
@@ -62,7 +72,7 @@
                 @Html.HiddenFor(m => m.EmployerFirstName)
             </dd>
             <dd class="govuk-summary-list__actions">
-                @if (!Model.Unsubscribed)
+                @if (Model.EditAndResendEnabled)
                 {
                     <input class="govuk-link govuk-button--looks-like-link" type="submit" value="Change" name="command" />
                 }
@@ -77,7 +87,7 @@
                 @Html.HiddenFor(m => m.EmployerLastName)
             </dd>
             <dd class="govuk-summary-list__actions">
-                @if (!Model.Unsubscribed)
+                @if (Model.EditAndResendEnabled)
                 {
                     <input class="govuk-link govuk-button--looks-like-link" type="submit" value="Change" name="command" />
                 }
@@ -92,14 +102,14 @@
                 @Html.HiddenFor(m => m.EmployerEmailAddress)
             </dd>
             <dd class="govuk-summary-list__actions">
-                @if (!Model.Unsubscribed && !Model.ResendInvitation)
+                @if (Model.EditAndResendEnabled && !Model.ResendInvitation)
                 {
                     <input class="govuk-link govuk-button--looks-like-link" type="submit" value="Change" name="command" />
                 }
             </dd>
         </div>
         </dl>
-        @if (!Model.Unsubscribed)
+        @if (Model.EditAndResendEnabled)
         {
             <button type="submit" class="govuk-button">Send invitation</button>
         }

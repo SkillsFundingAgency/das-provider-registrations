@@ -11,6 +11,7 @@ using SFA.DAS.ProviderRegistrations.Application.Commands.AddInvitationCommand;
 using SFA.DAS.ProviderRegistrations.Application.Commands.AddResendInvitationCommand;
 using SFA.DAS.ProviderRegistrations.Application.Commands.SendInvitationEmailCommand;
 using SFA.DAS.ProviderRegistrations.Application.Commands.UpdateInvitationCommand;
+using SFA.DAS.ProviderRegistrations.Application.Queries.GetEmailAddressInUseQuery;
 using SFA.DAS.ProviderRegistrations.Application.Queries.GetInvitationByIdQuery;
 using SFA.DAS.ProviderRegistrations.Application.Queries.GetInvitationEventByIdQuery;
 using SFA.DAS.ProviderRegistrations.Application.Queries.GetInvitationQuery;
@@ -92,8 +93,11 @@ namespace SFA.DAS.ProviderRegistrations.Web.Controllers
                 Reference = result.Invitation.Reference,
                 InvitationId = result.Invitation.Id
             };
+
+            var emailNowInUse = await _mediator.Send(new GetEmailAddressInUseQuery(model.EmployerEmailAddress?.Trim().ToLower()));
             model.Unsubscribed = await _mediator.Send(new GetUnsubscribedQuery(ukprn, model.EmployerEmailAddress), new CancellationToken());
             model.ResendInvitation = true;
+            model.IsEmailInUse = emailNowInUse;
 
             return View("ReviewDetails", model);
         }

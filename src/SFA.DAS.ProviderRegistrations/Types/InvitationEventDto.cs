@@ -12,8 +12,6 @@ namespace SFA.DAS.ProviderRegistrations.Types
     {
         public long Id { get; set; }
 
-        public InvitationDto InvitationDto { get; set; }
-
         public int EventType { get; set; }
 
         public DateTime? Date { get; set; }
