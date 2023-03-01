@@ -11,5 +11,6 @@
         public static string ZenDeskSettings = "ZenDeskSettings";
         public static string RedisConnectionSettings = "RedisConnectionSettings";
         public static string RoatpApiClientSettings ="RoatpApiClientSettings";
+        public const string UseDfESignIn = "UseDfESignIn";
     }
 }

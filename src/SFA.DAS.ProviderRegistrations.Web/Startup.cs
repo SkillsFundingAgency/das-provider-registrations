@@ -9,6 +9,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Authorization.Mvc.Extensions;
 using SFA.DAS.Provider.Shared.UI.Startup;
+using SFA.DAS.ProviderRegistrations.Configuration;
 using SFA.DAS.ProviderRegistrations.Extensions;
 using SFA.DAS.ProviderRegistrations.Web.Authentication;
 using SFA.DAS.ProviderRegistrations.Web.Authorization;
@@ -34,6 +35,7 @@ namespace SFA.DAS.ProviderRegistrations.Web
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            var useDfESignIn = Configuration.GetSection(ProviderRegistrationsConfigurationKeys.UseDfESignIn).Get<bool>();
             services
                 .Configure<CookiePolicyOptions>(options =>
                 {
@@ -58,6 +60,7 @@ namespace SFA.DAS.ProviderRegistrations.Web
                 .AddCookieBannerSettings(Configuration)
                 .AddControllersAsServices()
                 .AddSessionStateTempDataProvider()
+                .SetDfESignInConfiguration(useDfESignIn)
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
             services.AddProviderUiServiceRegistration(Configuration);
