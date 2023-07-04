@@ -109,6 +109,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.UnitTests.Controllers.RegistrationCo
             string providerName)
         {
             //arrange
+            model.ResendInvitation = true;
             authService.Object.TryGetUserClaimValue(ProviderClaims.DisplayName, out var displayName);
             mediator.Setup(s => s.Send(It.IsAny<GetProviderByUkprnQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new GetProviderByUkprnQueryResult(providerName));
