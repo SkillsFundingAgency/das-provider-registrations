@@ -10,12 +10,16 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using SFA.DAS.DfESignIn.Auth.AppStart;
 using SFA.DAS.ProviderRegistrations.Configuration;
 
 namespace SFA.DAS.ProviderRegistrations.Web.Authentication
 {
     public static class AuthenticationExtensions
     {
+        private const string ClientName = "ProviderRoATP";
+        private const string CookieAuthName = "SFA.DAS.ProviderApprenticeshipService";
+
         public static IServiceCollection AddProviderIdamsAuthentication(this IServiceCollection services, IConfiguration config)
         {
             if (config["UseAuthenticationStub"] != null && bool.Parse(config["UseAuthenticationStub"]))
@@ -24,8 +28,22 @@ namespace SFA.DAS.ProviderRegistrations.Web.Authentication
             }
             else
             {
-                var authenticationSettings = config.GetSection(ProviderRegistrationsConfigurationKeys.AuthenticationSettings).Get<AuthenticationSettings>();
-                services.AddIdamsAuthentication(authenticationSettings);
+                // if the DfESignIn feature toggle is turned on then use DfESignIn OpenIdConnect as the authentication. 
+                var useDfeSignIn = config.GetSection(ProviderRegistrationsConfigurationKeys.UseDfESignIn).Get<bool>();
+                if (useDfeSignIn)
+                {
+                    services.AddAndConfigureDfESignInAuthentication(
+                        config,
+                        CookieAuthName,
+                        typeof(CustomServiceRole),
+                        ClientName,
+                        "/signout");
+                }
+                else
+                {
+                    var authenticationSettings = config.GetSection(ProviderRegistrationsConfigurationKeys.AuthenticationSettings).Get<AuthenticationSettings>();
+                    services.AddIdamsAuthentication(authenticationSettings);
+                }
             }
 
             return services;

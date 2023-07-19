@@ -23,7 +23,11 @@ namespace SFA.DAS.ProviderRegistrations.Web
                     {
                         config.AddAzureTableStorage(options =>
                             {
-                                options.ConfigurationKeys = ProviderRegistrationsConfigurationKeys.ProviderRegistrations.Split(',');
+                                options.ConfigurationKeys = new[]
+                                {
+                                    ProviderRegistrationsConfigurationKeys.ProviderRegistrations,
+                                    ProviderRegistrationsConfigurationKeys.DfEOidcConfiguration
+                                };
                                 options.PreFixConfigurationKeys = false;
                             });
                     })
