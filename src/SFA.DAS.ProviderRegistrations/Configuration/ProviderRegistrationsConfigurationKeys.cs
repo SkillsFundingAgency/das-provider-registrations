@@ -13,5 +13,6 @@
         public static string RoatpApiClientSettings ="RoatpApiClientSettings";
         public const string UseDfESignIn = "UseDfESignIn";
         public const string DfEOidcConfiguration = "SFA.DAS.Provider.DfeSignIn";
+        public static string ProviderSharedUIConfigurationSettings = "ProviderSharedUIConfiguration";
     }
 }

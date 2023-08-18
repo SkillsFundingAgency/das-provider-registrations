@@ -3,6 +3,7 @@ using SFA.DAS.AutoConfiguration.DependencyResolution;
 using SFA.DAS.ProviderRegistrations.Configuration;
 using SFA.DAS.Provider.Shared.UI.Models;
 using StructureMap;
+using ProviderSharedUIConfiguration = SFA.DAS.Provider.Shared.UI.Models.ProviderSharedUIConfiguration;
 
 namespace SFA.DAS.ProviderRegistrations.DependencyResolution
 {
@@ -18,6 +19,7 @@ namespace SFA.DAS.ProviderRegistrations.DependencyResolution
             AddConfiguration<EmployerApprenticeshipApiClientSettings>(ProviderRegistrationsConfigurationKeys.EmployerApprenticeshipApiClientSettings);
             AddConfiguration<ZenDeskConfiguration>(ProviderRegistrationsConfigurationKeys.ZenDeskSettings);
             AddConfiguration<RoatpApiClientSettings>(ProviderRegistrationsConfigurationKeys.RoatpApiClientSettings);
+            AddConfiguration<ProviderSharedUIConfiguration>(ProviderRegistrationsConfigurationKeys.ProviderSharedUIConfigurationSettings);
         }
 
         private void AddConfiguration<T>(string key) where T : class
