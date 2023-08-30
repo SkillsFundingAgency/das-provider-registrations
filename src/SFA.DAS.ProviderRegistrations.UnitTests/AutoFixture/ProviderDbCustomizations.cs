@@ -1,13 +1,12 @@
-﻿using AutoFixture;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using AutoFixture;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using SFA.DAS.ProviderRegistrations.Data;
 using SFA.DAS.ProviderRegistrations.Mappings;
 using SFA.DAS.ProviderRegistrations.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace SFA.DAS.ProviderRegistrations.UnitTests.AutoFixture
 {
@@ -28,7 +27,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.AutoFixture
                 i.With(i => i.InvitationEvents, new List<InvitationEvent>()));
         }
 
-        private IConfigurationProvider CreateMappings()
+        private static IConfigurationProvider CreateMappings()
         {
             return new MapperConfiguration(c =>
             {
@@ -36,11 +35,11 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.AutoFixture
             });
         }
 
-        private ProviderRegistrationsDbContext CreateInMemoryProviderDb(Guid databaseGuid)
+        private static ProviderRegistrationsDbContext CreateInMemoryProviderDb(Guid databaseGuid)
         {
             return new ProviderRegistrationsDbContext(
                     new DbContextOptionsBuilder<ProviderRegistrationsDbContext>().
-                    UseInMemoryDatabase(databaseGuid.ToString()).ConfigureWarnings(warnings => warnings.Throw(RelationalEventId.QueryClientEvaluationWarning)).Options);
+                    UseInMemoryDatabase(databaseGuid.ToString()).Options);
         }
     }
 }

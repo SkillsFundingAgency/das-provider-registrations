@@ -1,6 +1,5 @@
 using System.Data.Common;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.AutoConfiguration;
 
@@ -22,9 +21,8 @@ namespace SFA.DAS.ProviderRegistrations.Data
         public ProviderRegistrationsDbContext CreateDbContext()
         {
             var optionsBuilder = new DbContextOptionsBuilder<ProviderRegistrationsDbContext>()
-                .UseSqlServer(_dbConnection)
-                .ConfigureWarnings(w => w.Throw(RelationalEventId.QueryClientEvaluationWarning));
-
+                .UseSqlServer(_dbConnection);
+                
             if (_environmentService.IsCurrent(DasEnv.LOCAL))
             {
                 optionsBuilder.UseLoggerFactory(_loggerFactory);

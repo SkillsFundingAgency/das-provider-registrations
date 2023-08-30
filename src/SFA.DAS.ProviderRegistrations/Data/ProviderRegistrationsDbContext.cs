@@ -20,7 +20,7 @@ namespace SFA.DAS.ProviderRegistrations.Data
 
         public virtual Task ExecuteSqlCommandAsync(string sql, params object[] parameters)
         {
-            return Database.ExecuteSqlCommandAsync(sql, parameters);
+            return Database.ExecuteSqlRawAsync(sql, parameters);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
