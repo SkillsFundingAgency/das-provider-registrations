@@ -31,7 +31,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             await setupContext.SaveChangesAsync();
 
             //act
-            await ((IRequestHandler<AddedAccountProviderCommand, Unit>)handler).Handle(command, new CancellationToken());
+            await ((IRequestHandler<AddedAccountProviderCommand>)handler).Handle(command, new CancellationToken());
 
 
             //assert
@@ -54,7 +54,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             await setupContext.SaveChangesAsync();
 
             //act
-            await ((IRequestHandler<AddedAccountProviderCommand, Unit>)handler).Handle(command, new CancellationToken());
+            await ((IRequestHandler<AddedAccountProviderCommand>)handler).Handle(command, new CancellationToken());
 
             //assert
             var addedInvitationEvent = await confirmationContext.InvitationEvents.FirstOrDefaultAsync(s => s.InvitationId == invitation.Id && s.EventType == (int)EventType.AccountProviderAdded);
@@ -75,7 +75,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             await setupContext.SaveChangesAsync();
 
             //act
-            await ((IRequestHandler<AddedAccountProviderCommand, Unit>)handler).Handle(command, new CancellationToken());
+            await ((IRequestHandler<AddedAccountProviderCommand>)handler).Handle(command, new CancellationToken());
 
             // assert
             (await confirmationContext.InvitationEvents.FirstOrDefaultAsync(s => s.Invitation.Id == invitation.Id)).Should().BeNull();
@@ -95,7 +95,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             //act
             try
             {
-                await ((IRequestHandler<AddedAccountProviderCommand, Unit>)handler).Handle(command, new CancellationToken());
+                await ((IRequestHandler<AddedAccountProviderCommand>)handler).Handle(command, new CancellationToken());
             }
             catch (InvalidInvitationException ex)
             {

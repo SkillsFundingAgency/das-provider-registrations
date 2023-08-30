@@ -46,7 +46,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             var command = new AddResendInvitationCommand(invitation.Id, updatedDate);
 
             //act            
-            await ((IRequestHandler<AddResendInvitationCommand, Unit>)handler).Handle(command, new CancellationToken());
+            await ((IRequestHandler<AddResendInvitationCommand>)handler).Handle(command, new CancellationToken());
 
             //assert
             confirmationContext.InvitationEvents.Should().ContainSingle(s => s.InvitationId == command.InvitationId && s.Date == updatedDate);            
@@ -66,7 +66,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             //act
             try
             {
-                await ((IRequestHandler<AddResendInvitationCommand, Unit>)handler).Handle(command, new CancellationToken());
+                await ((IRequestHandler<AddResendInvitationCommand>)handler).Handle(command, new CancellationToken());
             }
             catch (InvalidInvitationException ex)
             {

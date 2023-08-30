@@ -30,7 +30,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             var command = new UpsertUserCommand(invitation.UserRef, DateTime.Now, invitation.Reference.ToString());
 
             //act
-            await ((IRequestHandler<UpsertUserCommand, Unit>)handler).Handle(command, new CancellationToken());
+            await ((IRequestHandler<UpsertUserCommand>)handler).Handle(command, new CancellationToken());
 
             //assert
             var updatedInvite = await confirmationContext.Invitations.SingleAsync(s => s.Reference == invitation.Reference);
@@ -51,7 +51,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             var command = new UpsertUserCommand(invitation.UserRef, DateTime.Now, "unknownreference");
 
             //act
-            await ((IRequestHandler<UpsertUserCommand, Unit>)handler).Handle(command, new CancellationToken());
+            await ((IRequestHandler<UpsertUserCommand>)handler).Handle(command, new CancellationToken());
 
             //assert
             var dbInvite = await confirmationContext.Invitations.FirstAsync(f => f.Reference == invitation.Reference);
@@ -74,7 +74,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             var command = new UpsertUserCommand(invitation.UserRef, updatedDate, invitation.Reference.ToString());
 
             //act
-            await ((IRequestHandler<UpsertUserCommand, Unit>)handler).Handle(command, new CancellationToken());
+            await ((IRequestHandler<UpsertUserCommand>)handler).Handle(command, new CancellationToken());
 
             //assert
             var addedInvitationEvent = await confirmationContext.InvitationEvents.FirstOrDefaultAsync(s => s.Invitation.Id == invitation.Id && s.EventType == (int)EventType.AccountStarted);
@@ -95,7 +95,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             var command = new UpsertUserCommand(invitation.UserRef, DateTime.Now, invitation.Reference.ToString());
 
             //act
-            await ((IRequestHandler<UpsertUserCommand, Unit>)handler).Handle(command, new CancellationToken());
+            await ((IRequestHandler<UpsertUserCommand>)handler).Handle(command, new CancellationToken());
 
             // assert
             (await confirmationContext.InvitationEvents.FirstOrDefaultAsync(s => s.Invitation.Id == invitation.Id)).Should().BeNull();
@@ -118,7 +118,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             //act
             try
             {
-                await ((IRequestHandler<UpsertUserCommand, Unit>)handler).Handle(command, new CancellationToken());
+                await ((IRequestHandler<UpsertUserCommand>)handler).Handle(command, new CancellationToken());
             }
             catch (InvalidInvitationException ex)
             {

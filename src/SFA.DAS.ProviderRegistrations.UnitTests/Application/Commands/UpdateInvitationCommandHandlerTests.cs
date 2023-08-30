@@ -1,4 +1,8 @@
-﻿using AutoFixture;
+﻿using System;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using AutoFixture;
 using FluentAssertions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -7,10 +11,6 @@ using SFA.DAS.ProviderRegistrations.Application.Commands.UpdateInvitationCommand
 using SFA.DAS.ProviderRegistrations.Data;
 using SFA.DAS.ProviderRegistrations.Models;
 using SFA.DAS.ProviderRegistrations.UnitTests.AutoFixture;
-using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
 {
@@ -47,7 +47,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             command.CorrelationId = Guid.NewGuid().ToString();
 
             //act           
-            var result = await ((IRequestHandler<UpdateInvitationCommand, Unit>)handler).Handle(command, new CancellationToken());
+            await ((IRequestHandler<UpdateInvitationCommand>)handler).Handle(command, new CancellationToken());
 
             //assert
             var updatedInvite = await confirmationContext.Invitations.SingleAsync(s => s.Reference == invitation.Reference);

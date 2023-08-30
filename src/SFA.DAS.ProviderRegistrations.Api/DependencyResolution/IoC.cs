@@ -8,7 +8,7 @@ namespace SFA.DAS.ProviderRegistrations.Api.DependencyResolution
         public static void Initialize(Registry registry)
         {
             registry.IncludeRegistry<ConfigurationRegistry>();
-            registry.IncludeRegistry<MediatorRegistry>(); 
+           // registry.IncludeRegistry<MediatorRegistry>(); 
             registry.IncludeRegistry<DataRegistry>();
             registry.IncludeRegistry<MapperRegistry>();
             registry.IncludeRegistry<DefaultRegistry>();

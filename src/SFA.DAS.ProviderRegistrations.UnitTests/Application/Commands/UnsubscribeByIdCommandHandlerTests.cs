@@ -42,7 +42,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             var command = new UnsubscribeByIdCommand(invitation.Reference);
 
             //act
-            await ((IRequestHandler<UnsubscribeByIdCommand, Unit>)handler).Handle(command, new CancellationToken());
+            await ((IRequestHandler<UnsubscribeByIdCommand>)handler).Handle(command, new CancellationToken());
 
             //assert
             var unsubscribe = confirmationContext.Unsubscribed.Single(s => s.EmailAddress == invitation.EmployerEmail && s.Ukprn == invitation.Ukprn);

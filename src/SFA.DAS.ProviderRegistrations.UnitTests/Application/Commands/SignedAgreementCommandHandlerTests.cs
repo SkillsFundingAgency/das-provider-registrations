@@ -33,7 +33,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             await setupContext.SaveChangesAsync();
 
             //act
-            await ((IRequestHandler<SignedAgreementCommand, Unit>)handler).Handle(command, new CancellationToken());
+            await ((IRequestHandler<SignedAgreementCommand>)handler).Handle(command, new CancellationToken());
 
             //assert
             var savedInvite = await confirmationContext.Invitations.FirstAsync(i => i.Reference.ToString() == command.CorrelationId);
@@ -55,7 +55,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             await db.SaveChangesAsync();
 
             //act
-            await ((IRequestHandler<SignedAgreementCommand, Unit>)handler).Handle(command, new CancellationToken());
+            await ((IRequestHandler<SignedAgreementCommand>)handler).Handle(command, new CancellationToken());
 
             //assert
             var savedInvite = await confirmationContext.Invitations.FirstAsync(i => i.Reference == invitation.Reference);
@@ -78,7 +78,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             await setupContext.SaveChangesAsync();
 
             //act
-            await ((IRequestHandler<SignedAgreementCommand, Unit>)handler).Handle(command, new CancellationToken());
+            await ((IRequestHandler<SignedAgreementCommand>)handler).Handle(command, new CancellationToken());
 
             //assert            
             var addedInvitationEvent = await confirmationContext.InvitationEvents.FirstOrDefaultAsync(s => s.Invitation.Id == invitation.Id && s.EventType == (int)EventType.LegalAgreementSigned);
@@ -100,7 +100,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             await setupContext.SaveChangesAsync();
 
             //act
-            await ((IRequestHandler<SignedAgreementCommand, Unit>)handler).Handle(command, new CancellationToken());
+            await ((IRequestHandler<SignedAgreementCommand>)handler).Handle(command, new CancellationToken());
 
             // assert
             (await confirmationContext.InvitationEvents.FirstOrDefaultAsync(s => s.Invitation.Id == invitation.Id)).Should().BeNull();
@@ -124,7 +124,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             //act
             try
             {
-                await ((IRequestHandler<SignedAgreementCommand, Unit>)handler).Handle(command, new CancellationToken());
+                await ((IRequestHandler<SignedAgreementCommand>)handler).Handle(command, new CancellationToken());
             }
             catch (InvalidInvitationException ex)
             {

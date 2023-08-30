@@ -43,15 +43,15 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             var handler = new SendInvitationEmailCommandHandler(mockPublisher.Object, settings);
 
             //act
-            var result = await ((IRequestHandler<SendInvitationEmailCommand, Unit>)handler).Handle(command, new CancellationToken());
+            await ((IRequestHandler<SendInvitationEmailCommand>)handler).Handle(command, new CancellationToken());
 
             //assert
             mockPublisher.Verify(s => s.Send(It.Is<SendEmailCommand>(t =>
                 t.TemplateId == "ProviderInviteEmployerNotification" &&
                 t.RecipientsAddress == command.EmployerEmail &&
-                t.Tokens.OrderBy(kvp => kvp.Key).SequenceEqual(tokens.OrderBy(kvp => kvp.Key))),It.IsAny<SendOptions>()));
+                t.Tokens.OrderBy(kvp => kvp.Key).SequenceEqual(tokens.OrderBy(kvp => kvp.Key))), It.IsAny<SendOptions>()));
         }
-        
+
         [Test, ProviderAutoData]
         public async Task Handle_WhenHandlingSendInvitationEmailCommand_ThenShouldAddInvitationForGovProd(
             [Frozen] Mock<IMessageSession> mockPublisher,
@@ -75,15 +75,15 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             var handler = new SendInvitationEmailCommandHandler(mockPublisher.Object, settings);
 
             //act
-            var result = await ((IRequestHandler<SendInvitationEmailCommand, Unit>)handler).Handle(command, new CancellationToken());
+            await ((IRequestHandler<SendInvitationEmailCommand>)handler).Handle(command, new CancellationToken());
 
             //assert
             mockPublisher.Verify(s => s.Send(It.Is<SendEmailCommand>(t =>
                 t.TemplateId == "9dc52d84-0ee5-4755-b836-f4e71ae2a326" &&
                 t.RecipientsAddress == command.EmployerEmail &&
-                t.Tokens.OrderBy(kvp => kvp.Key).SequenceEqual(tokens.OrderBy(kvp => kvp.Key))),It.IsAny<SendOptions>()));
+                t.Tokens.OrderBy(kvp => kvp.Key).SequenceEqual(tokens.OrderBy(kvp => kvp.Key))), It.IsAny<SendOptions>()));
         }
-        
+
         [Test, ProviderAutoData]
         public async Task Handle_WhenHandlingSendInvitationEmailCommand_ThenShouldAddInvitationForGovNonProd(
             [Frozen] Mock<IMessageSession> mockPublisher,
@@ -104,17 +104,17 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
                 { "unsubscribe_training_provider", $"{settings.EmployerAccountsBaseUrl}/service/unsubscribe/{command.CorrelationId}" },
                 { "report_training_provider", $"{settings.EmployerAccountsBaseUrl}/report/trainingprovider/{command.CorrelationId}" }
             };
-            
+
             var handler = new SendInvitationEmailCommandHandler(mockPublisher.Object, settings);
 
             //act
-            var result = await ((IRequestHandler<SendInvitationEmailCommand, Unit>)handler).Handle(command, new CancellationToken());
+            await ((IRequestHandler<SendInvitationEmailCommand>)handler).Handle(command, new CancellationToken());
 
             //assert
             mockPublisher.Verify(s => s.Send(It.Is<SendEmailCommand>(t =>
                 t.TemplateId == "02818d7b-cea1-4445-8b16-5a27f40ddaf6" &&
                 t.RecipientsAddress == command.EmployerEmail &&
-                t.Tokens.OrderBy(kvp => kvp.Key).SequenceEqual(tokens.OrderBy(kvp => kvp.Key))),It.IsAny<SendOptions>()));
+                t.Tokens.OrderBy(kvp => kvp.Key).SequenceEqual(tokens.OrderBy(kvp => kvp.Key))), It.IsAny<SendOptions>()));
         }
     }
 }

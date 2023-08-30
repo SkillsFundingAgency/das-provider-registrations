@@ -32,7 +32,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             await setupContext.SaveChangesAsync();
 
             //act
-            await ((IRequestHandler<AddedPayeSchemeCommand, Unit>)handler).Handle(command, new CancellationToken());
+            await ((IRequestHandler<AddedPayeSchemeCommand>)handler).Handle(command, new CancellationToken());
 
             //assert
             var savedInvitation = await confirmationContext.Invitations.FirstAsync();
@@ -55,7 +55,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             await setupContext.SaveChangesAsync();
 
             //act
-            await ((IRequestHandler<AddedPayeSchemeCommand, Unit>)handler).Handle(command, new CancellationToken());
+            await ((IRequestHandler<AddedPayeSchemeCommand>)handler).Handle(command, new CancellationToken());
 
             //assert
             var addedInvitationEvent = await confirmationContext.InvitationEvents.FirstOrDefaultAsync(s => s.Invitation.Id == invitation.Id && s.EventType == (int)EventType.PayeSchemeAdded);
@@ -77,7 +77,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             var command = GetAddedPayeSchemeCommand(commandDetails, invitation.Reference.ToString());
 
             //act
-            await ((IRequestHandler<AddedPayeSchemeCommand, Unit>)handler).Handle(command, new CancellationToken());
+            await ((IRequestHandler<AddedPayeSchemeCommand>)handler).Handle(command, new CancellationToken());
 
             // assert
             (await confirmationContext.InvitationEvents.FirstOrDefaultAsync(s => s.Invitation.Id == invitation.Id)).Should().BeNull();
@@ -101,7 +101,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             //act
             try
             {
-                await ((IRequestHandler<AddedPayeSchemeCommand, Unit>)handler).Handle(command, new CancellationToken());
+                await ((IRequestHandler<AddedPayeSchemeCommand>)handler).Handle(command, new CancellationToken());
             }
             catch (InvalidInvitationException ex)
             {

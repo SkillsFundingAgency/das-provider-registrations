@@ -13,7 +13,7 @@ namespace SFA.DAS.ProviderRegistrations.MessageHandlers.DependencyResolution
             registry.IncludeRegistry<ConfigurationRegistry>();
             registry.IncludeRegistry<DataRegistry>();
             registry.IncludeRegistry<EntityFrameworkCoreUnitOfWorkRegistry<ProviderRegistrationsDbContext>>();
-            registry.IncludeRegistry<MediatorRegistry>();
+            //registry.IncludeRegistry<MediatorRegistry>();
             registry.IncludeRegistry<NServiceBusUnitOfWorkRegistry>();
             registry.IncludeRegistry<DefaultRegistry>();
         }
