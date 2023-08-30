@@ -8,7 +8,7 @@ using SFA.DAS.ProviderRegistrations.Models;
 
 namespace SFA.DAS.ProviderRegistrations.Application.Commands.UnsubscribeByIdCommand
 {
-    public class UnsubscribeByIdCommandHandler : AsyncRequestHandler<UnsubscribeByIdCommand>
+    public class UnsubscribeByIdCommandHandler : IRequestHandler<UnsubscribeByIdCommand>
     {
         private readonly Lazy<ProviderRegistrationsDbContext> _db;
 
@@ -17,7 +17,7 @@ namespace SFA.DAS.ProviderRegistrations.Application.Commands.UnsubscribeByIdComm
             _db = db;
         }
 
-        protected override async Task Handle(UnsubscribeByIdCommand request, CancellationToken cancellationToken)
+        public async Task Handle(UnsubscribeByIdCommand request, CancellationToken cancellationToken)
         {
             {
                 var invitation = await _db.Value.Invitations.SingleOrDefaultAsync(i => i.Reference == request.CorrelationId, cancellationToken);

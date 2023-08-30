@@ -10,7 +10,7 @@ using SFA.DAS.ProviderRegistrations.Models;
 
 namespace SFA.DAS.ProviderRegistrations.Application.Commands.UpsertUserCommand
 {
-    public class UpsertUserCommandHandler : AsyncRequestHandler<UpsertUserCommand>
+    public class UpsertUserCommandHandler : IRequestHandler<UpsertUserCommand>
     {
         private readonly Lazy<ProviderRegistrationsDbContext> _db;
         private readonly ILogger<UpsertUserCommandHandler> _logger;
@@ -21,7 +21,7 @@ namespace SFA.DAS.ProviderRegistrations.Application.Commands.UpsertUserCommand
             _db = db;
         }
 
-        protected override async Task Handle(UpsertUserCommand request, CancellationToken cancellationToken)
+        public async Task Handle(UpsertUserCommand request, CancellationToken cancellationToken)
         {
             if (!string.IsNullOrWhiteSpace(request.CorrelationId) && Guid.TryParse(request.CorrelationId, out var correlationId))
             {

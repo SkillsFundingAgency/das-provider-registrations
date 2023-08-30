@@ -1,16 +1,14 @@
-using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using NServiceBus;
 using SFA.DAS.Notifications.Messages.Commands;
-using SFA.DAS.ProviderRegistrations.Application.Queries.GetProviderByUkprnQuery;
 using SFA.DAS.ProviderRegistrations.Configuration;
 
 namespace SFA.DAS.ProviderRegistrations.Application.Commands.SendInvitationEmailCommand
 {
-    public class SendInvitationEmailCommandHandler : AsyncRequestHandler<SendInvitationEmailCommand>
+    public class SendInvitationEmailCommandHandler : IRequestHandler<SendInvitationEmailCommand>
     {
         private readonly string _notificationTemplateId = "ProviderInviteEmployerNotification";
         private readonly IMessageSession _publisher;
@@ -27,7 +25,7 @@ namespace SFA.DAS.ProviderRegistrations.Application.Commands.SendInvitationEmail
             }
         }
 
-        protected override async Task Handle(SendInvitationEmailCommand request, CancellationToken cancellationToken)
+        public Task Handle(SendInvitationEmailCommand request, CancellationToken cancellationToken)
         {
             var tokens = new Dictionary<string, string>()
             {
@@ -41,7 +39,9 @@ namespace SFA.DAS.ProviderRegistrations.Application.Commands.SendInvitationEmail
 
             };
 
-            await _publisher.Send(new SendEmailCommand(_notificationTemplateId, request.EmployerEmail, tokens));
+            _publisher.Send(new SendEmailCommand(_notificationTemplateId, request.EmployerEmail, tokens));
+
+            return Task.CompletedTask;
         }
     }
 }

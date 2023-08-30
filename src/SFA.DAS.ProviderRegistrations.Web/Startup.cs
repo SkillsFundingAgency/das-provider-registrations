@@ -9,6 +9,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Authorization.Mvc.Extensions;
 using SFA.DAS.Provider.Shared.UI.Startup;
+using SFA.DAS.ProviderRegistrations.Application.Commands.UnsubscribeByIdCommand;
 using SFA.DAS.ProviderRegistrations.Configuration;
 using SFA.DAS.ProviderRegistrations.Extensions;
 using SFA.DAS.ProviderRegistrations.Web.Authentication;
@@ -60,9 +61,9 @@ namespace SFA.DAS.ProviderRegistrations.Web
                 .AddCookieBannerSettings(Configuration)
                 .AddControllersAsServices()
                 .AddSessionStateTempDataProvider()
-                .SetDfESignInConfiguration(useDfESignIn)
-                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+                .SetDfESignInConfiguration(useDfESignIn);
 
+            services.AddMediatR(x => x.RegisterServicesFromAssembly(typeof(UnsubscribeByIdCommandHandler).Assembly));
             services.AddProviderUiServiceRegistration(Configuration);
             services.AddHealthChecks();
             services.AddApplicationInsightsTelemetry();

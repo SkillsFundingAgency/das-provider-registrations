@@ -10,7 +10,7 @@ using SFA.DAS.ProviderRegistrations.Models;
 
 namespace SFA.DAS.ProviderRegistrations.Application.Commands.AddedPayeSchemeCommand
 {
-    public class AddedPayeSchemeCommandHandler : AsyncRequestHandler<AddedPayeSchemeCommand>
+    public class AddedPayeSchemeCommandHandler : IRequestHandler<AddedPayeSchemeCommand>
     {
         private readonly Lazy<ProviderRegistrationsDbContext> _db;
         private readonly ILogger<AddedPayeSchemeCommandHandler> _logger;
@@ -21,7 +21,7 @@ namespace SFA.DAS.ProviderRegistrations.Application.Commands.AddedPayeSchemeComm
             _db = db;
         }
 
-        protected override async Task Handle(AddedPayeSchemeCommand request, CancellationToken cancellationToken)
+        public async Task Handle(AddedPayeSchemeCommand request, CancellationToken cancellationToken)
         {
             if (!string.IsNullOrWhiteSpace(request.CorrelationId) && Guid.TryParse(request.CorrelationId, out var correlationId))
             {

@@ -10,7 +10,7 @@ using SFA.DAS.ProviderRegistrations.Models;
 
 namespace SFA.DAS.ProviderRegistrations.Application.Commands.AddedAccountProviderCommand
 {
-    public class AddedAccountProviderCommandHandler : AsyncRequestHandler<AddedAccountProviderCommand>
+    public class AddedAccountProviderCommandHandler : IRequestHandler<AddedAccountProviderCommand>
     {
         private readonly Lazy<ProviderRegistrationsDbContext> _db;
         private readonly ILogger<AddedAccountProviderCommandHandler> _logger;
@@ -21,7 +21,7 @@ namespace SFA.DAS.ProviderRegistrations.Application.Commands.AddedAccountProvide
             _db = db;
         }
 
-        protected override async Task Handle(AddedAccountProviderCommand request, CancellationToken cancellationToken)
+        public async Task Handle(AddedAccountProviderCommand request, CancellationToken cancellationToken)
         {
             if (!string.IsNullOrWhiteSpace(request.CorrelationId) && Guid.TryParse(request.CorrelationId, out var correlationId))
             {
@@ -39,7 +39,7 @@ namespace SFA.DAS.ProviderRegistrations.Application.Commands.AddedAccountProvide
                 }
                 else
                 {
-                    _logger.LogWarning($"Invitation status already: {((InvitationStatus)invitation.Status)} not going to store {EventType.AccountProviderAdded} event");
+                    _logger.LogWarning($"Invitation status already: {(InvitationStatus)invitation.Status} not going to store {EventType.AccountProviderAdded} event");
                 }
                 
             }

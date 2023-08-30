@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NLog.Extensions.Logging;
+using SFA.DAS.ProviderRegistrations.Application.Commands.AddedPayeSchemeCommand;
 using SFA.DAS.ProviderRegistrations.MessageHandlers.DependencyResolution;
 using SFA.DAS.ProviderRegistrations.MessageHandlers.Extensions;
 using StructureMap;
@@ -25,6 +26,7 @@ namespace SFA.DAS.ProviderRegistrations.MessageHandlers
                     .UseStructureMap()
                     .ConfigureServices((c, s) => s
                         .AddMemoryCache()
+                        .AddMediatR(x=> x.RegisterServicesFromAssembly(typeof(AddedPayeSchemeCommand).Assembly))
                         .AddNServiceBus(c.Configuration, c.HostingEnvironment.IsDevelopment()))
                     .ConfigureContainer<Registry>(IoC.Initialize);
 

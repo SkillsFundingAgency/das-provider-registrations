@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SFA.DAS.ProviderRegistrations.Api.DependencyResolution;
 using SFA.DAS.ProviderRegistrations.Api.Extensions;
+using SFA.DAS.ProviderRegistrations.Application.Queries.GetInvitationByIdQuery;
 using SFA.DAS.ProviderRegistrations.Extensions;
 using StructureMap;
 
@@ -32,8 +33,9 @@ namespace SFA.DAS.ProviderRegistrations.Api
                 {
                     options.Filters.Add(new AuthorizeFilter("default"));
                 }
-            }).SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+            });
 
+            services.AddMediatR(x=> x.RegisterServicesFromAssembly(typeof(GetInvitationByIdQuery).Assembly));
             services.AddDasDistributedMemoryCache(Configuration, Environment.IsDevelopment());
             services.AddMemoryCache();
             services.AddHealthChecks();

@@ -10,7 +10,7 @@ using SFA.DAS.ProviderRegistrations.Models;
 
 namespace SFA.DAS.ProviderRegistrations.Application.Commands.SignedAgreementCommand
 {
-    public class SignedAgreementCommandHandler : AsyncRequestHandler<SignedAgreementCommand>
+    public class SignedAgreementCommandHandler : IRequestHandler<SignedAgreementCommand>
     {
         private readonly Lazy<ProviderRegistrationsDbContext> _db;
         private readonly ILogger<SignedAgreementCommandHandler> _logger;
@@ -21,7 +21,7 @@ namespace SFA.DAS.ProviderRegistrations.Application.Commands.SignedAgreementComm
             _db = db;
         }
 
-        protected override async Task Handle(SignedAgreementCommand request, CancellationToken cancellationToken)
+        public async Task Handle(SignedAgreementCommand request, CancellationToken cancellationToken)
         {
             if (!string.IsNullOrWhiteSpace(request.CorrelationId) && Guid.TryParse(request.CorrelationId, out var correlationId))
             {

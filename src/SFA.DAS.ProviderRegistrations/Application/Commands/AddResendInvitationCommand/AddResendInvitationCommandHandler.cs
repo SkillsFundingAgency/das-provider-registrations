@@ -9,7 +9,7 @@ using SFA.DAS.ProviderRegistrations.Models;
 
 namespace SFA.DAS.ProviderRegistrations.Application.Commands.AddResendInvitationCommand
 {
-    public class AddResendInvitationCommandHandler : AsyncRequestHandler<AddResendInvitationCommand>
+    public class AddResendInvitationCommandHandler : IRequestHandler<AddResendInvitationCommand>
     {
         private readonly Lazy<ProviderRegistrationsDbContext> _db;
 
@@ -18,7 +18,7 @@ namespace SFA.DAS.ProviderRegistrations.Application.Commands.AddResendInvitation
             _db = db;
         }     
 
-        protected override async Task Handle(AddResendInvitationCommand request, CancellationToken cancellationToken)
+        public async Task Handle(AddResendInvitationCommand request, CancellationToken cancellationToken)
         {
             var invitation = await _db.Value.Invitations.SingleOrDefaultAsync(i => i.Id == request.InvitationId, cancellationToken);
             if (invitation == null) throw new InvalidInvitationException($"No invitation found for InvitationId:{ request.InvitationId}");
