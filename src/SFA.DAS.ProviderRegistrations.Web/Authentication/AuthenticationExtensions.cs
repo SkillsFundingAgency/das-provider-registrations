@@ -38,7 +38,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.Authentication
                         typeof(CustomServiceRole),
                         ClientName,
                         "/signout",
-                        "/dashboard");
+                        "");
                 }
                 else
                 {
