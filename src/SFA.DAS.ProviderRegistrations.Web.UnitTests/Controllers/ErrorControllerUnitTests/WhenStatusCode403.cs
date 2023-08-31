@@ -23,7 +23,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.UnitTests.Controllers.ErrorControlle
             [Greedy] ErrorController errorController)
         {
             
-            configuration?.SetupGet(x => x[It.Is<string>(s => s == "ResourceEnvironmentName")]).Returns("LOCAL");
+            configuration?.SetupGet(x => x[It.Is<string>(s => s == "ResourceEnvironmentName")]).Returns(env);
             configuration?.Setup(x => x[It.Is<string>(s => s == "UseDfESignIn")]).Returns(Convert.ToString(useDfESignIn));
 
             var actual = errorController.Error(403) as ViewResult;
