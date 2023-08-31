@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using SFA.DAS.ProviderRegistrations.Extensions;
 using SFA.DAS.ProviderRegistrations.Models;
 using SFA.DAS.ProviderRegistrations.Types;
 
