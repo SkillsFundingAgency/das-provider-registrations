@@ -130,7 +130,7 @@
         "webJobAppServiceName": "[concat(variables('resourceNamePrefix'), 'wkr-as')]",
         "webJobAppServicePlanName": "[concat(variables('resourceNamePrefix'), 'wkr-asp')]",
         "databaseName": "[concat(variables('resourceNamePrefix'), '-db')]",
-        "configNames": "SFA.DAS.ProviderRegistrations",
+        "configNames": "SFA.DAS.ProviderRegistrations,SFA.DAS.Provider.DfeSignIn",
         "configNamesApi": "SFA.DAS.ProviderRegistrations"
     },
     "resources": [
@@ -426,6 +426,10 @@
                                 {
                                     "name": "ConfigurationStorageConnectionString",
                                     "value": "[parameters('configurationStorageConnectionString')]"
+                                },
+                                {
+                                    "name": "ConfigNames",
+                                    "value": "[variables('configNames')]"
                                 }
                             ]
                         }

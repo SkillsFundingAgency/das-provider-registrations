@@ -11,8 +11,8 @@ public static class ConfigurationServiceRegistrations
         services.AddOptions();
         services.Configure<ProviderRegistrationsSettings>(configuration.GetSection(ProviderRegistrationsConfigurationKeys.ProviderRegistrations));
 
-        var employerAccountsConfiguration = configuration.Get<ProviderRegistrationsSettings>();
-        services.AddSingleton(employerAccountsConfiguration);
+        var providerRegistrationsSettings = configuration.Get<ProviderRegistrationsSettings>();
+        services.AddSingleton(providerRegistrationsSettings);
         
         return services;
     }

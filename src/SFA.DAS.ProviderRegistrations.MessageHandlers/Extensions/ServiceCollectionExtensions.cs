@@ -20,7 +20,7 @@ public static class ServiceCollectionExtensions
 {
     private const string EndpointName = "SFA.DAS.ProviderRegistrations.MessageHandlers";
     
-    public static IServiceCollection AddNServiceBus(this IServiceCollection services, IConfiguration config)
+    public static IServiceCollection StartNServiceBus(this IServiceCollection services, IConfiguration config)
     {
         return services
             .AddSingleton(provider =>

@@ -9,11 +9,11 @@ namespace SFA.DAS.ProviderRegistrations.Web.DependencyResolution
         public static void Initialize(Registry registry)
         {
             registry.IncludeRegistry<AuthorizationRegistry>();
-            registry.IncludeRegistry<ConfigurationRegistry>();
+           // registry.IncludeRegistry<ConfigurationRegistry>();
             //registry.IncludeRegistry<MediatorRegistry>(); 
-            registry.IncludeRegistry<DataRegistry>();
-            registry.IncludeRegistry<MapperRegistry>();
-            registry.IncludeRegistry<ServiceRegistry>();
+            //registry.IncludeRegistry<DataRegistry>();
+            //registry.IncludeRegistry<MapperRegistry>();
+           //registry.IncludeRegistry<ServiceRegistry>();
             registry.IncludeRegistry<NServiceBusRegistry>();
             registry.IncludeRegistry<DefaultRegistry>();
         }

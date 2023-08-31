@@ -2,7 +2,7 @@
 
 namespace SFA.DAS.ProviderRegistrations.Configuration
 {
-    class EmployerApprenticeshipApiClientSettings : IManagedIdentityClientConfiguration
+    public class EmployerApprenticeshipApiClientSettings : IManagedIdentityClientConfiguration
     {
         public string ApiBaseUrl { get; set; }
 

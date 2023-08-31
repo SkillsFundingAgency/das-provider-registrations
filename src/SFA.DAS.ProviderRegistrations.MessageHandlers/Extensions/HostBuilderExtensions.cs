@@ -71,9 +71,9 @@ public static class HostBuilderExtensions
             
             services.AddMemoryCache();
             services.AddMediatR(configuration => configuration.RegisterServicesFromAssembly(typeof(AddedPayeSchemeCommand).Assembly));
-            services.AddNServiceBus(context.Configuration);
+            services.StartNServiceBus(context.Configuration);
             services.AddDatabaseRegistration();
-            services.AddNServiceBus(context.Configuration);
+            services.StartNServiceBus(context.Configuration);
 
         });
         
