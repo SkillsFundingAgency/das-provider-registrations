@@ -13,11 +13,7 @@ public static class ConfigurationServiceRegistrations
 
         var employerAccountsConfiguration = configuration.Get<ProviderRegistrationsSettings>();
         services.AddSingleton(employerAccountsConfiguration);
-
-        // var encodingConfigJson = configuration.GetSection(ConfigurationKeys.EncodingConfig).Value;
-        // var encodingConfig = JsonConvert.DeserializeObject<EncodingConfig>(encodingConfigJson);
-        // services.AddSingleton(encodingConfig);
-
+        
         return services;
     }
 }

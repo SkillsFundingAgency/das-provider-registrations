@@ -1,43 +1,42 @@
-﻿using FluentAssertions;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using AutoFixture.NUnit3;
+using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 using SFA.DAS.ProviderRegistrations.Api.Controllers;
 using SFA.DAS.ProviderRegistrations.Api.UnitTests.AutoFixture;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-using AutoFixture.NUnit3;
 
-namespace SFA.DAS.ProviderRegistrations.Api.UnitTests.Controllers.UnsubscribeControllerUnitTests
+namespace SFA.DAS.ProviderRegistrations.Api.UnitTests.Controllers.UnsubscribeControllerUnitTests;
+
+[TestFixture]
+public class GetTests
 {
-    [TestFixture]
-    public class GetTests
+    [Test, DomainAutoData]
+    public async Task WhenValidCorrelationIdIsSupplied_ThenShouldReturnOk(
+        [Greedy] UnsubscribeController controller,
+        Guid correlationId)
     {
-        [Test, DomainAutoData]
-        public async Task WhenValidCorrelationIdIsSupplied_ThenShouldReturnOk(
-            [Greedy] UnsubscribeController controller,
-            Guid correlationId)
-        {
-            //arrange
+        //arrange
 
-            //act
-            var result = await controller.Get(correlationId.ToString(), new CancellationToken());
+        //act
+        var result = await controller.Get(correlationId.ToString(), new CancellationToken());
 
-            //assert
-            result.Should().NotBeNull().And.BeOfType<OkResult>();
-        }
+        //assert
+        result.Should().NotBeNull().And.BeOfType<OkResult>();
+    }
 
-        [Test, DomainAutoData]
-        public async Task WhenCorrelationIdIsInvalid_ThenShouldReturnBadRequest(
-            [Greedy] UnsubscribeController controller)
-        {
-            //arrange
+    [Test, DomainAutoData]
+    public async Task WhenCorrelationIdIsInvalid_ThenShouldReturnBadRequest(
+        [Greedy] UnsubscribeController controller)
+    {
+        //arrange
 
-            //act
-            var result = await controller.Get("INVALID", new CancellationToken());
+        //act
+        var result = await controller.Get("INVALID", new CancellationToken());
 
-            //assert
-            result.Should().NotBeNull().And.BeOfType<BadRequestObjectResult>();
-        }
+        //assert
+        result.Should().NotBeNull().And.BeOfType<BadRequestObjectResult>();
     }
 }

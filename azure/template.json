@@ -129,7 +129,9 @@
         "uiAppServiceName": "[concat(variables('resourceNamePrefix'), '-as')]",
         "webJobAppServiceName": "[concat(variables('resourceNamePrefix'), 'wkr-as')]",
         "webJobAppServicePlanName": "[concat(variables('resourceNamePrefix'), 'wkr-asp')]",
-        "databaseName": "[concat(variables('resourceNamePrefix'), '-db')]"
+        "databaseName": "[concat(variables('resourceNamePrefix'), '-db')]",
+        "configNames": "SFA.DAS.ProviderRegistrations",
+        "configNamesApi": "SFA.DAS.ProviderRegistrations"
     },
     "resources": [
         {
@@ -530,6 +532,10 @@
                                 {
                                     "name": "LoggingRedisConnectionString",
                                     "value": "[parameters('loggingRedisConnectionString')]"
+                                },
+                                {
+                                    "name": "ConfigNames",
+                                    "value": "[variables('configNamesApi')]"
                                 }
                             ]
                         }

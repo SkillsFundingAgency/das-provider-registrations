@@ -1,40 +1,35 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.ProviderRegistrations.Application.Commands.UnsubscribeByIdCommand;
 
-namespace SFA.DAS.ProviderRegistrations.Api.Controllers
+namespace SFA.DAS.ProviderRegistrations.Api.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+public class UnsubscribeController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class UnsubscribeController : ControllerBase
+    private readonly IMediator _mediator;
+
+    public UnsubscribeController(IMediator mediator)
     {
-        private readonly IMediator _mediator;
+        _mediator = mediator;
+    }
 
-        public UnsubscribeController(IMediator mediator)
+    [HttpGet]
+    [Route("{correlationId}")]
+    public async Task<ActionResult> Get(string correlationId, CancellationToken cancellationToken)
+    {
+        if (!Guid.TryParse(correlationId, out var correlationGuid))
         {
-            _mediator = mediator;
+            ModelState.AddModelError(nameof(correlationId), "An invalid correlation id was supplied");
         }
 
-        [HttpGet]
-        [Route("{correlationId}")]
-        public async Task<ActionResult> Get(string correlationId, CancellationToken cancellationToken)
+        if (!ModelState.IsValid)
         {
-            if (!Guid.TryParse(correlationId, out var correlationGuid))
-            {
-                ModelState.AddModelError(nameof(correlationId), "An invalid correlation id was supplied");
-            }
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            await _mediator.Send(new UnsubscribeByIdCommand(correlationGuid), cancellationToken);
-
-            return Ok();
+            return BadRequest(ModelState);
         }
+
+        await _mediator.Send(new UnsubscribeByIdCommand(correlationGuid), cancellationToken);
+
+        return Ok();
     }
 }
