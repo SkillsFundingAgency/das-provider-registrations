@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using NServiceBus.ObjectBuilder.MSDependencyInjection;
 using SFA.DAS.Authorization.DependencyResolution;
+using SFA.DAS.Authorization.DependencyResolution.Microsoft;
 using SFA.DAS.Authorization.Mvc.Extensions;
 using SFA.DAS.NServiceBus.Features.ClientOutbox.Data;
 using SFA.DAS.Provider.Shared.UI.Startup;
