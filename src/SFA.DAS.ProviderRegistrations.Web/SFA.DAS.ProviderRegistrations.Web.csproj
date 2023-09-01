@@ -25,7 +25,7 @@
     <PackageReference Include="SFA.DAS.Configuration.AzureTableStorage" Version="3.0.84" />
     <PackageReference Include="SFA.DAS.DfESignIn.Auth" Version="17.1.61" />
     <PackageReference Include="SFA.DAS.Provider.Shared.UI" Version="2.0.27" />
-    <PackageReference Include="SFA.DAS.ProviderUrlHelper" Version="1.1.749" />
+    <PackageReference Include="SFA.DAS.ProviderUrlHelper" Version="1.1.1043" />
     <PackageReference Include="SFA.DAS.UnitOfWork.EntityFrameworkCore" Version="9.0.28" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.32.2" />
   </ItemGroup>
