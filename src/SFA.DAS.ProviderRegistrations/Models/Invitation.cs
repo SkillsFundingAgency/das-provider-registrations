@@ -48,9 +48,8 @@ public class Invitation : Entity
         InvitationEvents = invitationEvents;
     }
 
-    private Invitation()
-    {
-    }
+    // For unit tests
+    public Invitation() { }
 
     public void UpdateStatus(int status, DateTime updated)
     {

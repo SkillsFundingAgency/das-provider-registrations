@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoFixture.NUnit3;
 using FluentAssertions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -23,7 +24,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
                 ProviderRegistrationsDbContext confirmationContext,
                 AddedPayeSchemeCommandHandler handler,
                 AddedPayeSchemeCommand commandDetails,
-                Invitation invitation)
+                [Greedy]Invitation invitation)
         {
             //arrange
             invitation.UpdateStatus((int)InvitationStatus.AccountStarted, DateTime.Now);
@@ -45,7 +46,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
                 ProviderRegistrationsDbContext confirmationContext,
                 AddedPayeSchemeCommandHandler handler,
                 AddedPayeSchemeCommand commandDetails,
-                Invitation invitation)
+                [Greedy]Invitation invitation)
         {
             //arrange            
             var updatedDate = DateTime.Now;
@@ -68,8 +69,10 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
                 ProviderRegistrationsDbContext confirmationContext,
                 AddedPayeSchemeCommandHandler handler,
                 AddedPayeSchemeCommand commandDetails,
-                Invitation invitation)
+                [Greedy]Invitation invitation)
         {
+            invitation.InvitationEvents.Clear();
+            
             //arrange
             invitation.UpdateStatus((int)InvitationStatus.InvitationComplete, DateTime.Now);
             setupContext.Invitations.Add(invitation);
@@ -88,7 +91,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
                 ProviderRegistrationsDbContext setupContext,
                 AddedPayeSchemeCommandHandler handler,
                 AddedPayeSchemeCommand commandDetails,
-                Invitation invitation)
+                [Greedy]Invitation invitation)
         {
             //arrange            
             invitation.UpdateStatus((int)InvitationStatus.InvitationComplete, DateTime.Now);

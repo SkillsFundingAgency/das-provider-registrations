@@ -12,7 +12,6 @@ public class Unsubscribe : Entity
         Ukprn = ukprn;
     }
 
-    private Unsubscribe()
-    {
-    }
+    // For unit tests
+    public Unsubscribe() { }
 }

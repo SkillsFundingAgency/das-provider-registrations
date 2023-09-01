@@ -8,6 +8,7 @@ using SFA.DAS.ProviderRegistrations.UnitTests.AutoFixture;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoFixture.NUnit3;
 
 namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Queries
 {
@@ -43,10 +44,10 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Queries
         [Test, ProviderAutoData]
         public async Task Handle_WhenHandlingGetInvitationByIdQueryAndInvitationIsFound_ThenShouldReturnGetInvitationByIdQueryResult(
             ProviderRegistrationsDbContext setupContext,            
-            GetInvitationByIdQueryHandler handler)
+            GetInvitationByIdQueryHandler handler,
+            [Greedy]Invitation invitation)
         {
             //arrange
-            var invitation = fixture.Create<Invitation>();
             setupContext.Invitations.Add(invitation);
             await setupContext.SaveChangesAsync();
             var query = new GetInvitationByIdQuery(invitation.Reference);

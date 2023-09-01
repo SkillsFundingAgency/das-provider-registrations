@@ -8,6 +8,7 @@ using SFA.DAS.ProviderRegistrations.UnitTests.AutoFixture;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoFixture.NUnit3;
 
 namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Queries
 {
@@ -31,10 +32,10 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Queries
         [Test, ProviderAutoData]
         public async Task Handle_WhenHandlingGetInvitationQueryAndProviderIsFound_ThenShouldReturnGetInvitationQueryResult(
             ProviderRegistrationsDbContext setupContext,
-            GetInvitationQueryHandler handler)
+            GetInvitationQueryHandler handler,
+            [Greedy]Invitation invitation)
         {
             //arrange
-            var invitation = fixture.Create<Invitation>();
             setupContext.Invitations.Add(invitation);
             await setupContext.SaveChangesAsync();
             var query = new GetInvitationQuery(invitation.Ukprn, invitation.UserRef, "EmployerOrganisation", "Desc", "EmployerFirstname");

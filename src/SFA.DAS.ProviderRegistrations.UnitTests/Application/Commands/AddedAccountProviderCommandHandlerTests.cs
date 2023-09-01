@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoFixture.NUnit3;
 using FluentAssertions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -22,7 +23,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             ProviderRegistrationsDbContext setupContext,
             ProviderRegistrationsDbContext confirmationContext,
             AddedAccountProviderCommandHandler handler,
-            Invitation invitation)
+            [Greedy]Invitation invitation)
         {
             //Arrange            
             var command = new AddedAccountProviderCommand(invitation.Ukprn, Guid.NewGuid(), invitation.Reference.ToString(), DateTime.Now);
@@ -44,7 +45,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             ProviderRegistrationsDbContext setupContext,
             ProviderRegistrationsDbContext confirmationContext,
             AddedAccountProviderCommandHandler handler,
-            Invitation invitation)
+            [Greedy]Invitation invitation)
         {
             //arrange
             var updateDate = DateTime.Now;
@@ -66,8 +67,10 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             ProviderRegistrationsDbContext setupContext,
             ProviderRegistrationsDbContext confirmationContext,
             AddedAccountProviderCommandHandler handler,
-            Invitation invitation)
+            [Greedy]Invitation invitation)
         {
+            invitation.InvitationEvents.Clear();
+            
             //arrange
             var command = new AddedAccountProviderCommand(invitation.Ukprn, Guid.NewGuid(), invitation.Reference.ToString(), DateTime.Now);
             invitation.UpdateStatus((int)InvitationStatus.InvitationComplete, DateTime.Now);
@@ -85,7 +88,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
         public async Task Handle_WhenInvitationDoesNotExist_ThenErrorIsThrown(
             ProviderRegistrationsDbContext setupContext,
             AddedAccountProviderCommandHandler handler,
-            Invitation invitation)
+            [Greedy]Invitation invitation)
         {
             //arrange            
             var command = new AddedAccountProviderCommand(12345, Guid.NewGuid(), Guid.NewGuid().ToString(), DateTime.Now);

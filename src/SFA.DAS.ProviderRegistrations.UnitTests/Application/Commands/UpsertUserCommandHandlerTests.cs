@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoFixture.NUnit3;
 using FluentAssertions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -21,7 +22,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             ProviderRegistrationsDbContext setupContext,
             ProviderRegistrationsDbContext confirmationContext,
             UpsertUserCommandHandler handler,
-            Invitation invitation)
+            [Greedy]Invitation invitation)
         {
             //arrange            
             invitation.UpdateStatus((int)InvitationStatus.InvitationSent, DateTime.Now);
@@ -42,7 +43,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             ProviderRegistrationsDbContext setupContext,
             ProviderRegistrationsDbContext confirmationContext,
             UpsertUserCommandHandler handler,
-            Invitation invitation)
+            [Greedy]Invitation invitation)
         {
             //arrange
             setupContext.Invitations.Add(invitation);
@@ -63,7 +64,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             ProviderRegistrationsDbContext setupContext,
             ProviderRegistrationsDbContext confirmationContext,
             UpsertUserCommandHandler handler,
-            Invitation invitation)
+            [Greedy]Invitation invitation)
         {
             //arrange
             confirmationContext.InvitationEvents.RemoveRange(confirmationContext.InvitationEvents);
@@ -86,8 +87,10 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             ProviderRegistrationsDbContext setupContext,
             ProviderRegistrationsDbContext confirmationContext,
             UpsertUserCommandHandler handler,
-            Invitation invitation)
+            [Greedy]Invitation invitation)
         {
+            invitation.InvitationEvents.Clear();
+            
             //arrange
             invitation.UpdateStatus((int)InvitationStatus.InvitationComplete, DateTime.Now);
             setupContext.Invitations.Add(invitation);
@@ -98,14 +101,15 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             await ((IRequestHandler<UpsertUserCommand>)handler).Handle(command, new CancellationToken());
 
             // assert
-            (await confirmationContext.InvitationEvents.FirstOrDefaultAsync(s => s.Invitation.Id == invitation.Id)).Should().BeNull();
+            var invitationEvent = await confirmationContext.InvitationEvents.FirstOrDefaultAsync(s => s.Invitation.Id == invitation.Id);
+            invitationEvent.Should().BeNull();
         }
 
         [Test, ProviderAutoData]
         public async Task Handle_WhenInvitationDoesNotExist_ThenErrorIsThrown(
             ProviderRegistrationsDbContext setupContext,
             UpsertUserCommandHandler handler,
-            Invitation invitation)
+            [Greedy]Invitation invitation)
         {
             //arrange            
             invitation.UpdateStatus((int)InvitationStatus.InvitationComplete, DateTime.Now);

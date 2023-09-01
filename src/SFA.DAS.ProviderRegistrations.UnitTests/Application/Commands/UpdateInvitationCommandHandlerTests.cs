@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture;
+using AutoFixture.NUnit3;
 using FluentAssertions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -37,10 +38,10 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
            ProviderRegistrationsDbContext setupContext,
            ProviderRegistrationsDbContext confirmationContext,
            UpdateInvitationCommandHandler handler,
-           UpdateInvitationCommand command)
+           UpdateInvitationCommand command,
+           [Greedy]Invitation invitation)
         {
             //arrange
-            var invitation = fixture.Create<Invitation>();
             invitation.UpdateInvitation(invitation.EmployerOrganisation, invitation.EmployerFirstName, invitation.EmployerLastName, (int)InvitationStatus.InvitationSent, DateTime.Now);
             setupContext.Invitations.Add(invitation);
             await setupContext.SaveChangesAsync();

@@ -9,6 +9,7 @@ using SFA.DAS.ProviderRegistrations.UnitTests.AutoFixture;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoFixture.NUnit3;
 
 namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
 {
@@ -33,10 +34,10 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
         public async Task Handle_WhenCommandIsHandled_ThenShouldUpdateInvitationStatus(
            ProviderRegistrationsDbContext setupContext,
            ProviderRegistrationsDbContext confirmationContext,
-           UnsubscribeByIdCommandHandler handler)
+           UnsubscribeByIdCommandHandler handler,
+           [Greedy]Invitation invitation)
         {
             //arrange
-            var invitation = fixture.Create<Invitation>();
             setupContext.Invitations.Add(invitation);
             await setupContext.SaveChangesAsync();
             var command = new UnsubscribeByIdCommand(invitation.Reference);

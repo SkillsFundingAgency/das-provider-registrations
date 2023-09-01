@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoFixture.NUnit3;
 using FluentAssertions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -24,7 +25,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             ProviderRegistrationsDbContext confirmationContext,
             SignedAgreementCommandHandler handler,
             SignedAgreementCommand commandDetails,
-            Invitation invitation)
+            [Greedy]Invitation invitation)
         {
             //arrange            
             var command = GetSignedAgreementCommand(commandDetails, invitation.Reference.ToString());
@@ -46,7 +47,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             ProviderRegistrationsDbContext confirmationContext,
             SignedAgreementCommandHandler handler,
             SignedAgreementCommand commandDetails,
-            Invitation invitation)
+            [Greedy]Invitation invitation)
         {
             //arrange            
             var command = GetSignedAgreementCommand(commandDetails, string.Empty);
@@ -68,7 +69,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             ProviderRegistrationsDbContext confirmationContext,
             SignedAgreementCommandHandler handler,
             SignedAgreementCommand commandDetails,
-            Invitation invitation)
+            [Greedy]Invitation invitation)
         {
             //arrange
             var updateDate = DateTime.Now;
@@ -91,8 +92,10 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             ProviderRegistrationsDbContext confirmationContext,
             SignedAgreementCommandHandler handler,
             SignedAgreementCommand commandDetails,
-            Invitation invitation)
+            [Greedy]Invitation invitation)
         {
+            invitation.InvitationEvents.Clear();
+            
             //arrange            
             var command = GetSignedAgreementCommand(commandDetails, invitation.Reference.ToString());
             setupContext.Invitations.Add(invitation);
@@ -111,14 +114,13 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             ProviderRegistrationsDbContext setupContext,
             SignedAgreementCommandHandler handler,
             SignedAgreementCommand commandDetails,
-            Invitation invitation)
+            [Greedy]Invitation invitation)
         {
             //arrange            
             invitation.UpdateStatus((int)InvitationStatus.InvitationComplete, DateTime.Now);
             setupContext.Invitations.Add(invitation);
             await setupContext.SaveChangesAsync();
 
-            var differentInvitationCorrelationId = Guid.NewGuid();
             var command = GetSignedAgreementCommand(commandDetails, invitation.Reference.ToString());
 
             //act

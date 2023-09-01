@@ -11,6 +11,7 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoFixture.NUnit3;
 
 namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
 {
@@ -18,26 +19,25 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
     [Parallelizable]
     public class AddResendInvitationCommandHandlerTests
     {
-        private Fixture fixture { get; set; }
-        private Invitation invitation { get; set; }
+        private Fixture _fixture;
 
         [SetUp]
         public void SetUp()
         {
-            fixture = new Fixture();
-            fixture.Behaviors
+            _fixture = new Fixture();
+            _fixture.Behaviors
                 .OfType<ThrowingRecursionBehavior>()
                 .ToList()
-                .ForEach(b => fixture.Behaviors.Remove(b));
-            fixture.Behaviors.Add(new OmitOnRecursionBehavior());
-            invitation = fixture.Create<Invitation>();
+                .ForEach(b => _fixture.Behaviors.Remove(b));
+            _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
         }
 
         [Test, ProviderAutoData]
         public async Task Handle_WhenHandlingAddResendInvitationCommand_ThenShouldAddResendInvitation(
             ProviderRegistrationsDbContext setupContext,
             ProviderRegistrationsDbContext confirmationContext,
-            AddResendInvitationCommandHandler handler)
+            AddResendInvitationCommandHandler handler,
+            [Greedy]Invitation invitation)
         {
             //arrange
             var updatedDate = DateTime.Now;
@@ -55,7 +55,8 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
         [Test, ProviderAutoData]
         public async Task Handle_WhenInvalidStatusCommandIsHandled_ThenNoChangesAreMade(
            ProviderRegistrationsDbContext setupContext,           
-           AddResendInvitationCommandHandler handler)
+           AddResendInvitationCommandHandler handler,
+           [Greedy]Invitation invitation)
         {
             //arrange            
             invitation.UpdateStatus((int)InvitationStatus.InvitationComplete, DateTime.Now);
