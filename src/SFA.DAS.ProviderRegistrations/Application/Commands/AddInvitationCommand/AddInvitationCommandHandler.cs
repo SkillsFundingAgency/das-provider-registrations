@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using SFA.DAS.ProviderRegistrations.Data;
 using SFA.DAS.ProviderRegistrations.Models;
 

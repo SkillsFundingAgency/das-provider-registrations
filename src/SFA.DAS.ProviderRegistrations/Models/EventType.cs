@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace SFA.DAS.ProviderRegistrations.Models;
+﻿namespace SFA.DAS.ProviderRegistrations.Models;
 
 public enum EventType
 {

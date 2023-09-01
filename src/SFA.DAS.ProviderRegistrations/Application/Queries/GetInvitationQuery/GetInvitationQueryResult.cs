@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using SFA.DAS.ProviderRegistrations.Types;
 
 namespace SFA.DAS.ProviderRegistrations.Application.Queries.GetInvitationQuery;

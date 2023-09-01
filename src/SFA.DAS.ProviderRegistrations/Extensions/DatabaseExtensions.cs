@@ -1,8 +1,7 @@
-﻿using System;
-using System.Data.Common;
-using Microsoft.Data.SqlClient;
+﻿using System.Data.Common;
 using Azure.Core;
 using Azure.Identity;
+using Microsoft.Data.SqlClient;
 
 namespace SFA.DAS.ProviderRegistrations.Extensions;
 

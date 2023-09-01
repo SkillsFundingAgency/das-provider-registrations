@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using Microsoft.Azure.Services.AppAuthentication;
 using NServiceBus.Persistence;
 using SFA.DAS.NServiceBus.SqlServer.Data;

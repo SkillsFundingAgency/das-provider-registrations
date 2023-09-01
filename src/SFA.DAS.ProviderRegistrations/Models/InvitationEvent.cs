@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SFA.DAS.ProviderRegistrations.Models;
+﻿namespace SFA.DAS.ProviderRegistrations.Models;
 
 public class InvitationEvent
 {

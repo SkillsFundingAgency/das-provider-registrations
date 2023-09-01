@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SFA.DAS.ProviderRegistrations.Exceptions;
+﻿namespace SFA.DAS.ProviderRegistrations.Exceptions;
 
 public class InvalidInvitationException : Exception
 {

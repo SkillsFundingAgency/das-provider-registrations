@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using NServiceBus;
 using SFA.DAS.Notifications.Messages.Commands;
 using SFA.DAS.ProviderRegistrations.Configuration;

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace SFA.DAS.ProviderRegistrations.Configuration;
+﻿namespace SFA.DAS.ProviderRegistrations.Configuration;
 
 public static class DasEnvironmentName
 {

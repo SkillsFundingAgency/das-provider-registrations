@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace SFA.DAS.ProviderRegistrations.Models;
+﻿namespace SFA.DAS.ProviderRegistrations.Models;
 
 public class Invitation : Entity
 {
