@@ -27,7 +27,7 @@ public static class ConfigurationExtensions
                 options.ConfigurationKeys = configuration["ConfigNames"].Split(",");
                 options.StorageConnectionString = configuration["ConfigurationStorageConnectionString"];
                 options.EnvironmentName = configuration["EnvironmentName"];
-                options.PreFixConfigurationKeys = true;
+                options.PreFixConfigurationKeys = false;
             }
         );
         
