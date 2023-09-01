@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using NServiceBus;
 using SFA.DAS.NServiceBus.Configuration;
 using SFA.DAS.NServiceBus.Configuration.AzureServiceBus;
@@ -9,33 +11,40 @@ using SFA.DAS.ProviderRegistrations.Configuration;
 using SFA.DAS.ProviderRegistrations.Extensions;
 using SFA.DAS.UnitOfWork.NServiceBus.Configuration;
 
-namespace SFA.DAS.ProviderRegistrations.Web.ServiceRegistrations;
+namespace SFA.DAS.ProviderRegistrations.ServiceRegistrations;
 
+public enum ServiceBusEndpointType
+{
+    Api,
+    Web
+}
+
+[ExcludeFromCodeCoverage]
 public static class NServiceBusServiceRegistration
 {
-    private const string EndpointName = "SFA.DAS.ProviderRegistrations.Web";
-
-    public static IServiceCollection StartNServiceBus(this IServiceCollection services)
+    public static IServiceCollection StartNServiceBus(this IServiceCollection services, IConfiguration configuration, ServiceBusEndpointType endpointType)
     {
+        var endPointName = $"SFA.DAS.ProviderRegistrations.{endpointType}";
+        
         return services
             .AddSingleton(provider =>
             {
-                var config = provider.GetService<IConfiguration>();
-                var nServiceBusSettings = config.GetSection(ProviderRegistrationsConfigurationKeys.NServiceBusSettings).Get<NServiceBusSettings>();
-                var configuration = provider.GetService<ProviderRegistrationsSettings>();
+                var providerRegistrationsSettings = configuration.GetSection(ProviderRegistrationsConfigurationKeys.ProviderRegistrationsSettings).Get<ProviderRegistrationsSettings>();
+                var nServiceBusSettings = configuration.GetSection(ProviderRegistrationsConfigurationKeys.NServiceBusSettings).Get<NServiceBusSettings>();
                 var hostingEnvironment = provider.GetService<IHostEnvironment>();
                 var isDevelopment = hostingEnvironment.IsDevelopment();
+                
+                var allowOutboxCleanup = endpointType == ServiceBusEndpointType.Api;
 
-                var endpointConfiguration = new EndpointConfiguration(EndpointName)
-                    .UseErrorQueue($"{EndpointName}-errors")
+                var endpointConfiguration = new EndpointConfiguration(endPointName)
+                    .UseErrorQueue($"{endPointName}-errors")
                     .UseInstallers()
                     .UseLicense(nServiceBusSettings.NServiceBusLicense)
                     .UseMessageConventions()
                     .UseNewtonsoftJsonSerializer()
-                    .UseOutbox(true)                
-                    .UseSqlServerPersistence(() => DatabaseExtensions.GetSqlConnection(configuration.DatabaseConnectionString))                
-                    .UseUnitOfWork()
-                    .UseSendOnly();
+                    .UseOutbox(allowOutboxCleanup)                
+                    .UseSqlServerPersistence(() => DatabaseExtensions.GetSqlConnection(providerRegistrationsSettings.DatabaseConnectionString))                
+                    .UseUnitOfWork();
 
                 if (isDevelopment)
                 {

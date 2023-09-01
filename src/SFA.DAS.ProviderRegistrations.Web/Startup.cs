@@ -11,8 +11,8 @@ using SFA.DAS.ProviderRegistrations.Application.Commands.UnsubscribeByIdCommand;
 using SFA.DAS.ProviderRegistrations.Configuration;
 using SFA.DAS.ProviderRegistrations.Data;
 using SFA.DAS.ProviderRegistrations.Extensions;
+using SFA.DAS.ProviderRegistrations.ServiceRegistrations;
 using SFA.DAS.ProviderRegistrations.Startup;
-using SFA.DAS.ProviderRegistrations.Web.AppStart;
 using SFA.DAS.ProviderRegistrations.Web.Authentication;
 using SFA.DAS.ProviderRegistrations.Web.Authorization;
 using SFA.DAS.ProviderRegistrations.Web.Extensions;
@@ -90,7 +90,7 @@ public class Startup
     
     public void ConfigureContainer(UpdateableServiceProvider serviceProvider)
     {
-        serviceProvider.StartNServiceBus();
+        serviceProvider.StartNServiceBus(_configuration, ServiceBusEndpointType.Web);
 
         // Replacing ClientOutboxPersisterV2 with a local version to fix unit of work issue due to propogating Task up the chain rather than awaiting on DB Command.
         // not clear why this fixes the issue. Attempted to make the change in SFA.DAS.Nservicebus.SqlServer however it conflicts when upgraded with SFA.DAS.UnitOfWork.Nservicebus

@@ -10,7 +10,7 @@ using SFA.DAS.NServiceBus.Services;
 using SFA.DAS.NServiceBus.SqlServer.Data;
 using SFA.DAS.NServiceBus.SqlServer.Features.ClientOutbox.Data;
 
-namespace SFA.DAS.ProviderRegistrations.Web.AppStart;
+namespace SFA.DAS.ProviderRegistrations;
 
 [ExcludeFromCodeCoverage]
 public class ClientOutboxPersisterV2 : IClientOutboxStorageV2

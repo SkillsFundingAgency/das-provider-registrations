@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Linq;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Authorization;
@@ -7,6 +8,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.ApplicationInsights;
+using NServiceBus.ObjectBuilder.MSDependencyInjection;
+using SFA.DAS.NServiceBus.Features.ClientOutbox.Data;
 using SFA.DAS.ProviderRegistrations.Api.Extensions;
 using SFA.DAS.ProviderRegistrations.Api.ServiceRegistrations;
 using SFA.DAS.ProviderRegistrations.Application.Queries.GetInvitationByIdQuery;
@@ -52,6 +55,18 @@ public class Startup
         services.AddHealthChecks();
         services.AddAutoMapper(typeof(InvitationMappings));
         services.AddApplicationInsightsTelemetry();
+    }
+    
+    public void ConfigureContainer(UpdateableServiceProvider serviceProvider)
+    {
+        serviceProvider.StartNServiceBus(_configuration, ServiceBusEndpointType.Api);
+
+        // Replacing ClientOutboxPersisterV2 with a local version to fix unit of work issue due to propogating Task up the chain rather than awaiting on DB Command.
+        // not clear why this fixes the issue. Attempted to make the change in SFA.DAS.Nservicebus.SqlServer however it conflicts when upgraded with SFA.DAS.UnitOfWork.Nservicebus
+        // which would require upgrading to NET6 to resolve.
+        var serviceDescriptor = serviceProvider.FirstOrDefault(serv => serv.ServiceType == typeof(IClientOutboxStorageV2));
+        serviceProvider.Remove(serviceDescriptor);
+        serviceProvider.AddScoped<IClientOutboxStorageV2, ClientOutboxPersisterV2>();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
