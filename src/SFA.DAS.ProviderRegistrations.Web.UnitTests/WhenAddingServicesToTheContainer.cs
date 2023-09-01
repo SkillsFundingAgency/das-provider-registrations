@@ -1,36 +1,23 @@
 using System;
 using System.Collections.Generic;
-using AutoMapper;
 using MediatR;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Memory;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Moq;
 using NServiceBus;
 using NUnit.Framework;
-using SFA.DAS.Authorization.DependencyResolution;
-using SFA.DAS.ProviderRegistrations.Application.Commands.AddedPayeSchemeCommand;
 using SFA.DAS.ProviderRegistrations.Application.Commands.AddInvitationCommand;
 using SFA.DAS.ProviderRegistrations.Application.Commands.AddResendInvitationCommand;
 using SFA.DAS.ProviderRegistrations.Application.Commands.SendInvitationEmailCommand;
-using SFA.DAS.ProviderRegistrations.Application.Commands.SignedAgreementCommand;
 using SFA.DAS.ProviderRegistrations.Application.Commands.UpdateInvitationCommand;
-using SFA.DAS.ProviderRegistrations.Application.Commands.UpsertUserCommand;
 using SFA.DAS.ProviderRegistrations.Application.Queries.GetEmailAddressInUseQuery;
 using SFA.DAS.ProviderRegistrations.Application.Queries.GetInvitationByIdQuery;
 using SFA.DAS.ProviderRegistrations.Application.Queries.GetInvitationEventByIdQuery;
 using SFA.DAS.ProviderRegistrations.Application.Queries.GetInvitationQuery;
 using SFA.DAS.ProviderRegistrations.Application.Queries.GetProviderByUkprnQuery;
 using SFA.DAS.ProviderRegistrations.Application.Queries.GetUnsubscribedQuery;
-using SFA.DAS.ProviderRegistrations.Configuration;
-using SFA.DAS.ProviderRegistrations.ServiceRegistrations;
-using SFA.DAS.ProviderRegistrations.Web.Authorization;
 using SFA.DAS.ProviderRegistrations.Web.Controllers;
-using SFA.DAS.ProviderRegistrations.Web.Mappings;
-using IConfigurationProvider = Microsoft.Extensions.Configuration.IConfigurationProvider;
-using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
 namespace SFA.DAS.ProviderRegistrations.Web.UnitTests;
 
@@ -66,14 +53,10 @@ public class WhenAddingServicesToTheContainer
 
     private static ServiceProvider SetupServiceProvider()
     {
-        var mockHostingEnvironment = new Mock<IHostingEnvironment>();
-        mockHostingEnvironment.Setup(x => x.EnvironmentName).Returns(Environments.Development);
-
         var startup = new Startup(GenerateStubConfiguration(), false);
         var serviceCollection = new ServiceCollection();
         startup.ConfigureServices(serviceCollection);
 
-        serviceCollection.AddSingleton(_ => mockHostingEnvironment.Object);
         serviceCollection.AddTransient<RegistrationController>();
         serviceCollection.AddTransient(_ =>Mock.Of<IMessageSession>());
         
