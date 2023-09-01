@@ -1,6 +1,7 @@
 ﻿using SFA.DAS.Provider.Shared.UI.Attributes;
 using SFA.DAS.ProviderRegistrations.Web.ViewModels;
 using System;
+using Microsoft.Extensions.Configuration;
 
 namespace SFA.DAS.ProviderRegistrations.Web.Controllers
 {
