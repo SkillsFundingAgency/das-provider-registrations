@@ -1,13 +1,6 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.ApplicationInsights;
 using NServiceBus.ObjectBuilder.MSDependencyInjection;
 using SFA.DAS.Authorization.DependencyResolution;
 using SFA.DAS.Authorization.Mvc.Extensions;
@@ -18,6 +11,7 @@ using SFA.DAS.ProviderRegistrations.Configuration;
 using SFA.DAS.ProviderRegistrations.Data;
 using SFA.DAS.ProviderRegistrations.Extensions;
 using SFA.DAS.ProviderRegistrations.Startup;
+using SFA.DAS.ProviderRegistrations.Web.AppStart;
 using SFA.DAS.ProviderRegistrations.Web.Authentication;
 using SFA.DAS.ProviderRegistrations.Web.Authorization;
 using SFA.DAS.ProviderRegistrations.Web.Extensions;
@@ -102,7 +96,7 @@ public class Startup
         // which would require upgrading to NET6 to resolve.
         var serviceDescriptor = serviceProvider.FirstOrDefault(serv => serv.ServiceType == typeof(IClientOutboxStorageV2));
         serviceProvider.Remove(serviceDescriptor);
-        serviceProvider.AddScoped<IClientOutboxStorageV2, AppStart.ClientOutboxPersisterV2>();
+        serviceProvider.AddScoped<IClientOutboxStorageV2, ClientOutboxPersisterV2>();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)

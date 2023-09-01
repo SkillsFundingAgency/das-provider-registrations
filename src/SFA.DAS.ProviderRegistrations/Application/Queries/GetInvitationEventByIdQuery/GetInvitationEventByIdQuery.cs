@@ -1,14 +1,11 @@
-﻿using MediatR;
+﻿namespace SFA.DAS.ProviderRegistrations.Application.Queries.GetInvitationEventByIdQuery;
 
-namespace SFA.DAS.ProviderRegistrations.Application.Queries.GetInvitationEventByIdQuery
+public class GetInvitationEventByIdQuery : IRequest<GetInvitationEventByIdQueryResult>
 {
-    public class GetInvitationEventByIdQuery : IRequest<GetInvitationEventByIdQueryResult>
+    public GetInvitationEventByIdQuery(long invitationId)
     {
-        public GetInvitationEventByIdQuery(long invitationId)
-        {
-            InvitationId = invitationId;
-        }
-
-        public long InvitationId { get; }
+        InvitationId = invitationId;
     }
+
+    public long InvitationId { get; }
 }

@@ -1,9 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿namespace SFA.DAS.ProviderRegistrations.Services;
 
-namespace SFA.DAS.ProviderRegistrations.Services
+public interface IProviderService
 {
-    public interface IProviderService
-    {
-        Task<Models.Provider> GetProvider(long ukprn);
-    }
+    Task<Models.Provider> GetProvider(long ukprn);
 }

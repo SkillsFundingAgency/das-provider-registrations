@@ -1,12 +1,8 @@
 ﻿using Microsoft.AspNetCore.DataProtection;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using SFA.DAS.ProviderRegistrations.Configuration;
 using SFA.DAS.ProviderRegistrations.Extensions;
 using StackExchange.Redis;
-
 
 namespace SFA.DAS.ProviderRegistrations.Web.Extensions;
 

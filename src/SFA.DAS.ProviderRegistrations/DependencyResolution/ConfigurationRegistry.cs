@@ -4,34 +4,33 @@ using SFA.DAS.ProviderRegistrations.Configuration;
 using SFA.DAS.Provider.Shared.UI.Models;
 using StructureMap;
 
-namespace SFA.DAS.ProviderRegistrations.DependencyResolution
+namespace SFA.DAS.ProviderRegistrations.DependencyResolution;
+
+public class ConfigurationRegistry : Registry
 {
-    public class ConfigurationRegistry : Registry
+    public ConfigurationRegistry()
     {
-        public ConfigurationRegistry()
-        {
-            IncludeRegistry<AutoConfigurationRegistry>();
-            AddConfiguration<AuthenticationSettings>(ProviderRegistrationsConfigurationKeys.AuthenticationSettings);
-            AddConfiguration<ActiveDirectorySettings>(ProviderRegistrationsConfigurationKeys.ActiveDirectorySettings);
-            AddConfiguration<ProviderRegistrationsSettings>(ProviderRegistrationsConfigurationKeys.ProviderRegistrationsSettings);
-            AddConfiguration<NServiceBusSettings>(ProviderRegistrationsConfigurationKeys.NServiceBusSettings);
-            AddConfiguration<EmployerApprenticeshipApiClientSettings>(ProviderRegistrationsConfigurationKeys.EmployerApprenticeshipApiClientSettings);
-            AddConfiguration<ZenDeskConfiguration>(ProviderRegistrationsConfigurationKeys.ZenDeskSettings);
-            AddConfiguration<RoatpApiClientSettings>(ProviderRegistrationsConfigurationKeys.RoatpApiClientSettings);
-        }
+        IncludeRegistry<AutoConfigurationRegistry>();
+        AddConfiguration<AuthenticationSettings>(ProviderRegistrationsConfigurationKeys.AuthenticationSettings);
+        AddConfiguration<ActiveDirectorySettings>(ProviderRegistrationsConfigurationKeys.ActiveDirectorySettings);
+        AddConfiguration<ProviderRegistrationsSettings>(ProviderRegistrationsConfigurationKeys.ProviderRegistrationsSettings);
+        AddConfiguration<NServiceBusSettings>(ProviderRegistrationsConfigurationKeys.NServiceBusSettings);
+        AddConfiguration<EmployerApprenticeshipApiClientSettings>(ProviderRegistrationsConfigurationKeys.EmployerApprenticeshipApiClientSettings);
+        AddConfiguration<ZenDeskConfiguration>(ProviderRegistrationsConfigurationKeys.ZenDeskSettings);
+        AddConfiguration<RoatpApiClientSettings>(ProviderRegistrationsConfigurationKeys.RoatpApiClientSettings);
+    }
 
-        private void AddConfiguration<T>(string key) where T : class
-        {
-            For<T>().Use(c => GetConfiguration<T>(c, key)).Singleton();
-        }
+    private void AddConfiguration<T>(string key) where T : class
+    {
+        For<T>().Use(c => GetConfiguration<T>(c, key)).Singleton();
+    }
 
-        private T GetConfiguration<T>(IContext context, string name)
-        {
-            var configuration = context.GetInstance<IConfiguration>();
-            var section = configuration.GetSection(name);
-            var value = section.Get<T>();
+    private T GetConfiguration<T>(IContext context, string name)
+    {
+        var configuration = context.GetInstance<IConfiguration>();
+        var section = configuration.GetSection(name);
+        var value = section.Get<T>();
 
-            return value;
-        }
+        return value;
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System.Data;
-using System.Threading.Tasks;
 using Microsoft.Azure.Services.AppAuthentication;
 using Microsoft.Data.SqlClient;
 using SFA.DAS.ProviderRegistrations.Configuration;
@@ -27,12 +26,7 @@ public class ProviderRegistrationsDbContext : DbContext
         _azureServiceTokenProvider = azureServiceTokenProvider;
         _connection = connection;
     }
-
-    public virtual Task ExecuteSqlCommandAsync(string sql, params object[] parameters)
-    {
-        return Database.ExecuteSqlRawAsync(sql, parameters);
-    }
-        
+    
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseLazyLoadingProxies();
@@ -43,14 +37,10 @@ public class ProviderRegistrationsDbContext : DbContext
         }
 
         optionsBuilder.UseSqlServer(_connection as SqlConnection);
-
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.ApplyConfiguration(new InvitationConfiguration());
-        modelBuilder.ApplyConfiguration(new InvitationEventConfiguration());
-        modelBuilder.ApplyConfiguration(new UnsubscribeConfiguration());
-        modelBuilder.Entity<Invitation>().HasMany(a => a.InvitationEvents).WithOne(a => a.Invitation);            
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(ProviderRegistrationsDbContext).Assembly);
     }
 }

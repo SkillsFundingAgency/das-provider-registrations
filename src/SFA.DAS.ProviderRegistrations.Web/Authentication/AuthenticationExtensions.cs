@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Authentication.WsFederation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using SFA.DAS.DfESignIn.Auth.AppStart;
 using SFA.DAS.ProviderRegistrations.Configuration;

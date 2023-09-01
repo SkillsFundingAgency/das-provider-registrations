@@ -1,9 +1,8 @@
 using SFA.DAS.Http;
 
-namespace SFA.DAS.ProviderRegistrations.Services
+namespace SFA.DAS.ProviderRegistrations.Services;
+
+public interface IRoatpApiHttpClientFactory
 {
-    public interface IRoatpApiHttpClientFactory
-    {
-        IRestHttpClient CreateRestHttpClient();
-    }
+    IRestHttpClient CreateRestHttpClient();
 }

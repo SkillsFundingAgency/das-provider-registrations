@@ -13,59 +13,58 @@ using SFA.DAS.UnitOfWork.NServiceBus.Configuration;
 using StructureMap;
 using System.Data.Common;
 
-namespace SFA.DAS.ProviderRegistrations.DependencyResolution
+namespace SFA.DAS.ProviderRegistrations.DependencyResolution;
+
+public class NServiceBusRegistry : Registry
 {
-    public class NServiceBusRegistry : Registry
+    private const string AzureResource = "https://database.windows.net/";
+
+    public NServiceBusRegistry()
     {
-        private const string AzureResource = "https://database.windows.net/";
+        For<IMessageSession>().Singleton().Use(s => StartNServiceBus(s));
+    }
 
-        public NServiceBusRegistry()
+    private IMessageSession StartNServiceBus(IContext context)
+    {
+        var nServiceBusSettings = context.GetInstance<NServiceBusSettings>();
+        var providerSettings = context.GetInstance<ProviderRegistrationsSettings>();
+        var environmentService = context.GetInstance<IEnvironmentService>();          
+
+        var endpointName = "SFA.DAS.ProviderRegistrations.Web";
+        var endpointConfiguration = new EndpointConfiguration(endpointName)
+            .UseErrorQueue($"{endpointName}-errors")
+            .UseInstallers()
+            .UseLicense(nServiceBusSettings.NServiceBusLicense)
+            .UseMessageConventions()
+            .UseNLogFactory()
+            .UseNewtonsoftJsonSerializer()
+            .UseOutbox(true)                
+            .UseSqlServerPersistence(() => GetConnectionString(environmentService, providerSettings))                
+            .UseUnitOfWork()
+            .UseSendOnly();
+
+        if (environmentService.IsCurrent(DasEnv.LOCAL))
         {
-            For<IMessageSession>().Singleton().Use(s => StartNServiceBus(s));
+            endpointConfiguration.UseLearningTransport(r => r.AddRouting());
         }
-
-        private IMessageSession StartNServiceBus(IContext context)
+        else
         {
-            var nServiceBusSettings = context.GetInstance<NServiceBusSettings>();
-            var providerSettings = context.GetInstance<ProviderRegistrationsSettings>();
-            var environmentService = context.GetInstance<IEnvironmentService>();          
-
-            var endpointName = "SFA.DAS.ProviderRegistrations.Web";
-            var endpointConfiguration = new EndpointConfiguration(endpointName)
-                .UseErrorQueue($"{endpointName}-errors")
-                .UseInstallers()
-                .UseLicense(nServiceBusSettings.NServiceBusLicense)
-                .UseMessageConventions()
-                .UseNLogFactory()
-                .UseNewtonsoftJsonSerializer()
-                .UseOutbox(true)                
-                .UseSqlServerPersistence(() => GetConnectionString(environmentService, providerSettings))                
-                .UseUnitOfWork()
-                .UseSendOnly();
-
-            if (environmentService.IsCurrent(DasEnv.LOCAL))
-            {
-                endpointConfiguration.UseLearningTransport(r => r.AddRouting());
-            }
-            else
-            {
-                endpointConfiguration.UseAzureServiceBusTransport(nServiceBusSettings.ServiceBusConnectionString, r => r.AddRouting());
-            }
+            endpointConfiguration.UseAzureServiceBusTransport(nServiceBusSettings.ServiceBusConnectionString, r => r.AddRouting());
+        }
             
-            var endpoint = Endpoint.Start(endpointConfiguration).GetAwaiter().GetResult();
-            return endpoint;
-        }
+        var endpoint = Endpoint.Start(endpointConfiguration).GetAwaiter().GetResult();
+        return endpoint;
+    }
 
-        private DbConnection GetConnectionString(IEnvironmentService environmentService, ProviderRegistrationsSettings providerSettings)
-        {
-            var azureServiceTokenProvider = new AzureServiceTokenProvider();
-            return environmentService.IsCurrent(DasEnv.LOCAL)
-                ? new SqlConnection(providerSettings.DatabaseConnectionString)
-                : new SqlConnection
-                {
-                    ConnectionString = providerSettings.DatabaseConnectionString,
-                    AccessToken = azureServiceTokenProvider.GetAccessTokenAsync(AzureResource).Result
-                };
-        }
+    private DbConnection GetConnectionString(IEnvironmentService environmentService, ProviderRegistrationsSettings providerSettings)
+    {
+        var azureServiceTokenProvider = new AzureServiceTokenProvider();
+        return environmentService.IsCurrent(DasEnv.LOCAL)
+            ? new SqlConnection(providerSettings.DatabaseConnectionString)
+            : new SqlConnection
+            {
+                ConnectionString = providerSettings.DatabaseConnectionString,
+                AccessToken = azureServiceTokenProvider.GetAccessTokenAsync(AzureResource).Result
+            };
     }
 }

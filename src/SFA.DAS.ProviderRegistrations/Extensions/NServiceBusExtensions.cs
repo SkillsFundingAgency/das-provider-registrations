@@ -1,15 +1,14 @@
 ﻿using NServiceBus;
 using SFA.DAS.Notifications.Messages.Commands;
 
-namespace SFA.DAS.ProviderRegistrations.Extensions
+namespace SFA.DAS.ProviderRegistrations.Extensions;
+
+public static class NServiceBusExtensions
 {
-    public static class NServiceBusExtensions
+    private const string NotificationsMessageHandler = "SFA.DAS.Notifications.MessageHandlers";
+    public static void AddRouting(this RoutingSettings routingSettings)
     {
-        private const string NotificationsMessageHandler = "SFA.DAS.Notifications.MessageHandlers";
-        public static void AddRouting(this RoutingSettings routingSettings)
-        {
-            routingSettings.RouteToEndpoint(typeof(SendEmailCommand), NotificationsMessageHandler);
-            routingSettings.RouteToEndpoint(typeof(SendSmsCommand), NotificationsMessageHandler);
-        }
+        routingSettings.RouteToEndpoint(typeof(SendEmailCommand), NotificationsMessageHandler);
+        routingSettings.RouteToEndpoint(typeof(SendSmsCommand), NotificationsMessageHandler);
     }
 }

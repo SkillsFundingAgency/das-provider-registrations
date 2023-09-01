@@ -1,7 +1,6 @@
-namespace SFA.DAS.ProviderRegistrations.Data
+namespace SFA.DAS.ProviderRegistrations.Data;
+
+public interface IProviderRegistrationsDbContextFactory
 {
-    public interface IProviderRegistrationsDbContextFactory
-    {
-        ProviderRegistrationsDbContext CreateDbContext();
-    }
+    ProviderRegistrationsDbContext CreateDbContext();
 }

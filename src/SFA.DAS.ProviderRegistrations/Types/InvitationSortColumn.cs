@@ -1,13 +1,12 @@
-﻿namespace SFA.DAS.ProviderRegistrations.Types
+﻿namespace SFA.DAS.ProviderRegistrations.Types;
+
+public enum InvitationSortColumn
 {
-    public enum InvitationSortColumn
-    {
-        EmployerOrganisation,
-        EmployerFirstname,
-        EmployerLastname,
-        EmployerEmail,
-        CreatedDate,
-        UpdatedDate,
-        Status
-    }
+    EmployerOrganisation,
+    EmployerFirstname,
+    EmployerLastname,
+    EmployerEmail,
+    CreatedDate,
+    UpdatedDate,
+    Status
 }

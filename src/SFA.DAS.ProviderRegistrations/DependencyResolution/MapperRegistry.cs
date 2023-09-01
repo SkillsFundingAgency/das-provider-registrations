@@ -3,14 +3,13 @@ using System.Linq;
 using AutoMapper;
 using StructureMap;
 
-namespace SFA.DAS.ProviderRegistrations.DependencyResolution
+namespace SFA.DAS.ProviderRegistrations.DependencyResolution;
+
+public class MapperRegistry : Registry
 {
-    public class MapperRegistry : Registry
+    public MapperRegistry()
     {
-        public MapperRegistry()
-        {
-            For<IConfigurationProvider>().Use(c => new MapperConfiguration(cfg => cfg.AddMaps(AppDomain.CurrentDomain.GetAssemblies().Where(a => a.FullName.StartsWith("SFA.DAS"))))).Singleton();
-            For<IMapper>().Use(c => c.GetInstance<IConfigurationProvider>().CreateMapper()).Singleton();
-        }
+        For<IConfigurationProvider>().Use(c => new MapperConfiguration(cfg => cfg.AddMaps(AppDomain.CurrentDomain.GetAssemblies().Where(a => a.FullName.StartsWith("SFA.DAS"))))).Singleton();
+        For<IMapper>().Use(c => c.GetInstance<IConfigurationProvider>().CreateMapper()).Singleton();
     }
 }
