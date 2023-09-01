@@ -406,6 +406,32 @@
                     },
                     "appServiceAppSettings": {
                         "value": {
+                          "array": [
+                            {
+                              "name": "EnvironmentName",
+                              "value": "[parameters('environmentName')]"
+                            },
+                            {
+                              "name": "ResourceEnvironmentName",
+                              "value": "[parameters('resourceEnvironmentName')]"
+                            },
+                            {
+                              "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+                              "value": "[reference(concat(variables('uiAppServiceName'), '-app-insights-',parameters('utcValue'))).outputs.InstrumentationKey.value]"
+                            },
+                            {
+                              "name": "ASPNETCORE_ENVIRONMENT",
+                              "value": "[toUpper(parameters('environmentName'))]"
+                            },
+                            {
+                              "name": "LoggingRedisConnectionString",
+                              "value": "[parameters('loggingRedisConnectionString')]"
+                            },
+                            {
+                              "name": "ConfigurationStorageConnectionString",
+                              "value": "[parameters('configurationStorageConnectionString')]"
+                            }
+                          ]
                             "array": [
                                 {
                                     "name": "EnvironmentName",
