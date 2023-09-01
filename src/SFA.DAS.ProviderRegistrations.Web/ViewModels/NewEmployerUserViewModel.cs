@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using SFA.DAS.ProviderRegistrations.Web.Validation;
 
 namespace SFA.DAS.ProviderRegistrations.Web.ViewModels

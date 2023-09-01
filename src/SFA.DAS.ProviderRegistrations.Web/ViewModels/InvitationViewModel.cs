@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SFA.DAS.ProviderRegistrations.Web.ViewModels
+﻿namespace SFA.DAS.ProviderRegistrations.Web.ViewModels
 {
     public class InvitationViewModel
     {

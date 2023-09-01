@@ -10,13 +10,12 @@ public class UpsertedUserEventHandler : IHandleMessages<UpsertedUserEvent>
 {
     private readonly IMediator _mediator;
 
-    public UpsertedUserEventHandler(IMediator mediator)
-    {
-        _mediator = mediator;
-    }
+    public UpsertedUserEventHandler(IMediator mediator)=> _mediator = mediator;
 
     public Task Handle(UpsertedUserEvent message, IMessageHandlerContext context)
     {
-        return _mediator.Send(new UpsertUserCommand(message.UserRef, message.Created, message.CorrelationId));
+        var command = new UpsertUserCommand(message.UserRef, message.Created, message.CorrelationId);
+        
+        return _mediator.Send(command);
     }
 }

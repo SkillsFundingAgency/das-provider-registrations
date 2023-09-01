@@ -1,4 +1,3 @@
-using System;
 using SFA.DAS.Authorization.Context;
 using SFA.DAS.ProviderRegistrations.Web.Authentication;
 

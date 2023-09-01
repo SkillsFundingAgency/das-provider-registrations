@@ -1,8 +1,4 @@
-﻿using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
+﻿using Microsoft.AspNetCore.Mvc.Infrastructure;
 using SFA.DAS.ProviderRegistrations.Web.Authentication;
 using SFA.DAS.ProviderRegistrations.Web.Extensions;
 

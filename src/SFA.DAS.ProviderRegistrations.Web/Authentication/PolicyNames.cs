@@ -1,15 +1,14 @@
-﻿namespace SFA.DAS.ProviderRegistrations.Web.Authentication
+﻿namespace SFA.DAS.ProviderRegistrations.Web.Authentication;
+
+public static class PolicyNames
 {
-    public static class PolicyNames
-    {
-        public static string ProviderPolicyName => "ProviderPolicy";
+    public static string ProviderPolicyName => "ProviderPolicy";
 
-        public static string HasViewerOrAbovePermission => "HasViewerOrAbovePermission";
+    public static string HasViewerOrAbovePermission => "HasViewerOrAbovePermission";
 
-        public static string HasContributorOrAbovePermission => "HasContributorOrAbovePermission";
+    public static string HasContributorOrAbovePermission => "HasContributorOrAbovePermission";
 
-        public static string HasContributorWithApprovalOrAbovePermission => "HasContributorWithApprovalOrAbovePermission";
+    public static string HasContributorWithApprovalOrAbovePermission => "HasContributorWithApprovalOrAbovePermission";
 
-        public static string HasAccountOwnerPermission => "HasAccountOwnerPermission";
-    }
+    public static string HasAccountOwnerPermission => "HasAccountOwnerPermission";
 }

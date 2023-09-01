@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using SFA.DAS.ProviderRegistrations.Web.Extensions;
+﻿using SFA.DAS.ProviderRegistrations.Web.Extensions;
 
 namespace SFA.DAS.ProviderRegistrations.Web.Authorization
 {

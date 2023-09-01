@@ -1,5 +1,10 @@
 ﻿global using System;
+global using System.Collections.Generic;
+global using System.IO;
 global using System.Linq;
+global using System.Linq.Expressions;
+global using System.Security.Claims;
+global using System.Text.Encodings.Web;
 global using System.Threading;
 global using System.Threading.Tasks;
 global using Microsoft.AspNetCore.Authorization;

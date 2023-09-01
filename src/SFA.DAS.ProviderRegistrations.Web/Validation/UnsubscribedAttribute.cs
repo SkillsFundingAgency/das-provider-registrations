@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using MediatR;
 using SFA.DAS.ProviderRegistrations.Application.Queries.GetUnsubscribedQuery;
 using SFA.DAS.ProviderRegistrations.Web.Authentication;
 

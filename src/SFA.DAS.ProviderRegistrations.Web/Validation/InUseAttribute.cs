@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using MediatR;
 using SFA.DAS.ProviderRegistrations.Application.Queries.GetEmailAddressInUseQuery;
 
 namespace SFA.DAS.ProviderRegistrations.Web.Validation
