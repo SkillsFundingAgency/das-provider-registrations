@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.16.1" />
     <PackageReference Include="Microsoft.Azure.WebJobs.Logging.ApplicationInsights" Version="3.0.35" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.32.2" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.0" />
