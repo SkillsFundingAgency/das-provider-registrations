@@ -1,5 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using SFA.DAS.ProviderRegistrations.Services;
+﻿using SFA.DAS.ProviderRegistrations.Services;
+using SFA.DAS.ProviderUrlHelper;
 
 namespace SFA.DAS.ProviderRegistrations.Web.ServiceRegistrations;
 
@@ -11,6 +11,7 @@ public static class ApplicationServiceRegistrations
         services.AddTransient<IEmployerUsersApiHttpClientFactory, EmployerApprenticeshipApiHttpClientFactory>();
         services.AddTransient<IRoatpApiHttpClientFactory, RoatpApiHttpClientFactory>();
         services.AddTransient<IEmployerApprenticeshipService, EmployerApprenticeshipService>();
+        services.AddSingleton<ILinkGenerator, LinkGenerator>();
         
         return services;
     }

@@ -9,6 +9,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.ApplicationInsights;
 using NServiceBus.ObjectBuilder.MSDependencyInjection;
+using SFA.DAS.Authorization.DependencyResolution;
 using SFA.DAS.Authorization.Mvc.Extensions;
 using SFA.DAS.NServiceBus.Features.ClientOutbox.Data;
 using SFA.DAS.Provider.Shared.UI.Startup;
@@ -30,14 +31,12 @@ namespace SFA.DAS.ProviderRegistrations.Web;
 
 public class Startup
 {
-    public Startup(IConfiguration configuration, IWebHostEnvironment environment)
+    public Startup(IConfiguration configuration, bool buildConfig = true)
     {
-       _environment = environment;
-       _configuration = configuration.BuildDasConfiguration();
+       _configuration = buildConfig ? configuration.BuildDasConfiguration() : configuration;
     }
 
     private readonly IConfiguration _configuration;
-    private readonly IWebHostEnvironment _environment;
 
     public void ConfigureServices(IServiceCollection services)
     {
@@ -58,10 +57,10 @@ public class Startup
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             })
             .AddProviderIdamsAuthentication(_configuration)
-            .AddDasDistributedMemoryCache(_configuration, _environment.IsDevelopment())
+            .AddDasDistributedMemoryCache(_configuration, _configuration.IsDevOrLocal())
             .AddMemoryCache()
             .AddApplicationServices()
-            .AddDataProtection(_configuration, _environment)
+            .AddDataProtection(_configuration)
             .AddMvc(options =>
             {
                 options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
@@ -76,6 +75,8 @@ public class Startup
             .AddControllersAsServices()
             .AddSessionStateTempDataProvider()
             .SetDfESignInConfiguration(useDfESignIn);
+        
+        services.AddAuthorization<AuthorizationContextProvider>();
         
         var providerRegistrationsSettings = _configuration.GetSection(ProviderRegistrationsConfigurationKeys.ProviderRegistrationsSettings).Get<ProviderRegistrationsSettings>();
         

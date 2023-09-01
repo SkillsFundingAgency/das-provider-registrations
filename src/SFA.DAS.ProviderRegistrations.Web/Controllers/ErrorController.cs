@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using SFA.DAS.Provider.Shared.UI.Attributes;
+﻿using SFA.DAS.Provider.Shared.UI.Attributes;
 
 namespace SFA.DAS.ProviderRegistrations.Web.Controllers;
 

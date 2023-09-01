@@ -46,7 +46,7 @@ public class Startup
 
         services.AddApiConfigurationSections(_configuration);
         services.AddMediatR(configuration=> configuration.RegisterServicesFromAssembly(typeof(GetInvitationByIdQuery).Assembly));
-        services.AddDasDistributedMemoryCache(_configuration, _environment.IsDevelopment());
+        services.AddDasDistributedMemoryCache(_configuration, _configuration.IsDevOrLocal());
         services.AddDatabaseRegistration();
         services.AddMemoryCache();
         services.AddHealthChecks();

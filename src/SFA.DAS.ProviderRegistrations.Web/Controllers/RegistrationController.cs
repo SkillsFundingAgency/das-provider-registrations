@@ -57,7 +57,7 @@ public class RegistrationController : Controller
     [Authorize(Policy = nameof(PolicyNames.HasContributorOrAbovePermission))]
     public async Task<IActionResult> ViewStatus(long InvitationId)
     {
-        var results = await _mediator.Send(new GetInvitationEventByIdQuery(InvitationId), new CancellationToken());           
+        var results = await _mediator.Send(new GetInvitationEventByIdQuery(InvitationId));           
 
         var model = _mapper.Map<InvitationEventsViewModel>(results);
             
@@ -75,7 +75,7 @@ public class RegistrationController : Controller
     public async Task<IActionResult> ReviewDetails(Guid reference)
     {
         var ukprn = _authenticationService.Ukprn.Value;
-        var result = await _mediator.Send(new GetInvitationByIdQuery(reference), new CancellationToken());
+        var result = await _mediator.Send(new GetInvitationByIdQuery(reference));
         var model = new NewEmployerUserViewModel
         {
             ProviderId = ukprn.ToString(),
@@ -88,7 +88,7 @@ public class RegistrationController : Controller
         };
 
         var emailNowInUse = await _mediator.Send(new GetEmailAddressInUseQuery(model.EmployerEmailAddress?.Trim().ToLower()));
-        model.Unsubscribed = await _mediator.Send(new GetUnsubscribedQuery(ukprn, model.EmployerEmailAddress), new CancellationToken());
+        model.Unsubscribed = await _mediator.Send(new GetUnsubscribedQuery(ukprn, model.EmployerEmailAddress));
         model.ResendInvitation = true;
         model.IsEmailInUse = emailNowInUse;
 
@@ -125,14 +125,14 @@ public class RegistrationController : Controller
             
         if (model.ResendInvitation)
         {
-            await _mediator.Send(new AddResendInvitationCommand(model.InvitationId.Value, DateTime.UtcNow), new CancellationToken());
+            await _mediator.Send(new AddResendInvitationCommand(model.InvitationId.Value, DateTime.UtcNow));
         }
 
         var ukprn = _authenticationService.Ukprn.Value;
         var userId = _authenticationService.UserId;
         _authenticationService.TryGetUserClaimValue(ProviderClaims.DisplayName, out string providerUserFullName);
 
-        var provider = await _mediator.Send(new GetProviderByUkprnQuery(ukprn), new CancellationToken());
+        var provider = await _mediator.Send(new GetProviderByUkprnQuery(ukprn));
                         
         var employerOrganisation = model.EmployerOrganisation.Trim();
         var employerFirstName = model.EmployerFirstName.Trim();
@@ -147,7 +147,7 @@ public class RegistrationController : Controller
         }
         else
         {
-            await _mediator.Send(new UpdateInvitationCommand(model.Reference.ToString(), employerOrganisation, employerFirstName, employerLastName), new CancellationToken());
+            await _mediator.Send(new UpdateInvitationCommand(model.Reference.ToString(), employerOrganisation, employerFirstName, employerLastName));
         }
 
         await _mediator.Send(new SendInvitationEmailCommand(ukprn,provider.ProviderName, providerUserFullName, employerOrganisation, employerFullName, employerEmail, correlationId));            
