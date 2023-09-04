@@ -20,6 +20,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.Controllers
             _configuration = configuration;
         }
 
+        [AllowAnonymous]
         [HttpGet]
         [Route("signout", Name = "provider-signout")]
         public IActionResult SignOutProvider()
@@ -34,7 +35,6 @@ namespace SFA.DAS.ProviderRegistrations.Web.Controllers
             return SignOut(
                 new Microsoft.AspNetCore.Authentication.AuthenticationProperties
                 {
-                    RedirectUri = "",
                     AllowRefresh = true
                 },
                 CookieAuthenticationDefaults.AuthenticationScheme,
