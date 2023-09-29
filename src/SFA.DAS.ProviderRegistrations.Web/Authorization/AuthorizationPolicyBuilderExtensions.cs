@@ -25,7 +25,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.Authorization
                     policy.RequireClaim(ProviderClaims.Service);
                     policy.RequireClaim(ProviderClaims.Ukprn);
                     policy.Requirements.Add(new MinimumServiceClaimRequirement(ServiceClaim.DAV));
-                    policy.Requirements.Add(new TrainingProviderAllRolesRequirement()); //Policy requirement to check if the signed provider is a Main or Employer Profile.
+                    policy.Requirements.Add(new TrainingProviderAllRolesRequirement());
                 });
 
                 options.AddPolicy(PolicyNames.HasContributorOrAbovePermission, policy =>
@@ -34,7 +34,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.Authorization
                     policy.RequireClaim(ProviderClaims.Service);
                     policy.RequireClaim(ProviderClaims.Ukprn);
                     policy.Requirements.Add(new MinimumServiceClaimRequirement(ServiceClaim.DAC));
-                    policy.Requirements.Add(new TrainingProviderAllRolesRequirement()); //Policy requirement to check if the signed provider is a Main or Employer Profile.
+                    policy.Requirements.Add(new TrainingProviderAllRolesRequirement());
                 });
 
                 options.AddPolicy(PolicyNames.HasContributorWithApprovalOrAbovePermission, policy =>
@@ -43,7 +43,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.Authorization
                     policy.RequireClaim(ProviderClaims.Service);
                     policy.RequireClaim(ProviderClaims.Ukprn);
                     policy.Requirements.Add(new MinimumServiceClaimRequirement(ServiceClaim.DAB));
-                    policy.Requirements.Add(new TrainingProviderAllRolesRequirement()); //Policy requirement to check if the signed provider is a Main or Employer Profile.
+                    policy.Requirements.Add(new TrainingProviderAllRolesRequirement());
                 });
 
                 options.AddPolicy(PolicyNames.HasAccountOwnerPermission, policy =>
@@ -52,7 +52,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.Authorization
                     policy.RequireClaim(ProviderClaims.Service);
                     policy.RequireClaim(ProviderClaims.Ukprn);
                     policy.Requirements.Add(new MinimumServiceClaimRequirement(ServiceClaim.DAA));
-                    policy.Requirements.Add(new TrainingProviderAllRolesRequirement()); //Policy requirement to check if the signed provider is a Main or Employer Profile.
+                    policy.Requirements.Add(new TrainingProviderAllRolesRequirement());
                 });
             });
 

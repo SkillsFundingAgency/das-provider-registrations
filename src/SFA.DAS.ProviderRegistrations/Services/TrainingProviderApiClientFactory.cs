@@ -8,6 +8,7 @@ using System.Net.Http.Headers;
 
 namespace SFA.DAS.ProviderRegistrations.Services
 {
+    ///<inheritdoc cref="ITrainingProviderApiClientFactory"/>
     public class TrainingProviderApiClientFactory : ITrainingProviderApiClientFactory
     {
         private readonly HttpClient _httpClient;
@@ -28,6 +29,7 @@ namespace SFA.DAS.ProviderRegistrations.Services
             return GetHttpClient(_settings, _configuration);
         }
 
+        ///<inherit-doc />
         private HttpClient GetHttpClient(
             IManagedIdentityClientConfiguration apiClientConfiguration,
             IConfiguration config)

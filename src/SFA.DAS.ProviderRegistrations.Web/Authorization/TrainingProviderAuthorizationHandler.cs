@@ -20,7 +20,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.Authorization
         Task<bool> IsProviderAuthorized(AuthorizationHandlerContext context, bool allowAllUserRoles);
     }
 
-    // <inherit-doc />
+    ///<inheritdoc cref="ITrainingProviderAuthorizationHandler"/>
     public class TrainingProviderAuthorizationHandler : ITrainingProviderAuthorizationHandler
     {
         private readonly IAuthenticationService _authenticationService;
@@ -47,6 +47,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.Authorization
             return providerDetails is { CanAccessApprenticeshipService: true };
         }
 
+        #region "Private Methods"
         private long GetProviderId()
         {
             if (!_authenticationService.TryGetUserClaimValue(ProviderClaims.Ukprn, out var ukprnClaimValue))
@@ -61,5 +62,6 @@ namespace SFA.DAS.ProviderRegistrations.Web.Authorization
 
             return ukprn;
         }
+        #endregion
     }
 }

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace SFA.DAS.ProviderRegistrations.Services
 {
+    ///<inheritdoc cref="ITrainingProviderApiClient"/>
     public class TrainingProviderApiClient : ITrainingProviderApiClient
     {
         private readonly HttpClient _httpClient;
@@ -24,16 +25,13 @@ namespace SFA.DAS.ProviderRegistrations.Services
             _logger = logger;
         }
 
-        /// <summary>
-        /// Method to get the provider status from RoATP API by given ukprn number.
-        /// </summary>
-        /// <param name="providerId">ukprn number.</param>
-        /// <returns>GetProviderStatusResult</returns>
+        ///<inherit-doc />
         public async Task<GetProviderSummaryResult> GetProviderDetails(long providerId)
         {
             _logger.LogInformation("Getting Training Provider Details for ukprn:{0} returned OK", providerId);
 
             var url = $"{BaseUrl()}api/providers/{providerId}";
+
             var requestMessage = new HttpRequestMessage(HttpMethod.Get, url);
 
             var response = await _httpClient.SendAsync(requestMessage).ConfigureAwait(false);

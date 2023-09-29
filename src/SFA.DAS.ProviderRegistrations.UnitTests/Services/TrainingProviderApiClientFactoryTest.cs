@@ -3,7 +3,6 @@ using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using Moq;
 using NUnit.Framework;
-using RichardSzalay.MockHttp;
 using SFA.DAS.ProviderRegistrations.Configuration;
 using SFA.DAS.ProviderRegistrations.Services;
 using System;
@@ -14,7 +13,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Services
     public class TrainingProviderApiClientFactoryTest
     {
         private const string OuterApiBaseAddress = "http://outer-api";
-        private MockHttpMessageHandler _mockHttp = null!;
+        private Mock<HttpMessageHandler> _mockHttpsMessageHandler = null!;
         private Fixture _fixture = null!;
         private TrainingProviderApiClientFactory _sut = null!;
         private TrainingProviderApiClientConfiguration _settings = null!;
@@ -24,7 +23,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Services
         public void SetUp()
         {
             _fixture = new Fixture();
-            _mockHttp = new MockHttpMessageHandler();
+            _mockHttpsMessageHandler = new Mock<HttpMessageHandler>();
             _configuration = new Mock<IConfiguration>();
             _configuration.SetupGet(x => x[It.Is<string>(s => s == "EnvironmentName")]).Returns("LOCAL");
             _settings = _fixture
@@ -33,7 +32,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Services
                 .With(x => x.IdentifierUri, "")
                 .Create();
 
-            _sut = new TrainingProviderApiClientFactory(new HttpClient(_mockHttp)
+            _sut = new TrainingProviderApiClientFactory(new HttpClient(_mockHttpsMessageHandler.Object)
             {
                 BaseAddress = new Uri(OuterApiBaseAddress),
             }, _settings, _configuration.Object);

@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace SFA.DAS.ProviderRegistrations.Web.Authorization
 {
+    /// <summary>
+    /// AuthorizationHandler to validate the Training Provider and it applies to all Provider roles.
+    /// </summary>
     public class TrainingProviderAllRolesAuthorizationHandler : AuthorizationHandler<TrainingProviderAllRolesRequirement>
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -29,7 +32,8 @@ namespace SFA.DAS.ProviderRegistrations.Web.Authorization
         {
             var isStubProviderValidationEnabled = GetUseStubProviderValidationSetting();
 
-            // logic to check if the provider is authorized if not redirect the user to 401 un-authorized page.
+            // check if the stub is activated to by-pass the validation. Mostly used for local development purpose.
+            // logic to check if the provider is authorized if not redirect the user to PAS 401 un-authorized page.
             if (!isStubProviderValidationEnabled && !(await _handler.IsProviderAuthorized(context, true)))
             {
                 var httpContext = _httpContextAccessor.HttpContext;
@@ -39,11 +43,14 @@ namespace SFA.DAS.ProviderRegistrations.Web.Authorization
             context.Succeed(requirement);
         }
 
+        #region "Private Methods"
         private bool GetUseStubProviderValidationSetting()
         {
             var value = _configuration.GetSection("UseStubProviderValidation").Value;
 
             return value != null && bool.TryParse(value, out var result) && result;
         }
+        #endregion
+
     }
 }
