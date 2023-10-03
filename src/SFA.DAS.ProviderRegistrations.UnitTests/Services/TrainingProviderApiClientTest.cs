@@ -18,8 +18,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Services
 {
     public class TrainingProviderApiClientTest
     {
-        private const string OuterApiBaseAddress = "http://google.com";
-        private const string IdentifierUrl = "https://citizenazuresfabisgov.onmicrosoft.com/das-at-roatpv2api-as-ar";
+        private const string OuterApiBaseAddress = "http://outer.api";
         private Mock<HttpMessageHandler> _mockHttpsMessageHandler = null!;
         private Fixture _fixture = null!;
         private TrainingProviderApiClient _sut = null!;
