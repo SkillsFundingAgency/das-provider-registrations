@@ -1,7 +1,6 @@
 ﻿using AutoFixture;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.Protected;
 using NUnit.Framework;
@@ -19,13 +18,12 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Services
 {
     public class TrainingProviderApiClientTest
     {
-        private const string OuterApiBaseAddress = "http://outer-api";
+        private const string OuterApiBaseAddress = "http://google.com";
+        private const string IdentifierUrl = "https://citizenazuresfabisgov.onmicrosoft.com/das-at-roatpv2api-as-ar";
         private Mock<HttpMessageHandler> _mockHttpsMessageHandler = null!;
         private Fixture _fixture = null!;
         private TrainingProviderApiClient _sut = null!;
         private TrainingProviderApiClientConfiguration _settings = null!;
-        private Mock<ILogger<TrainingProviderApiClient>> _logger = null!;
-        private ITrainingProviderApiClientFactory _factory = null!;
         private Mock<IConfiguration> _configuration = null!;
 
         [SetUp]
@@ -33,9 +31,8 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Services
         {
             _fixture = new Fixture();
             _mockHttpsMessageHandler = new Mock<HttpMessageHandler>();
-            _logger = new Mock<ILogger<TrainingProviderApiClient>>();
             _configuration = new Mock<IConfiguration>();
-            _configuration.SetupGet(x => x[It.Is<string>(s => s == "EnvironmentName")]).Returns("LOCAL");
+            _configuration.SetupGet(x => x[It.Is<string>(s => s == "EnvironmentName")]).Returns("TEST");
             _settings = _fixture
                 .Build<TrainingProviderApiClientConfiguration>()
                 .With(x => x.ApiBaseUrl, OuterApiBaseAddress)
@@ -58,11 +55,10 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Services
                     Content = new StringContent(JsonSerializer.Serialize(expected)),
                     RequestMessage = new HttpRequestMessage()
                 });
-            _factory = new TrainingProviderApiClientFactory(new HttpClient(_mockHttpsMessageHandler.Object)
+            _sut = new TrainingProviderApiClient(new HttpClient(_mockHttpsMessageHandler.Object)
             {
                 BaseAddress = new Uri(OuterApiBaseAddress),
-            }, _settings, _configuration.Object);
-            _sut = new TrainingProviderApiClient(_factory, _settings, _logger.Object);
+            }, _settings);
 
             // Act
             var actual = await _sut.GetProviderDetails(ukprn);
@@ -84,11 +80,10 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Services
                     Content = new StringContent(""),
                     RequestMessage = new HttpRequestMessage()
                 });
-            _factory = new TrainingProviderApiClientFactory(new HttpClient(_mockHttpsMessageHandler.Object)
+            _sut = new TrainingProviderApiClient(new HttpClient(_mockHttpsMessageHandler.Object)
             {
                 BaseAddress = new Uri(OuterApiBaseAddress),
-            }, _settings, _configuration.Object);
-            _sut = new TrainingProviderApiClient(_factory, _settings, _logger.Object);
+            }, _settings);
 
             // Act
             var actual = await _sut.GetProviderDetails(ukprn);
@@ -111,11 +106,10 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Services
                     Content = new StringContent(""),
                     RequestMessage = new HttpRequestMessage()
                 });
-            _factory = new TrainingProviderApiClientFactory(new HttpClient(_mockHttpsMessageHandler.Object)
+            _sut = new TrainingProviderApiClient(new HttpClient(_mockHttpsMessageHandler.Object)
             {
                 BaseAddress = new Uri(OuterApiBaseAddress),
-            }, _settings, _configuration.Object);
-            _sut = new TrainingProviderApiClient(_factory, _settings, _logger.Object);
+            }, _settings);
 
             // Act
             var actual = await _sut.GetProviderDetails(ukprn);

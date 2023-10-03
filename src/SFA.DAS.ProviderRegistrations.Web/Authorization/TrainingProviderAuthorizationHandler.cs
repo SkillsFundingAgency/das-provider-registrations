@@ -47,7 +47,6 @@ namespace SFA.DAS.ProviderRegistrations.Web.Authorization
             return providerDetails is { CanAccessApprenticeshipService: true };
         }
 
-        #region "Private Methods"
         private long GetProviderId()
         {
             if (!_authenticationService.TryGetUserClaimValue(ProviderClaims.Ukprn, out var ukprnClaimValue))
@@ -62,6 +61,5 @@ namespace SFA.DAS.ProviderRegistrations.Web.Authorization
 
             return ukprn;
         }
-        #endregion
     }
 }
