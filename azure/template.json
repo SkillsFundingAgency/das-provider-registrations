@@ -120,10 +120,7 @@
     },
     "workerAccessRestrictions": {
       "type": "array"
-    },
-    "UseStubProviderValidation": {
-      "type": "string"
-    }    
+    }  
   },
     "variables": {
         "deploymentUrlBase": "https://raw.githubusercontent.com/SkillsFundingAgency/das-platform-building-blocks/master/templates/",
@@ -435,10 +432,6 @@
                             {
                               "name": "ConfigurationStorageConnectionString",
                               "value": "[parameters('configurationStorageConnectionString')]"
-                            },
-                            {
-                              "name": "UseStubProviderValidation",
-                              "value": "[parameters('useStubProviderValidation')]"
                             }
                           ]
                         }
