@@ -37,7 +37,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.Authorization
             if (!isStubProviderValidationEnabled && !(await _handler.IsProviderAuthorized(context, true)))
             {
                 var httpContext = _httpContextAccessor.HttpContext;
-                httpContext?.Response.Redirect($"{_providerSharedUiConfiguration.DashboardUrl}/error/401");
+                httpContext?.Response.Redirect($"{_providerSharedUiConfiguration.DashboardUrl}/error/403/invalid-status");
             }
 
             context.Succeed(requirement);
