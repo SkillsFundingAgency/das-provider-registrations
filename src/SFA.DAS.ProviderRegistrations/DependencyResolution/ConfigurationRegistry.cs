@@ -20,6 +20,7 @@ namespace SFA.DAS.ProviderRegistrations.DependencyResolution
             AddConfiguration<ZenDeskConfiguration>(ProviderRegistrationsConfigurationKeys.ZenDeskSettings);
             AddConfiguration<RoatpApiClientSettings>(ProviderRegistrationsConfigurationKeys.RoatpApiClientSettings);
             AddConfiguration<ProviderSharedUIConfiguration>(ProviderRegistrationsConfigurationKeys.ProviderSharedUIConfigurationSettings);
+            AddConfiguration<TrainingProviderApiClientConfiguration>(ProviderRegistrationsConfigurationKeys.TrainingProviderApiClientSettings);
         }
 
         private void AddConfiguration<T>(string key) where T : class
