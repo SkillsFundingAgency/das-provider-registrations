@@ -1,127 +1,127 @@
 {
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
-    "parameters": {
-        "resourceEnvironmentName": {
-            "type": "string"
-        },
-        "serviceName": {
-            "type": "string"
-        },
-        "environmentName": {
-            "type": "string"
-        },
-        "sharedFrontEndAppServicePlanName": {
-            "type": "string"
-        },
-        "sharedFrontEndSubnetResourceId": {
-            "type": "string"
-        },
-        "sharedBackEndAppServicePlanName": {
-            "type": "string"
-        },
-        "sharedBackEndSubnetResourceId": {
-            "type": "string"
-        },
-        "sharedAppServicePlanResourceGroup": {
-            "type": "string"
-        },
-        "sharedSqlServerName": {
-            "type": "string"
-        },
-        "sharedServiceBusName": {
-            "type": "string"
-        },
-        "sharedResourceGroup": {
-            "type": "string"
-        },
-        "configurationStorageConnectionString": {
-            "type": "securestring"
-        },
-        "sharedStorageAccountConnectionString": {
-            "type": "securestring"
-        },
-        "elasticPoolName": {
-            "type": "string",
-            "defaultValue": ""
-        },
-        "databaseSkuName": {
-            "type": "string",
-            "defaultValue": "S0"
-        },
-        "databaseTier": {
-            "type": "string",
-            "defaultValue": "Standard"
-        },
-        "logAnalyticsSubscriptionId": {
-            "type": "string",
-            "defaultValue": "[subscription().subscriptionId]"
-        },
-        "sharedManagementResourceGroup": {
-            "type": "string"
-        },
-        "logAnalyticsWorkspaceName": {
-            "type": "string"
-        },
-        "uiCustomHostname": {
-            "type": "string"
-        },
-        "apiCustomHostname": {
-            "type": "string"
-        },
-        "uiCertificateName": {
-            "type": "string"
-        },
-        "apiCertificateName": {
-            "type": "string"
-        },
-        "keyVaultName": {
-            "type": "string"
-        },
-        "loggingRedisConnectionString": {
-            "type": "securestring"
-        },
-        "aspSize": {
-            "type": "string",
-            "defaultValue": "1"
-        },
-        "aspInstances": {
-            "type": "int",
-            "defaultValue": 1
-        },
-        "aspSku": {
-            "type": "string",
-            "defaultValue": "Basic"
-        },
-        "backEndAccessRestrictions": {
-            "type": "array"
-        },
-        "frontEndAccessRestrictions": {
-            "type": "array"
-        },
-        "sharedEnvResourceGroup": {
-            "type": "string"
-        },
-        "sharedEnvVirtualNetworkName": {
-            "type": "string"
-        },
-        "subnetObject": {
-            "type": "object"
-        },
-        "subnetServiceEndpointList": {
-            "type": "array"
-        },
-        "subnetDelegations": {
-            "type": "array"
-        },
-        "utcValue": {
-            "type": "string",
-            "defaultValue": "[utcNow()]"
-        },
-        "workerAccessRestrictions": {
-            "type": "array"
-        }
+  "parameters": {
+    "resourceEnvironmentName": {
+      "type": "string"
     },
+    "serviceName": {
+      "type": "string"
+    },
+    "environmentName": {
+      "type": "string"
+    },
+    "sharedFrontEndAppServicePlanName": {
+      "type": "string"
+    },
+    "sharedFrontEndSubnetResourceId": {
+      "type": "string"
+    },
+    "sharedBackEndAppServicePlanName": {
+      "type": "string"
+    },
+    "sharedBackEndSubnetResourceId": {
+      "type": "string"
+    },
+    "sharedAppServicePlanResourceGroup": {
+      "type": "string"
+    },
+    "sharedSqlServerName": {
+      "type": "string"
+    },
+    "sharedServiceBusName": {
+      "type": "string"
+    },
+    "sharedResourceGroup": {
+      "type": "string"
+    },
+    "configurationStorageConnectionString": {
+      "type": "securestring"
+    },
+    "sharedStorageAccountConnectionString": {
+      "type": "securestring"
+    },
+    "elasticPoolName": {
+      "type": "string",
+      "defaultValue": ""
+    },
+    "databaseSkuName": {
+      "type": "string",
+      "defaultValue": "S0"
+    },
+    "databaseTier": {
+      "type": "string",
+      "defaultValue": "Standard"
+    },
+    "logAnalyticsSubscriptionId": {
+      "type": "string",
+      "defaultValue": "[subscription().subscriptionId]"
+    },
+    "sharedManagementResourceGroup": {
+      "type": "string"
+    },
+    "logAnalyticsWorkspaceName": {
+      "type": "string"
+    },
+    "uiCustomHostname": {
+      "type": "string"
+    },
+    "apiCustomHostname": {
+      "type": "string"
+    },
+    "uiCertificateName": {
+      "type": "string"
+    },
+    "apiCertificateName": {
+      "type": "string"
+    },
+    "keyVaultName": {
+      "type": "string"
+    },
+    "loggingRedisConnectionString": {
+      "type": "securestring"
+    },
+    "aspSize": {
+      "type": "string",
+      "defaultValue": "1"
+    },
+    "aspInstances": {
+      "type": "int",
+      "defaultValue": 1
+    },
+    "aspSku": {
+      "type": "string",
+      "defaultValue": "Basic"
+    },
+    "backEndAccessRestrictions": {
+      "type": "array"
+    },
+    "frontEndAccessRestrictions": {
+      "type": "array"
+    },
+    "sharedEnvResourceGroup": {
+      "type": "string"
+    },
+    "sharedEnvVirtualNetworkName": {
+      "type": "string"
+    },
+    "subnetObject": {
+      "type": "object"
+    },
+    "subnetServiceEndpointList": {
+      "type": "array"
+    },
+    "subnetDelegations": {
+      "type": "array"
+    },
+    "utcValue": {
+      "type": "string",
+      "defaultValue": "[utcNow()]"
+    },
+    "workerAccessRestrictions": {
+      "type": "array"
+    }  
+  },
     "variables": {
         "deploymentUrlBase": "https://raw.githubusercontent.com/SkillsFundingAgency/das-platform-building-blocks/master/templates/",
         "resourceNamePrefix": "[toLower(concat('das-', parameters('resourceEnvironmentName'),'-', parameters('serviceName')))]",
@@ -266,6 +266,10 @@
                                     "value": "[parameters('environmentName')]"
                                 },
                                 {
+                                    "name": "ResourceEnvironmentName",
+                                    "value": "[parameters('resourceEnvironmentName')]"
+                                },
+                                {
                                     "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
                                     "value": "[reference(concat(variables('webJobAppServiceName'), '-app-insights-', parameters('utcValue'))).outputs.InstrumentationKey.value]"
                                 },
@@ -404,28 +408,32 @@
                     },
                     "appServiceAppSettings": {
                         "value": {
-                            "array": [
-                                {
-                                    "name": "EnvironmentName",
-                                    "value": "[parameters('environmentName')]"
-                                },
-                                {
-                                    "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-                                    "value": "[reference(concat(variables('uiAppServiceName'), '-app-insights-',parameters('utcValue'))).outputs.InstrumentationKey.value]"
-                                },
-                                {
-                                    "name": "ASPNETCORE_ENVIRONMENT",
-                                    "value": "[toUpper(parameters('environmentName'))]"
-                                },
-                                {
-                                    "name": "LoggingRedisConnectionString",
-                                    "value": "[parameters('loggingRedisConnectionString')]"
-                                },
-                                {
-                                    "name": "ConfigurationStorageConnectionString",
-                                    "value": "[parameters('configurationStorageConnectionString')]"
-                                }
-                            ]
+                          "array": [
+                            {
+                              "name": "EnvironmentName",
+                              "value": "[parameters('environmentName')]"
+                            },
+                            {
+                              "name": "ResourceEnvironmentName",
+                              "value": "[parameters('resourceEnvironmentName')]"
+                            },
+                            {
+                              "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+                              "value": "[reference(concat(variables('uiAppServiceName'), '-app-insights-',parameters('utcValue'))).outputs.InstrumentationKey.value]"
+                            },
+                            {
+                              "name": "ASPNETCORE_ENVIRONMENT",
+                              "value": "[toUpper(parameters('environmentName'))]"
+                            },
+                            {
+                              "name": "LoggingRedisConnectionString",
+                              "value": "[parameters('loggingRedisConnectionString')]"
+                            },
+                            {
+                              "name": "ConfigurationStorageConnectionString",
+                              "value": "[parameters('configurationStorageConnectionString')]"
+                            }
+                          ]
                         }
                     },
                     "customHostName": {

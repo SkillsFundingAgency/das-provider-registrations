@@ -10,6 +10,7 @@ namespace SFA.DAS.ProviderRegistrations.DependencyResolution
             For<IProviderService>().Use<ProviderService>();
             For<IEmployerUsersApiHttpClientFactory>().Use<EmployerApprenticeshipApiHttpClientFactory>();
             For<IRoatpApiHttpClientFactory>().Use<RoatpApiHttpClientFactory>();
+            For<ITrainingProviderApiClient>().Use<TrainingProviderApiClient>();
             For<IEmployerApprenticeshipService>().Use<EmployerApprenticeshipService>();
         }
     }
