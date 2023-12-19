@@ -18,43 +18,50 @@ public static class AuthorizationPolicy
                 policy.Requirements.Add(new ProviderRequirement());
             });
 
-            options.AddPolicy(PolicyNames.HasViewerOrAbovePermission, policy =>
-            {
-                policy.RequireAuthenticatedUser();
-                policy.RequireClaim(ProviderClaims.Service);
-                policy.RequireClaim(ProviderClaims.Ukprn);
-                policy.Requirements.Add(new MinimumServiceClaimRequirement(ServiceClaim.DAV));
-            });
+                options.AddPolicy(PolicyNames.HasViewerOrAbovePermission, policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireClaim(ProviderClaims.Service);
+                    policy.RequireClaim(ProviderClaims.Ukprn);
+                    policy.Requirements.Add(new MinimumServiceClaimRequirement(ServiceClaim.DAV));
+                    policy.Requirements.Add(new TrainingProviderAllRolesRequirement());
+                });
 
-            options.AddPolicy(PolicyNames.HasContributorOrAbovePermission, policy =>
-            {
-                policy.RequireAuthenticatedUser();
-                policy.RequireClaim(ProviderClaims.Service);
-                policy.RequireClaim(ProviderClaims.Ukprn);
-                policy.Requirements.Add(new MinimumServiceClaimRequirement(ServiceClaim.DAC));
-            });
+                options.AddPolicy(PolicyNames.HasContributorOrAbovePermission, policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireClaim(ProviderClaims.Service);
+                    policy.RequireClaim(ProviderClaims.Ukprn);
+                    policy.Requirements.Add(new MinimumServiceClaimRequirement(ServiceClaim.DAC));
+                    policy.Requirements.Add(new TrainingProviderAllRolesRequirement());
+                });
 
-            options.AddPolicy(PolicyNames.HasContributorWithApprovalOrAbovePermission, policy =>
-            {
-                policy.RequireAuthenticatedUser();
-                policy.RequireClaim(ProviderClaims.Service);
-                policy.RequireClaim(ProviderClaims.Ukprn);
-                policy.Requirements.Add(new MinimumServiceClaimRequirement(ServiceClaim.DAB));
-            });
+                options.AddPolicy(PolicyNames.HasContributorWithApprovalOrAbovePermission, policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireClaim(ProviderClaims.Service);
+                    policy.RequireClaim(ProviderClaims.Ukprn);
+                    policy.Requirements.Add(new MinimumServiceClaimRequirement(ServiceClaim.DAB));
+                    policy.Requirements.Add(new TrainingProviderAllRolesRequirement());
+                });
 
-            options.AddPolicy(PolicyNames.HasAccountOwnerPermission, policy =>
-            {
-                policy.RequireAuthenticatedUser();
-                policy.RequireClaim(ProviderClaims.Service);
-                policy.RequireClaim(ProviderClaims.Ukprn);
-                policy.Requirements.Add(new MinimumServiceClaimRequirement(ServiceClaim.DAA));
+                options.AddPolicy(PolicyNames.HasAccountOwnerPermission, policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireClaim(ProviderClaims.Service);
+                    policy.RequireClaim(ProviderClaims.Ukprn);
+                    policy.Requirements.Add(new MinimumServiceClaimRequirement(ServiceClaim.DAA));
+                    policy.Requirements.Add(new TrainingProviderAllRolesRequirement());
+                });
             });
-        });
 
         services.AddTransient<IActionContextAccessor, ActionContextAccessor>();
         services.AddTransient<IAuthorizationHandler, ProviderHandler>();
         services.AddTransient<IAuthorizationHandler, MinimumServiceClaimRequirementHandler>();
         services.AddTransient<IAuthorizationContextProvider, AuthorizationContextProvider>();
-        services.AddSingleton<IAuthenticationService, AuthenticationService>();
+        services.AddSingleton<IAuthenticationService, AuthenticationService>(); 
+        services.AddSingleton<ITrainingProviderAuthorizationHandler, TrainingProviderAuthorizationHandler>();
+        services.AddSingleton<IAuthorizationHandler, TrainingProviderAllRolesAuthorizationHandler>();
+        }
     }
 }
