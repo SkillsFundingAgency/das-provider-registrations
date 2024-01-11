@@ -23,6 +23,7 @@ public static class ConfigurationServiceRegistrations
         services.AddConfiguration<EmployerApprenticeshipApiClientSettings>(configuration, ProviderRegistrationsConfigurationKeys.EmployerApprenticeshipApiClientSettings);
         services.AddConfiguration<ZenDeskConfiguration>(configuration, ProviderRegistrationsConfigurationKeys.ZenDeskSettings);
         services.AddConfiguration<RoatpApiClientSettings>(configuration, ProviderRegistrationsConfigurationKeys.RoatpApiClientSettings);
+        services.AddConfiguration<TrainingProviderApiClientConfiguration>(configuration, ProviderRegistrationsConfigurationKeys.TrainingProviderApiClientSettings);
         
         return services;
     }

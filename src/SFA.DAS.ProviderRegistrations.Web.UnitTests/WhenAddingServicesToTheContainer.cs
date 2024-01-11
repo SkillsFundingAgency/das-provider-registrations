@@ -17,6 +17,7 @@ using SFA.DAS.ProviderRegistrations.Application.Queries.GetInvitationEventByIdQu
 using SFA.DAS.ProviderRegistrations.Application.Queries.GetInvitationQuery;
 using SFA.DAS.ProviderRegistrations.Application.Queries.GetProviderByUkprnQuery;
 using SFA.DAS.ProviderRegistrations.Application.Queries.GetUnsubscribedQuery;
+using SFA.DAS.ProviderRegistrations.Configuration;
 using SFA.DAS.ProviderRegistrations.Web.Authorization;
 using SFA.DAS.ProviderRegistrations.Web.Controllers;
 
@@ -43,6 +44,7 @@ public class WhenAddingServicesToTheContainer
         Assert.IsNotNull(type);
     } 
     
+    [TestCase(typeof(HomeController))]
     [TestCase(typeof(RegistrationController))]
     [TestCase(typeof(ITrainingProviderAuthorizationHandler))]
     public void Then_The_Dependencies_Are_Correctly_Resolved_For_Services(Type toResolve)
@@ -52,17 +54,20 @@ public class WhenAddingServicesToTheContainer
        
         Assert.IsNotNull(type);
     }
-
+    
     private static ServiceProvider SetupServiceProvider()
     {
-        var startup = new Startup(GenerateStubConfiguration(), false);
-        var serviceCollection = new ServiceCollection();
-        startup.ConfigureServices(serviceCollection);
+        var stubConfiguration = GenerateStubConfiguration();
+        var startup = new Startup(stubConfiguration, false);
+        var services = new ServiceCollection();
+        startup.ConfigureServices(services);
 
-        serviceCollection.AddTransient<RegistrationController>();
-        serviceCollection.AddTransient(_ =>Mock.Of<IMessageSession>());
+        services.AddSingleton<IConfiguration>(stubConfiguration);
+        services.AddTransient<HomeController>();
+        services.AddTransient<RegistrationController>();
+        services.AddTransient(_ =>Mock.Of<IMessageSession>());
         
-        return serviceCollection.BuildServiceProvider();
+        return services.BuildServiceProvider();
     }
     
     private static IConfigurationRoot GenerateStubConfiguration()
