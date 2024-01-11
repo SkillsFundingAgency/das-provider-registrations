@@ -9,6 +9,7 @@ using SFA.DAS.ProviderRegistrations.Application.Commands.UnsubscribeByIdCommand;
 using SFA.DAS.ProviderRegistrations.Configuration;
 using SFA.DAS.ProviderRegistrations.Data;
 using SFA.DAS.ProviderRegistrations.Extensions;
+using SFA.DAS.ProviderRegistrations.Models;
 using SFA.DAS.ProviderRegistrations.ServiceRegistrations;
 using SFA.DAS.ProviderRegistrations.Startup;
 using SFA.DAS.ProviderRegistrations.Web.Authentication;
@@ -80,7 +81,7 @@ public class Startup
             .AddEntityFrameworkUnitOfWork<ProviderRegistrationsDbContext>();
 
         services.AddMediatR(x => x.RegisterServicesFromAssembly(typeof(UnsubscribeByIdCommandHandler).Assembly));
-        services.AddAutoMapper(typeof(InvitationMappings));
+        services.AddAutoMapper(typeof(InvitationMappings), typeof(SFA.DAS.ProviderRegistrations.Mappings.InvitationMappings));
         services.AddProviderUiServiceRegistration(_configuration);
         services.AddHealthChecks();
         services.AddApplicationInsightsTelemetry();
