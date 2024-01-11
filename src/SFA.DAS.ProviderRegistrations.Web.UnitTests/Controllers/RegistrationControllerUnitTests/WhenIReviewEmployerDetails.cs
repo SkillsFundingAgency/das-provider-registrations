@@ -118,7 +118,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.UnitTests.Controllers.RegistrationCo
             var viewModel = response.Model as NewEmployerUserViewModel;
 
             //assert
-            Assert.AreEqual(expectedResult, viewModel.EditAndResendEnabled);
+            Assert.That(viewModel.EditAndResendEnabled, Is.EqualTo(expectedResult));
         }
     }
 }

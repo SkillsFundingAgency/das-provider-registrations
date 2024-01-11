@@ -11,7 +11,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.UnitTests.ViewModels
             var actual = new Error403ViewModel("prd");
 
             Assert.That(actual.HelpPageLink, Is.Not.Null);
-            Assert.AreEqual(actual.HelpPageLink, "https://services.signin.education.gov.uk/approvals/select-organisation?action=request-service");
+            Assert.That("https://services.signin.education.gov.uk/approvals/select-organisation?action=request-service", Is.EqualTo(actual.HelpPageLink));
         }
 
         [Test]
@@ -20,7 +20,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.UnitTests.ViewModels
             var actual = new Error403ViewModel("");
 
             Assert.That(actual.HelpPageLink, Is.Not.Null);
-            Assert.AreEqual(actual.HelpPageLink, "https://services.signin.education.gov.uk/approvals/select-organisation?action=request-service");
+            Assert.That("https://services.signin.education.gov.uk/approvals/select-organisation?action=request-service", Is.EqualTo(actual.HelpPageLink));
         }
 
         [Test]
@@ -29,7 +29,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.UnitTests.ViewModels
             var actual = new Error403ViewModel("test");
 
             Assert.That(actual.HelpPageLink, Is.Not.Null);
-            Assert.AreEqual(actual.HelpPageLink, "https://test-services.signin.education.gov.uk/approvals/select-organisation?action=request-service");
+            Assert.That("https://test-services.signin.education.gov.uk/approvals/select-organisation?action=request-service", Is.EqualTo(actual.HelpPageLink));
         }
     }
 }

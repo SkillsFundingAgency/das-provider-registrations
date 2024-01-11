@@ -40,8 +40,8 @@ public class WhenAddingServicesToTheContainer
     {
         var provider = SetupServiceProvider();
         var type = provider.GetService(toResolve);
- 
-        Assert.IsNotNull(type);
+
+        Assert.That(type, Is.Not.Null);
     } 
     
     [TestCase(typeof(HomeController))]
@@ -51,8 +51,8 @@ public class WhenAddingServicesToTheContainer
     {
         var provider = SetupServiceProvider();
         var type = provider.GetService(toResolve);
-       
-        Assert.IsNotNull(type);
+
+        Assert.That(type, Is.Not.Null);
     }
     
     private static ServiceProvider SetupServiceProvider()

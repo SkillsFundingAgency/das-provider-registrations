@@ -131,7 +131,7 @@ public class SignedAgreementCommandHandlerTests
         catch (InvalidInvitationException ex)
         {
             //assert
-            Assert.AreEqual(ex.Message, $"No invitation ID found for CorrelationId:{command.CorrelationId}");
+            Assert.That($"No invitation ID found for CorrelationId:{command.CorrelationId}", Is.EqualTo(ex.Message));
         }
     }
 

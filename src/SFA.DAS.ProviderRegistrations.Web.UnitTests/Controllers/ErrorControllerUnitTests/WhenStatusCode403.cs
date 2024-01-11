@@ -28,10 +28,10 @@ namespace SFA.DAS.ProviderRegistrations.Web.UnitTests.Controllers.ErrorControlle
 
             var actual = errorController.Error(403) as ViewResult;
 
-            Assert.IsNotNull(actual);
+            Assert.That(actual, Is.Not.Null);
             var actualModel = actual.Model as Error403ViewModel;
-            Assert.IsNotNull(actualModel);
-            Assert.AreEqual(actualModel.UseDfESignIn, useDfESignIn);
+            Assert.That(actualModel, Is.Not.Null);
+            Assert.That(useDfESignIn, Is.EqualTo(actualModel.UseDfESignIn));
         }
     }
 }

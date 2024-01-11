@@ -19,8 +19,8 @@ namespace SFA.DAS.ProviderRegistrations.Web.UnitTests.Controllers.HomeController
 
             var actual = controller.Dashboard() as RedirectResult;
 
-            Assert.IsNotNull(actual);
-            Assert.AreEqual(actual.Url, dashboardUrl);
+            Assert.That(actual, Is.Not.Null);
+            Assert.That(dashboardUrl, Is.EqualTo(actual.Url));
         }
     }
 }

@@ -41,7 +41,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.UnitTests.Validation
         public void ValidateEmailAddress(string emailAddress, bool expectedResult)
         {
             var validator = new MailAddressAttribute();
-            Assert.AreEqual(expectedResult, validator.IsValid(emailAddress));
+            Assert.That(validator.IsValid(emailAddress), Is.EqualTo(expectedResult));
         }
     }
 }

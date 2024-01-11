@@ -72,7 +72,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             catch (InvalidInvitationException ex)
             {
                 //assert
-                Assert.AreEqual(ex.Message, $"No invitation found for InvitationId:{command.InvitationId}");
+                Assert.That($"No invitation found for InvitationId:{command.InvitationId}", Is.EqualTo(ex.Message));
             }
         }
     }
