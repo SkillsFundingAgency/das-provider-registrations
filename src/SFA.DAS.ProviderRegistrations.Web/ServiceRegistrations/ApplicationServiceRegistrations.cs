@@ -12,7 +12,7 @@ public static class ApplicationServiceRegistrations
         services.AddTransient<IRoatpApiHttpClientFactory, RoatpApiHttpClientFactory>();
         services.AddTransient<IEmployerApprenticeshipService, EmployerApprenticeshipService>();
         services.AddSingleton<ILinkGenerator, LinkGenerator>();
-        
+
         return services;
     }
 }

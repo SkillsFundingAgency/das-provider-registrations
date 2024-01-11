@@ -54,6 +54,7 @@ public class Startup
             .AddProviderIdamsAuthentication(_configuration)
             .AddDasDistributedMemoryCache(_configuration, _configuration.IsDevOrLocal())
             .AddMemoryCache()
+            .AddTrainingProviderApi(_configuration)
             .AddApplicationServices()
             .AddDataProtection(_configuration)
             .AddMvc(options =>

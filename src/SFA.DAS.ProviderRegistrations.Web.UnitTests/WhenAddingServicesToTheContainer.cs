@@ -17,6 +17,7 @@ using SFA.DAS.ProviderRegistrations.Application.Queries.GetInvitationEventByIdQu
 using SFA.DAS.ProviderRegistrations.Application.Queries.GetInvitationQuery;
 using SFA.DAS.ProviderRegistrations.Application.Queries.GetProviderByUkprnQuery;
 using SFA.DAS.ProviderRegistrations.Application.Queries.GetUnsubscribedQuery;
+using SFA.DAS.ProviderRegistrations.Web.Authorization;
 using SFA.DAS.ProviderRegistrations.Web.Controllers;
 
 namespace SFA.DAS.ProviderRegistrations.Web.UnitTests;
@@ -43,7 +44,8 @@ public class WhenAddingServicesToTheContainer
     } 
     
     [TestCase(typeof(RegistrationController))]
-    public void Then_The_Dependencies_Are_Correctly_Resolved_For_Controllers(Type toResolve)
+    [TestCase(typeof(ITrainingProviderAuthorizationHandler))]
+    public void Then_The_Dependencies_Are_Correctly_Resolved_For_Services(Type toResolve)
     {
         var provider = SetupServiceProvider();
         var type = provider.GetService(toResolve);
