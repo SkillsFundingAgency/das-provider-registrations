@@ -1,6 +1,6 @@
 ﻿@using SFA.DAS.ProviderRegistrations.Web.Extensions
 @model SFA.DAS.ProviderRegistrations.Web.ViewModels.Error403ViewModel
-@inject SFA.DAS.ProviderRegistrations.Services.LinkGenerator LinkGenerator;
+@inject SFA.DAS.ProviderRegistrations.Services.ILinkGenerator LinkGenerator;
 
 @{
     ViewData["Title"] = Model.UseDfESignIn ? "Different service role needed - Apprenticeships" : "You do not have permission to access this page";

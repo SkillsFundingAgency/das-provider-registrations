@@ -10,7 +10,7 @@ public static class ApplicationServiceRegistrations
         services.AddTransient<IEmployerUsersApiHttpClientFactory, EmployerApprenticeshipApiHttpClientFactory>();
         services.AddTransient<IRoatpApiHttpClientFactory, RoatpApiHttpClientFactory>();
         services.AddTransient<IEmployerApprenticeshipService, EmployerApprenticeshipService>();
-        services.AddSingleton<ILinkGenerator, LinkGenerator>();
+        services.AddTransient<ILinkGenerator, LinkGenerator>();
 
         return services;
     }
