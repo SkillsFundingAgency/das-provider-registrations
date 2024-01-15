@@ -130,7 +130,7 @@
         "webJobAppServiceName": "[concat(variables('resourceNamePrefix'), 'wkr-as')]",
         "webJobAppServicePlanName": "[concat(variables('resourceNamePrefix'), 'wkr-asp')]",
         "databaseName": "[concat(variables('resourceNamePrefix'), '-db')]",
-        "configNames": "SFA.DAS.ProviderRegistrations,SFA.DAS.Provider.DfeSignIn",
+        "configNames": "SFA.DAS.ProviderRegistrations,SFA.DAS.Provider.DfeSignIn,SFA.DAS.ProviderUrlHelper",
         "configNamesApi": "SFA.DAS.ProviderRegistrations"
     },
     "resources": [
