@@ -12,8 +12,8 @@ public static class ConfigurationServiceRegistrations
         services.AddOptions();
         services.Configure<ProviderRegistrationsSettings>(configuration.GetSection(ProviderRegistrationsConfigurationKeys.ProviderRegistrations));
 
-        var providerRegistrationsSettings = configuration.Get<ProviderRegistrationsSettings>();
-        services.AddSingleton(providerRegistrationsSettings);
+        services.AddSingleton(configuration.Get<ProviderRegistrationsSettings>());
+        services.AddSingleton(configuration.Get<ProviderUrlConfiguration>());
         
         services.AddConfiguration<AuthenticationSettings>(configuration, ProviderRegistrationsConfigurationKeys.AuthenticationSettings);
         services.AddConfiguration<ActiveDirectorySettings>(configuration, ProviderRegistrationsConfigurationKeys.ActiveDirectorySettings);
@@ -23,7 +23,6 @@ public static class ConfigurationServiceRegistrations
         services.AddConfiguration<ZenDeskConfiguration>(configuration, ProviderRegistrationsConfigurationKeys.ZenDeskSettings);
         services.AddConfiguration<RoatpApiClientSettings>(configuration, ProviderRegistrationsConfigurationKeys.RoatpApiClientSettings);
         services.AddConfiguration<TrainingProviderApiClientConfiguration>(configuration, ProviderRegistrationsConfigurationKeys.TrainingProviderApiClientSettings);
-        services.AddConfiguration<ProviderUrlConfiguration>(configuration, ProviderRegistrationsConfigurationKeys.ProviderUrlHelperSettings);
         
         return services;
     }
