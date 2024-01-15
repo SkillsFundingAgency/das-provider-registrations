@@ -23,7 +23,7 @@ public static class ConfigurationServiceRegistrations
         services.AddConfiguration<ZenDeskConfiguration>(configuration, ProviderRegistrationsConfigurationKeys.ZenDeskSettings);
         services.AddConfiguration<RoatpApiClientSettings>(configuration, ProviderRegistrationsConfigurationKeys.RoatpApiClientSettings);
         services.AddConfiguration<TrainingProviderApiClientConfiguration>(configuration, ProviderRegistrationsConfigurationKeys.TrainingProviderApiClientSettings);
-        services.AddConfiguration<ProviderUrlConfiguration>(configuration, ProviderRegistrationsConfigurationKeys.ProviderSharedUIConfigurationSettings);
+        services.AddConfiguration<ProviderUrlConfiguration>(configuration, ProviderRegistrationsConfigurationKeys.ProviderUrlHelperSettings);
         
         return services;
     }

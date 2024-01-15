@@ -3,6 +3,7 @@
 public static class ProviderRegistrationsConfigurationKeys
 {
     public const string ProviderRegistrations = "SFA.DAS.ProviderRegistrations";
+    public const string ProviderUrlHelperSettings = "SFA.DAS.ProviderUrlHelper";
     public static string ProviderRegistrationsSettings = "ProviderRegistrationsSettings";
     public static string AuthenticationSettings = "AuthenticationSettings";
     public static string ActiveDirectorySettings = "ActiveDirectorySettings";
