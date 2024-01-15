@@ -11,11 +11,11 @@ using SFA.DAS.ProviderRegistrations.Application.Queries.GetInvitationQuery;
 using SFA.DAS.ProviderRegistrations.Application.Queries.GetProviderByUkprnQuery;
 using SFA.DAS.ProviderRegistrations.Application.Queries.GetUnsubscribedQuery;
 using SFA.DAS.ProviderRegistrations.Configuration;
+using SFA.DAS.ProviderRegistrations.Services;
 using SFA.DAS.ProviderRegistrations.Types;
 using SFA.DAS.ProviderRegistrations.Web.Authentication;
 using SFA.DAS.ProviderRegistrations.Web.Extensions;
 using SFA.DAS.ProviderRegistrations.Web.ViewModels;
-using SFA.DAS.ProviderUrlHelper.Core;
 
 namespace SFA.DAS.ProviderRegistrations.Web.Controllers;
 
@@ -26,17 +26,20 @@ public class RegistrationController : Controller
     private readonly IMapper _mapper;
     private readonly IAuthenticationService _authenticationService;
     private readonly ProviderRegistrationsSettings _configuration;
+    private readonly ILinkGenerator _linkGenerator;
 
     public RegistrationController(
         IMediator mediator, 
         IMapper mapper, 
         IAuthenticationService authenticationService,
-        ProviderRegistrationsSettings configuration)
+        ProviderRegistrationsSettings configuration,
+        ILinkGenerator linkGenerator)
     {
         _mediator = mediator;
         _mapper = mapper;
         _authenticationService = authenticationService;
         _configuration = configuration;
+        _linkGenerator = linkGenerator;
     }
 
     [HttpGet]
@@ -161,9 +164,9 @@ public class RegistrationController : Controller
     {
         switch (action)
         {
-            case "Invite": return Redirect(@Url.ProviderAction("StartAccountSetup"));
-            case "View": return Redirect(@Url.ProviderAction("InvitedEmployers"));
-            case "Homepage": return Redirect(@Url.ProviderApprenticeshipServiceLink(""));
+            case "Invite": return Redirect(Url.ProviderAction("StartAccountSetup"));
+            case "View": return Redirect(Url.ProviderAction("InvitedEmployers"));
+            case "Homepage": return Redirect(Url.ProviderApprenticeshipServiceLink("", _linkGenerator));
             default:
             {
                 ViewBag.InValid = true;

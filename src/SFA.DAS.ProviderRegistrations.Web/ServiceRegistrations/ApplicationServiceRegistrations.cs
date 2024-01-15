@@ -1,5 +1,4 @@
 ﻿using SFA.DAS.ProviderRegistrations.Services;
-using SFA.DAS.ProviderUrlHelper;
 
 namespace SFA.DAS.ProviderRegistrations.Web.ServiceRegistrations;
 
