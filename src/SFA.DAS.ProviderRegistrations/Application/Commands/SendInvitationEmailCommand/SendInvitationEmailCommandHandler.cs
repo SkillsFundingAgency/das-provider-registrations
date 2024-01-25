@@ -10,13 +10,11 @@ public class SendInvitationEmailCommandHandler : IRequestHandler<SendInvitationE
     private readonly string _notificationTemplateId = "ProviderInviteEmployerNotification";
     private readonly IMessageSession _publisher;
     private readonly ProviderRegistrationsSettings _configuration;
-    private readonly ILogger<SendInvitationEmailCommandHandler> _logger;
 
-    public SendInvitationEmailCommandHandler(IMessageSession publisher, ProviderRegistrationsSettings configuration, ILogger<SendInvitationEmailCommandHandler> logger)
+    public SendInvitationEmailCommandHandler(IMessageSession publisher, ProviderRegistrationsSettings configuration)
     {
         _publisher = publisher;
         _configuration = configuration;
-        _logger = logger;
         if (_configuration.UseGovLogin)
         {
             _notificationTemplateId = _configuration.ResourceEnvironmentName.ToLower() == "prd" 
@@ -37,8 +35,6 @@ public class SendInvitationEmailCommandHandler : IRequestHandler<SendInvitationE
             { "report_training_provider", $"{_configuration.EmployerAccountsBaseUrl}/report/trainingprovider/{request.CorrelationId}" }
         };
         
-        _logger.LogInformation("SendInvitationEmailCommandHandler sending email to {Email} with template ID {TemplateId} and tokens {Tokens}.", request.EmployerEmail, _notificationTemplateId, JsonSerializer.Serialize(tokens));
-
         _publisher.Send(new SendEmailCommand(_notificationTemplateId, request.EmployerEmail, tokens));
 
         return Task.CompletedTask;

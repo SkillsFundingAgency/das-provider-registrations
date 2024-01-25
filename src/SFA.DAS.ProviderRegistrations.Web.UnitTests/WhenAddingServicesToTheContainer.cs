@@ -34,7 +34,7 @@ public class WhenAddingServicesToTheContainer
     [TestCase(typeof(IRequestHandler<GetProviderByUkprnQuery, GetProviderByUkprnQueryResult>))]
     [TestCase(typeof(IRequestHandler<AddResendInvitationCommand>))]
     [TestCase(typeof(IRequestHandler<UpdateInvitationCommand>))]
-    //[TestCase(typeof(IRequestHandler<SendInvitationEmailCommand>))]
+    [TestCase(typeof(IRequestHandler<SendInvitationEmailCommand>))]
     [TestCase(typeof(IRequestHandler<AddInvitationCommand, string>))]
     public void Then_The_Dependencies_Are_Correctly_Resolved_For_Handlers(Type toResolve)
     {
