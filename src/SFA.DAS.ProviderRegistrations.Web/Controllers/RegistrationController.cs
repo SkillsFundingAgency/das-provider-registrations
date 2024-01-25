@@ -143,7 +143,7 @@ public class RegistrationController : Controller
         var employerEmail = model.EmployerEmailAddress.Trim().ToLower();
         var employerFullName = string.Concat(employerFirstName, " ", employerLastName);           
 
-        var correlationId = (model.Reference != null && model.Reference != Guid.Empty) ? model.Reference.ToString() : string.Empty;
+        var correlationId = model.Reference != null && model.Reference != Guid.Empty ? model.Reference.ToString() : string.Empty;
         if (string.IsNullOrEmpty(correlationId))
         {
             correlationId = await _mediator.Send(new AddInvitationCommand(ukprn, userId, provider.ProviderName, providerUserFullName, employerOrganisation, employerFirstName, employerLastName, employerEmail));
