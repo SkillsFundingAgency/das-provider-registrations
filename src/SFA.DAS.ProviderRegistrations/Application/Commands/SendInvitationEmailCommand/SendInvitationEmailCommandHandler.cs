@@ -1,6 +1,7 @@
 using NServiceBus;
 using SFA.DAS.Notifications.Messages.Commands;
 using SFA.DAS.ProviderRegistrations.Configuration;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace SFA.DAS.ProviderRegistrations.Application.Commands.SendInvitationEmailCommand;
 
@@ -9,11 +10,13 @@ public class SendInvitationEmailCommandHandler : IRequestHandler<SendInvitationE
     private readonly string _notificationTemplateId = "ProviderInviteEmployerNotification";
     private readonly IMessageSession _publisher;
     private readonly ProviderRegistrationsSettings _configuration;
+    private readonly ILogger<SendInvitationEmailCommandHandler> _logger;
 
-    public SendInvitationEmailCommandHandler(IMessageSession publisher, ProviderRegistrationsSettings configuration)
+    public SendInvitationEmailCommandHandler(IMessageSession publisher, ProviderRegistrationsSettings configuration, ILogger<SendInvitationEmailCommandHandler> logger)
     {
         _publisher = publisher;
         _configuration = configuration;
+        _logger = logger;
         if (_configuration.UseGovLogin)
         {
             _notificationTemplateId = _configuration.ResourceEnvironmentName.ToLower() == "prd" 
@@ -32,8 +35,9 @@ public class SendInvitationEmailCommandHandler : IRequestHandler<SendInvitationE
             { "invitation_link", $"{_configuration.EmployerAccountsBaseUrl}/service/register/{request.CorrelationId}" },
             { "unsubscribe_training_provider", $"{_configuration.EmployerAccountsBaseUrl}/service/unsubscribe/{request.CorrelationId}" },
             { "report_training_provider", $"{_configuration.EmployerAccountsBaseUrl}/report/trainingprovider/{request.CorrelationId}" }
-
         };
+        
+        _logger.LogInformation("SendInvitationEmailCommandHandler sending email to {Email} with template ID {TemplateId} and tokens {Tokens}.", request.EmployerEmail, _notificationTemplateId, JsonSerializer.Serialize(tokens));
 
         _publisher.Send(new SendEmailCommand(_notificationTemplateId, request.EmployerEmail, tokens));
 
