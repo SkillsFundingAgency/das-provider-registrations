@@ -38,7 +38,7 @@ public class SendInvitationEmailCommandHandler : IRequestHandler<SendInvitationE
             { "report_training_provider", $"{_configuration.EmployerAccountsBaseUrl}/report/trainingprovider/{request.CorrelationId}" }
         };
         
-        _logger.LogInformation("Sending invitation email to employer via SendInvitationEmailCommand. TemplateId: {TemplateId}, EmployerEmail: {Email}, tokens: {Tokens}", _notificationTemplateId, request.EmployerEmail, JsonSerializer.Serialize(tokens));
+        //_logger.LogInformation("Sending invitation email to employer via SendInvitationEmailCommand. TemplateId: {TemplateId}, EmployerEmail: {Email}, tokens: {Tokens}", _notificationTemplateId, request.EmployerEmail, JsonSerializer.Serialize(tokens));
         
         _publisher.Send(new SendEmailCommand(_notificationTemplateId, request.EmployerEmail, tokens));
 
