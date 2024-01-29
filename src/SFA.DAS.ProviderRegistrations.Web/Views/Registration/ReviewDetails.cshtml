@@ -53,7 +53,7 @@
                     </dt>
                     <dd class="govuk-summary-list__value">
                         @Model.EmployerOrganisation
-                        @Html.HiddenFor(m => m.EmployerOrganisation)
+                        <input type="hidden" asp-for="EmployerOrganisation"/>
                     </dd>
                     <dd class="govuk-summary-list__actions">
                         @if (Model.EditAndResendEnabled)
@@ -68,7 +68,7 @@
                     </dt>
                     <dd class="govuk-summary-list__value">
                         @Model.EmployerFirstName
-                        @Html.HiddenFor(m => m.EmployerFirstName)
+                        <input type="hidden" asp-for="EmployerFirstName"/>
                     </dd>
                     <dd class="govuk-summary-list__actions">
                         @if (Model.EditAndResendEnabled)
@@ -83,7 +83,7 @@
                     </dt>
                     <dd class="govuk-summary-list__value">
                         @Model.EmployerLastName
-                        @Html.HiddenFor(m => m.EmployerLastName)
+                        <input type="hidden" asp-for="EmployerLastName"/>
                     </dd>
                     <dd class="govuk-summary-list__actions">
                         @if (Model.EditAndResendEnabled)
@@ -98,7 +98,7 @@
                     </dt>
                     <dd class="govuk-summary-list__value">
                         @Model.EmployerEmailAddress
-                        @Html.HiddenFor(m => m.EmployerEmailAddress)
+                        <input type="hidden" asp-for="EmployerEmailAddress"/>
                     </dd>
                     <dd class="govuk-summary-list__actions">
                         @if (Model.EditAndResendEnabled && !Model.ResendInvitation)
