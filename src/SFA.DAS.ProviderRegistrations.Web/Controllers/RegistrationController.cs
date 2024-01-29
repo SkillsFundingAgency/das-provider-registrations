@@ -99,7 +99,6 @@ public class RegistrationController : Controller
     }
 
     [HttpPost]
-    [ValidateAntiForgeryToken]
     [Authorize(Policy = nameof(PolicyNames.HasContributorOrAbovePermission))]
     public IActionResult NewEmployerUser(NewEmployerUserViewModel model)
     {
@@ -112,7 +111,6 @@ public class RegistrationController : Controller
     }
 
     [HttpPost]
-    [ValidateAntiForgeryToken]
     [Authorize(Policy = nameof(PolicyNames.HasContributorOrAbovePermission))]
     public async Task<IActionResult> InviteEmployeruser(NewEmployerUserViewModel model, string command)
     {
@@ -158,7 +156,6 @@ public class RegistrationController : Controller
     }
 
     [HttpPost]
-    [ValidateAntiForgeryToken]
     [Authorize(Policy = nameof(PolicyNames.HasContributorOrAbovePermission))]
     public IActionResult InviteConfirmation(string action)
     {
