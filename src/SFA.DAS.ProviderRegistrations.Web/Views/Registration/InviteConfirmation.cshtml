@@ -14,6 +14,7 @@
             </h1>
         </div>
         <form id="ConfirmInvite" novalidate method="post" action="@Url.ProviderAction("InviteConfirmation")">
+            @Html.AntiForgeryToken()
             <div class="govuk-form-group @(inError ? "govuk-form-group--error" : "")">
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
@@ -25,26 +26,26 @@
                     {
                         <span class="field-validation-error govuk-error-message">Please select an option to continue</span>
                     }
-                <div class="govuk-radios">
-                    <div class="govuk-radios__item">
-                        <input class="govuk-radios__input" id="employer-confirmation" name="action" type="radio" value="Invite">
-                        <label class="govuk-label govuk-radios__label" for="employer-confirmation">
-                            Invite another employer to create an account
-                        </label>
+                    <div class="govuk-radios">
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="employer-confirmation" name="action" type="radio" value="Invite">
+                            <label class="govuk-label govuk-radios__label" for="employer-confirmation">
+                                Invite another employer to create an account
+                            </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="employer-confirmation-3" name="action" type="radio" value="View">
+                            <label class="govuk-label govuk-radios__label" for="employer-confirmation-3">
+                                View invited employers
+                            </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="employer-confirmation-2" name="action" type="radio" value="Homepage">
+                            <label class="govuk-label govuk-radios__label" for="employer-confirmation-2">
+                                Return to homepage
+                            </label>
+                        </div>
                     </div>
-                    <div class="govuk-radios__item">
-                        <input class="govuk-radios__input" id="employer-confirmation-3" name="action" type="radio" value="View">
-                        <label class="govuk-label govuk-radios__label" for="employer-confirmation-3">
-                            View invited employers
-                        </label>
-                    </div>
-                    <div class="govuk-radios__item">
-                        <input class="govuk-radios__input" id="employer-confirmation-2" name="action" type="radio" value="Homepage">
-                        <label class="govuk-label govuk-radios__label" for="employer-confirmation-2">
-                            Return to homepage
-                        </label>
-                    </div>
-                </div>
                 </fieldset>
             </div>
             <button class="govuk-button">Continue</button>
