@@ -19,7 +19,9 @@ using SFA.DAS.ProviderRegistrations.Web.Mappings;
 using SFA.DAS.ProviderRegistrations.Web.ServiceRegistrations;
 using SFA.DAS.UnitOfWork.DependencyResolution.Microsoft;
 using SFA.DAS.UnitOfWork.EntityFrameworkCore.DependencyResolution.Microsoft;
+using SFA.DAS.UnitOfWork.Mvc.Extensions;
 using SFA.DAS.UnitOfWork.NServiceBus.DependencyResolution.Microsoft;
+using SFA.DAS.UnitOfWork.NServiceBus.Features.ClientOutbox.DependencyResolution.Microsoft;
 
 namespace SFA.DAS.ProviderRegistrations.Web;
 
@@ -77,7 +79,7 @@ public class Startup
         
         services
             .AddUnitOfWork()
-            .AddNServiceBusUnitOfWork()
+            .AddNServiceBusClientUnitOfWork()
             .AddEntityFramework(providerRegistrationsSettings)
             .AddEntityFrameworkUnitOfWork<ProviderRegistrationsDbContext>();
 
@@ -101,7 +103,7 @@ public class Startup
         serviceProvider.AddScoped<IClientOutboxStorageV2, ClientOutboxPersisterV2>();
     }
 
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
+    public void Configure(IApplicationBuilder app, IHostEnvironment env, ILoggerFactory loggerFactory)
     {
         if (env.IsDevelopment())
         {
@@ -112,6 +114,8 @@ public class Startup
             app.UseExceptionHandler("/error");
             app.UseHsts();
         }
+
+        app.UseUnitOfWork();
 
         app.UseStatusCodePagesWithReExecute("/error", "?statuscode={0}")
             .UseUnauthorizedAccessExceptionHandler()
