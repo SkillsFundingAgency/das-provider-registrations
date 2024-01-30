@@ -13,6 +13,8 @@ using SFA.DAS.ProviderRegistrations.Application.Commands.UnsubscribeByIdCommand;
 using SFA.DAS.ProviderRegistrations.Application.Queries.GetInvitationByIdQuery;
 using SFA.DAS.ProviderRegistrations.Mappings;
 using SFA.DAS.ProviderRegistrations.ServiceRegistrations;
+using SFA.DAS.UnitOfWork.DependencyResolution.Microsoft;
+using SFA.DAS.UnitOfWork.NServiceBus.DependencyResolution.Microsoft;
 using IConfigurationProvider = Microsoft.Extensions.Configuration.IConfigurationProvider;
 
 namespace SFA.DAS.ProviderRegistrations.Api.UnitTests;
@@ -27,14 +29,14 @@ public class WhenAddingServicesToTheContainer
         mockHostingEnvironment.Setup(x => x.EnvironmentName).Returns("Test");
 
         var config = GenerateConfiguration();
-        var serviceCollection = new ServiceCollection();
+        var services = new ServiceCollection();
         
-        serviceCollection.AddApiConfigurationSections(config);
-        serviceCollection.AddMediatR(x=> x.RegisterServicesFromAssembly(typeof(GetInvitationByIdQuery).Assembly));
-        serviceCollection.AddDatabaseRegistration();
-        serviceCollection.AddAutoMapper(typeof(InvitationMappings));
+        services.AddApiConfigurationSections(config);
+        services.AddMediatR(x=> x.RegisterServicesFromAssembly(typeof(GetInvitationByIdQuery).Assembly));
+        services.AddDatabaseRegistration();
+        services.AddAutoMapper(typeof(InvitationMappings));
         
-        var provider = serviceCollection.BuildServiceProvider();
+        var provider = services.BuildServiceProvider();
         var type = provider.GetService(toResolve);
 
         Assert.That(type, Is.Not.Null);

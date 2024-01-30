@@ -11,6 +11,8 @@ using SFA.DAS.ProviderRegistrations.Application.Commands.SignedAgreementCommand;
 using SFA.DAS.ProviderRegistrations.Application.Commands.UpsertUserCommand;
 using SFA.DAS.ProviderRegistrations.Configuration;
 using SFA.DAS.ProviderRegistrations.ServiceRegistrations;
+using SFA.DAS.UnitOfWork.DependencyResolution.Microsoft;
+using SFA.DAS.UnitOfWork.NServiceBus.DependencyResolution.Microsoft;
 
 namespace SFA.DAS.ProviderRegistrations.MessageHandlers.UnitTests;
 
@@ -38,6 +40,8 @@ public class WhenAddingServicesToTheContainer
             .Get<ProviderRegistrationsSettings>();
 
         services.AddLogging();
+        services.AddUnitOfWork();
+        services.AddNServiceBusUnitOfWork();
         services.AddSingleton<IConfiguration>(configuration);
         services.AddSingleton(providerRegistrationsConfig);
         services.AddDatabaseRegistration();
