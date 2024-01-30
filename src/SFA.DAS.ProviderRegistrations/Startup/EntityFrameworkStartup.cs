@@ -14,7 +14,7 @@ public static class EntityFrameworkStartup
     [ExcludeFromCodeCoverage]
     public static IServiceCollection AddEntityFramework(this IServiceCollection services, ProviderRegistrationsSettings config)
     {
-        return services.AddScoped(p =>
+        services.AddScoped<ProviderRegistrationsDbContext>(p =>
         {
             var unitOfWorkContext = p.GetService<IUnitOfWorkContext>();
             var azureServiceTokenProvider = new AzureServiceTokenProvider();
@@ -36,5 +36,9 @@ public static class EntityFrameworkStartup
 
             return dbContext;
         });
+
+        services.AddScoped(provider => new Lazy<ProviderRegistrationsDbContext>(provider.GetService<ProviderRegistrationsDbContext>()));
+
+        return services;
     }
 }

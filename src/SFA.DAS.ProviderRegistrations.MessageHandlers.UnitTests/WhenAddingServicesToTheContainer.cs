@@ -11,6 +11,7 @@ using SFA.DAS.ProviderRegistrations.Application.Commands.SignedAgreementCommand;
 using SFA.DAS.ProviderRegistrations.Application.Commands.UpsertUserCommand;
 using SFA.DAS.ProviderRegistrations.Configuration;
 using SFA.DAS.ProviderRegistrations.ServiceRegistrations;
+using SFA.DAS.ProviderRegistrations.Startup;
 using SFA.DAS.UnitOfWork.DependencyResolution.Microsoft;
 using SFA.DAS.UnitOfWork.NServiceBus.DependencyResolution.Microsoft;
 
@@ -40,11 +41,11 @@ public class WhenAddingServicesToTheContainer
             .Get<ProviderRegistrationsSettings>();
 
         services.AddLogging();
+        services.AddEntityFramework(providerRegistrationsConfig);
         services.AddUnitOfWork();
         services.AddNServiceBusUnitOfWork();
         services.AddSingleton<IConfiguration>(configuration);
         services.AddSingleton(providerRegistrationsConfig);
-        services.AddDatabaseRegistration();
         services.AddMediatR(config => config.RegisterServicesFromAssembly(typeof(AddedPayeSchemeCommand).Assembly));
     }
 
@@ -54,8 +55,7 @@ public class WhenAddingServicesToTheContainer
         {
             InitialData = new List<KeyValuePair<string, string>>
             {
-                new($"{ProviderRegistrationsConfigurationKeys.ProviderRegistrationsSettings}:DatabaseConnectionString",
-                    "Server=(localdb)\\MSSQLLocalDB;Integrated Security=true"),
+                new($"{ProviderRegistrationsConfigurationKeys.ProviderRegistrationsSettings}:DatabaseConnectionString", "Server=(localdb)\\MSSQLLocalDB;Integrated Security=true"),
             }
         };
 

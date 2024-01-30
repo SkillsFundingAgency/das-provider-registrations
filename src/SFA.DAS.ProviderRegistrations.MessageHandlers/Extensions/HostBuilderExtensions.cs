@@ -9,12 +9,10 @@ using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.ProviderRegistrations.Application.Commands.AddedPayeSchemeCommand;
 using SFA.DAS.ProviderRegistrations.Configuration;
 using SFA.DAS.ProviderRegistrations.Data;
-using SFA.DAS.ProviderRegistrations.Extensions;
-using SFA.DAS.ProviderRegistrations.ServiceRegistrations;
+using SFA.DAS.ProviderRegistrations.Startup;
 using SFA.DAS.UnitOfWork.DependencyResolution.Microsoft;
 using SFA.DAS.UnitOfWork.EntityFrameworkCore.DependencyResolution.Microsoft;
 using SFA.DAS.UnitOfWork.NServiceBus.DependencyResolution.Microsoft;
-using StructureMap;
 
 namespace SFA.DAS.ProviderRegistrations.MessageHandlers.Extensions;
 
@@ -73,7 +71,7 @@ public static class HostBuilderExtensions
             services.AddMemoryCache();
             services.AddMediatR(configuration => configuration.RegisterServicesFromAssembly(typeof(AddedPayeSchemeCommand).Assembly));
             services.StartNServiceBus(context.Configuration);
-            services.AddDatabaseRegistrationWithNServiceBusTransaction(context.Configuration.IsDevOrLocal());
+            services.AddEntityFramework(context.Configuration.Get<ProviderRegistrationsSettings>());
             services.StartNServiceBus(context.Configuration);
 
         });
