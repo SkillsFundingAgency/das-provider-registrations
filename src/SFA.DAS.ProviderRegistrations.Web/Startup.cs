@@ -9,8 +9,6 @@ using SFA.DAS.ProviderRegistrations.Application.Commands.UnsubscribeByIdCommand;
 using SFA.DAS.ProviderRegistrations.Configuration;
 using SFA.DAS.ProviderRegistrations.Data;
 using SFA.DAS.ProviderRegistrations.Extensions;
-using SFA.DAS.ProviderRegistrations.Models;
-using SFA.DAS.ProviderRegistrations.ServiceRegistrations;
 using SFA.DAS.ProviderRegistrations.Startup;
 using SFA.DAS.ProviderRegistrations.Web.Authentication;
 using SFA.DAS.ProviderRegistrations.Web.Authorization;
@@ -20,6 +18,7 @@ using SFA.DAS.ProviderRegistrations.Web.Mappings;
 using SFA.DAS.ProviderRegistrations.Web.ServiceRegistrations;
 using SFA.DAS.UnitOfWork.DependencyResolution.Microsoft;
 using SFA.DAS.UnitOfWork.EntityFrameworkCore.DependencyResolution.Microsoft;
+using SFA.DAS.UnitOfWork.NServiceBus.DependencyResolution.Microsoft;
 
 namespace SFA.DAS.ProviderRegistrations.Web;
 
@@ -77,11 +76,12 @@ public class Startup
         
         services
             .AddUnitOfWork()
+            .AddNServiceBusUnitOfWork()
             .AddEntityFramework(providerRegistrationsSettings)
             .AddEntityFrameworkUnitOfWork<ProviderRegistrationsDbContext>();
 
         services.AddMediatR(x => x.RegisterServicesFromAssembly(typeof(UnsubscribeByIdCommandHandler).Assembly));
-        services.AddAutoMapper(typeof(InvitationMappings), typeof(SFA.DAS.ProviderRegistrations.Mappings.InvitationMappings));
+        services.AddAutoMapper(typeof(InvitationMappings), typeof(ProviderRegistrations.Mappings.InvitationMappings));
         services.AddProviderUiServiceRegistration(_configuration);
         services.AddHealthChecks();
         services.AddApplicationInsightsTelemetry();
@@ -90,7 +90,7 @@ public class Startup
     
     public void ConfigureContainer(UpdateableServiceProvider serviceProvider)
     {
-        serviceProvider.StartNServiceBus(_configuration, ServiceBusEndpointType.Web);
+        serviceProvider.StartNServiceBus(_configuration);
 
         // Replacing ClientOutboxPersisterV2 with a local version to fix unit of work issue due to propogating Task up the chain rather than awaiting on DB Command.
         // not clear why this fixes the issue. Attempted to make the change in SFA.DAS.Nservicebus.SqlServer however it conflicts when upgraded with SFA.DAS.UnitOfWork.Nservicebus

@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SFA.DAS.ProviderRegistrations.Web\SFA.DAS.ProviderRegistrations.Web.csproj" />
     <ProjectReference Include="..\SFA.DAS.ProviderRegistrations\SFA.DAS.ProviderRegistrations.csproj" />
   </ItemGroup>
 
