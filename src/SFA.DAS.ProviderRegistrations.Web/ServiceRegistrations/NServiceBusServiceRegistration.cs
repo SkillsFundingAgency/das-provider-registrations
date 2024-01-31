@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Net;
 using Microsoft.Extensions.Configuration;
 using NServiceBus;
 using NServiceBus.ObjectBuilder.MSDependencyInjection;
@@ -27,14 +28,18 @@ public static class NServiceBusServiceRegistration
         var endpointConfiguration = new EndpointConfiguration(EndpointName)
             .UseErrorQueue($"{EndpointName}-errors")
             .UseInstallers()
-            .UseLicense(nServiceBusSettings.NServiceBusLicense)
             .UseMessageConventions()
             .UseServicesBuilder(services)
             .UseNewtonsoftJsonSerializer()
             .UseOutbox(true)                
             .UseSqlServerPersistence(() => DatabaseExtensions.GetSqlConnection(providerRegistrationsSettings.DatabaseConnectionString))                
-            .UseUnitOfWork()
-            .UseSendOnly();
+            .UseUnitOfWork();
+        
+        if (!string.IsNullOrEmpty(nServiceBusSettings.NServiceBusLicense))
+        {
+            var decodedLicence = WebUtility.HtmlDecode(nServiceBusSettings.NServiceBusLicense);
+            endpointConfiguration.License(decodedLicence);
+        }
 
         if (configuration.IsDevOrLocal())
         {
