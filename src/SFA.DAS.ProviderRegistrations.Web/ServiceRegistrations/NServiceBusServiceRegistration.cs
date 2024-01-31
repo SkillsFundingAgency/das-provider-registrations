@@ -33,7 +33,8 @@ public static class NServiceBusServiceRegistration
             .UseNewtonsoftJsonSerializer()
             .UseOutbox(true)                
             .UseSqlServerPersistence(() => DatabaseExtensions.GetSqlConnection(providerRegistrationsSettings.DatabaseConnectionString))                
-            .UseUnitOfWork();
+            .UseUnitOfWork()
+            .UseSendOnly();
         
         if (!string.IsNullOrEmpty(nServiceBusSettings.NServiceBusLicense))
         {
