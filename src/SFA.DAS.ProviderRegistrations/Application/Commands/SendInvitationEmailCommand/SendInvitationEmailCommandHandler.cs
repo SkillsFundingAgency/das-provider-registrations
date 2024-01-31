@@ -1,7 +1,6 @@
 using NServiceBus;
 using SFA.DAS.Notifications.Messages.Commands;
 using SFA.DAS.ProviderRegistrations.Configuration;
-using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace SFA.DAS.ProviderRegistrations.Application.Commands.SendInvitationEmailCommand;
 
@@ -10,13 +9,11 @@ public class SendInvitationEmailCommandHandler : IRequestHandler<SendInvitationE
     private readonly string _notificationTemplateId = "ProviderInviteEmployerNotification";
     private readonly IMessageSession _publisher;
     private readonly ProviderRegistrationsSettings _configuration;
-    private readonly ILogger<SendInvitationEmailCommandHandler> _logger;
-
-    public SendInvitationEmailCommandHandler(IMessageSession publisher, ProviderRegistrationsSettings configuration, ILogger<SendInvitationEmailCommandHandler> logger)
+    
+    public SendInvitationEmailCommandHandler(IMessageSession publisher, ProviderRegistrationsSettings configuration)
     {
         _publisher = publisher;
         _configuration = configuration;
-        _logger = logger;
         
         if (_configuration.UseGovLogin)
         {
@@ -37,8 +34,6 @@ public class SendInvitationEmailCommandHandler : IRequestHandler<SendInvitationE
             { "unsubscribe_training_provider", $"{_configuration.EmployerAccountsBaseUrl}/service/unsubscribe/{request.CorrelationId}" },
             { "report_training_provider", $"{_configuration.EmployerAccountsBaseUrl}/report/trainingprovider/{request.CorrelationId}" }
         };
-        
-        _logger.LogInformation("Sending invitation email to employer via SendInvitationEmailCommand. TemplateId: {TemplateId}, EmployerEmail: {Email}, tokens: {Tokens}", _notificationTemplateId, request.EmployerEmail, JsonSerializer.Serialize(tokens));
         
         _publisher.Send(new SendEmailCommand(_notificationTemplateId, request.EmployerEmail, tokens));
 

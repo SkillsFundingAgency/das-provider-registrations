@@ -12,7 +12,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using SFA.DAS.ProviderRegistrations.Application.Queries.GetProviderByUkprnQuery;
 using SFA.DAS.ProviderRegistrations.Configuration;
 
@@ -41,7 +40,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
                 { "unsubscribe_training_provider", $"{settings.EmployerAccountsBaseUrl}/service/unsubscribe/{command.CorrelationId}" },
                 { "report_training_provider", $"{settings.EmployerAccountsBaseUrl}/report/trainingprovider/{command.CorrelationId}" }
             };
-            var handler = new SendInvitationEmailCommandHandler(mockPublisher.Object, settings, Mock.Of<ILogger<SendInvitationEmailCommandHandler>>());
+            var handler = new SendInvitationEmailCommandHandler(mockPublisher.Object, settings);
 
             //act
             await ((IRequestHandler<SendInvitationEmailCommand>)handler).Handle(command, new CancellationToken());
@@ -73,7 +72,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
                 { "unsubscribe_training_provider", $"{settings.EmployerAccountsBaseUrl}/service/unsubscribe/{command.CorrelationId}" },
                 { "report_training_provider", $"{settings.EmployerAccountsBaseUrl}/report/trainingprovider/{command.CorrelationId}" }
             };
-            var handler = new SendInvitationEmailCommandHandler(mockPublisher.Object, settings, Mock.Of<ILogger<SendInvitationEmailCommandHandler>>());
+            var handler = new SendInvitationEmailCommandHandler(mockPublisher.Object, settings);
 
             //act
             await ((IRequestHandler<SendInvitationEmailCommand>)handler).Handle(command, new CancellationToken());
@@ -106,7 +105,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
                 { "report_training_provider", $"{settings.EmployerAccountsBaseUrl}/report/trainingprovider/{command.CorrelationId}" }
             };
 
-            var handler = new SendInvitationEmailCommandHandler(mockPublisher.Object, settings, Mock.Of<ILogger<SendInvitationEmailCommandHandler>>());
+            var handler = new SendInvitationEmailCommandHandler(mockPublisher.Object, settings);
 
             //act
             await ((IRequestHandler<SendInvitationEmailCommand>)handler).Handle(command, new CancellationToken());
