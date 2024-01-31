@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using FluentAssertions;
 using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Memory;
@@ -34,14 +35,14 @@ public class WhenAddingServicesToTheContainer
     [TestCase(typeof(IRequestHandler<GetProviderByUkprnQuery, GetProviderByUkprnQueryResult>))]
     [TestCase(typeof(IRequestHandler<AddResendInvitationCommand>))]
     [TestCase(typeof(IRequestHandler<UpdateInvitationCommand>))]
-   // [TestCase(typeof(IRequestHandler<SendInvitationEmailCommand>))]
+    [TestCase(typeof(IRequestHandler<SendInvitationEmailCommand>))]
     [TestCase(typeof(IRequestHandler<AddInvitationCommand, string>))]
     public void Then_The_Dependencies_Are_Correctly_Resolved_For_Handlers(Type toResolve)
     {
         var provider = SetupServiceProvider();
         var type = provider.GetService(toResolve);
 
-        Assert.That(type, Is.Not.Null);
+        type.Should().NotBeNull();
     } 
     
     [TestCase(typeof(HomeController))]
@@ -52,7 +53,7 @@ public class WhenAddingServicesToTheContainer
         var provider = SetupServiceProvider();
         var type = provider.GetService(toResolve);
 
-        Assert.That(type, Is.Not.Null);
+        type.Should().NotBeNull();
     }
     
     private static ServiceProvider SetupServiceProvider()
