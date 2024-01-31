@@ -29,12 +29,13 @@ public static class HostBuilderExtensions
                 loggingBuilder.AddFilter<ApplicationInsightsLoggerProvider>(string.Empty, LogLevel.Information);
                 loggingBuilder.AddFilter<ApplicationInsightsLoggerProvider>("Microsoft", LogLevel.Information);
             }
+
             loggingBuilder.AddConsole();
         });
 
         return hostBuilder;
     }
-    
+
     public static IHostBuilder ConfigureDasAppConfiguration(this IHostBuilder hostBuilder, string[] args)
     {
         return hostBuilder.ConfigureAppConfiguration((context, builder) =>
@@ -63,19 +64,16 @@ public static class HostBuilderExtensions
     {
         hostBuilder.ConfigureServices((context, services) =>
         {
-            services
-                .AddUnitOfWork()
-                .AddNServiceBusUnitOfWork()
-                .AddEntityFrameworkUnitOfWork<ProviderRegistrationsDbContext>();
-            
+            services.AddConfigurationSections(context.Configuration);
+            services.AddUnitOfWork();
+            services.AddNServiceBusUnitOfWork();
+            services.AddEntityFrameworkUnitOfWork<ProviderRegistrationsDbContext>();
             services.AddMemoryCache();
             services.AddMediatR(configuration => configuration.RegisterServicesFromAssembly(typeof(AddedPayeSchemeCommand).Assembly));
-            services.StartNServiceBus(context.Configuration);
             services.AddEntityFramework(context.Configuration.Get<ProviderRegistrationsSettings>());
             services.StartNServiceBus(context.Configuration);
-
         });
-        
+
         return hostBuilder;
     }
 }

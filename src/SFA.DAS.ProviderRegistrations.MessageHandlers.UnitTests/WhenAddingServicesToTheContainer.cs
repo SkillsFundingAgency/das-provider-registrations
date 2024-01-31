@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using FluentAssertions;
 using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Memory;
@@ -30,9 +31,9 @@ public class WhenAddingServicesToTheContainer
         var provider = services.BuildServiceProvider();
 
         var type = provider.GetService(toResolve);
-        Assert.That(type, Is.Not.Null);
+        type.Should().NotBeNull();
     }
-
+    
     private static void SetupServiceCollection(IServiceCollection services)
     {
         var configuration = GenerateStubConfiguration();
