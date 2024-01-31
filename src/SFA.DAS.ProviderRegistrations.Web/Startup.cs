@@ -6,33 +6,31 @@ using SFA.DAS.Authorization.Mvc.Extensions;
 using SFA.DAS.NServiceBus.Features.ClientOutbox.Data;
 using SFA.DAS.Provider.Shared.UI.Startup;
 using SFA.DAS.ProviderRegistrations.Application.Commands.UnsubscribeByIdCommand;
+using SFA.DAS.ProviderRegistrations.AppStart;
 using SFA.DAS.ProviderRegistrations.Configuration;
 using SFA.DAS.ProviderRegistrations.Data;
 using SFA.DAS.ProviderRegistrations.Extensions;
-using SFA.DAS.ProviderRegistrations.ServiceRegistrations;
 using SFA.DAS.ProviderRegistrations.Startup;
 using SFA.DAS.ProviderRegistrations.Web.Authentication;
 using SFA.DAS.ProviderRegistrations.Web.Authorization;
 using SFA.DAS.ProviderRegistrations.Web.Extensions;
-using SFA.DAS.ProviderRegistrations.Web.Filters;
 using SFA.DAS.ProviderRegistrations.Web.Mappings;
 using SFA.DAS.ProviderRegistrations.Web.ServiceRegistrations;
 using SFA.DAS.UnitOfWork.DependencyResolution.Microsoft;
 using SFA.DAS.UnitOfWork.EntityFrameworkCore.DependencyResolution.Microsoft;
 using SFA.DAS.UnitOfWork.Mvc.Extensions;
-using SFA.DAS.UnitOfWork.NServiceBus.DependencyResolution.Microsoft;
 using SFA.DAS.UnitOfWork.NServiceBus.Features.ClientOutbox.DependencyResolution.Microsoft;
 
 namespace SFA.DAS.ProviderRegistrations.Web;
 
 public class Startup
 {
+    private readonly IConfiguration _configuration;
+
     public Startup(IConfiguration configuration, bool buildConfig = true)
     {
-       _configuration = buildConfig ? configuration.BuildDasConfiguration() : configuration;
+        _configuration = buildConfig ? configuration.BuildDasConfiguration() : configuration;
     }
-
-    private readonly IConfiguration _configuration;
 
     public void ConfigureServices(IServiceCollection services)
     {
@@ -41,47 +39,34 @@ public class Startup
             builder.AddFilter<ApplicationInsightsLoggerProvider>(string.Empty, LogLevel.Information);
             builder.AddFilter<ApplicationInsightsLoggerProvider>("Microsoft", LogLevel.Information);
         });
-        
+
         services.AddWebConfigurationSections(_configuration);
-        
-        var useDfESignIn = _configuration.GetSection(ProviderRegistrationsConfigurationKeys.UseDfESignIn).Get<bool>();
-        services
-            .Configure<CookiePolicyOptions>(options =>
+
+        services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             })
-            .AddProviderIdamsAuthentication(_configuration)
-            .AddDasDistributedMemoryCache(_configuration, _configuration.IsDevOrLocal())
-            .AddMemoryCache()
-            .AddTrainingProviderApi(_configuration)
-            .AddApplicationServices()
-            .AddDataProtection(_configuration)
-            .AddMvc(options =>
-            {
-                options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
-                options.Filters.Add(new GoogleAnalyticsFilter());
-                options.Filters.Add(new AuthorizeFilter(PolicyNames.ProviderPolicyName));
-                options.AddAuthorization();
-            })
-            .AddNavigationBarSettings(_configuration)
-            .AddZenDeskSettings(_configuration)
-            .AddGoogleAnalyticsSettings(_configuration)
-            .AddCookieBannerSettings(_configuration)
-            .AddControllersAsServices()
-            .AddSessionStateTempDataProvider()
-            .SetDfESignInConfiguration(useDfESignIn);
+            .AddProviderIdamsAuthentication(_configuration);
         
+        services.AddDasDistributedMemoryCache(_configuration, _configuration.IsDevOrLocal());
+        services.AddMemoryCache();
+        services.AddTrainingProviderApi(_configuration);
+        services.AddApplicationServices();
+        services.AddDataProtection(_configuration);
+
+        services.AddDasMvc(_configuration);
+
         services.AddAuthorization<AuthorizationContextProvider>();
-        
+
         var providerRegistrationsSettings = _configuration.GetSection(ProviderRegistrationsConfigurationKeys.ProviderRegistrationsSettings).Get<ProviderRegistrationsSettings>();
-        
+
         services
             .AddUnitOfWork()
-            .AddNServiceBusClientUnitOfWork()
             .AddEntityFramework(providerRegistrationsSettings)
-            .AddEntityFrameworkUnitOfWork<ProviderRegistrationsDbContext>();
+            .AddEntityFrameworkUnitOfWork<ProviderRegistrationsDbContext>()
+            .AddNServiceBusClientUnitOfWork();
 
         services.AddMediatR(x => x.RegisterServicesFromAssembly(typeof(UnsubscribeByIdCommandHandler).Assembly));
         services.AddAutoMapper(typeof(InvitationMappings), typeof(ProviderRegistrations.Mappings.InvitationMappings));
@@ -90,7 +75,7 @@ public class Startup
         services.AddApplicationInsightsTelemetry();
         services.AddAuthorizationService();
     }
-    
+
     public void ConfigureContainer(UpdateableServiceProvider serviceProvider)
     {
         serviceProvider.StartNServiceBus(_configuration);
@@ -115,22 +100,16 @@ public class Startup
             app.UseHsts();
         }
 
-        app.UseUnitOfWork();
-
         app.UseStatusCodePagesWithReExecute("/error", "?statuscode={0}")
             .UseUnauthorizedAccessExceptionHandler()
             .UseHttpsRedirection()
+            .UseUnitOfWork()
             .UseStaticFiles()
             .UseCookiePolicy()
             .UseRouting()
             .UseAuthentication()
             .UseAuthorization()
-            .UseEndpoints(builder =>
-            {
-                builder.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
-            })
+            .UseEndpoints(builder => builder.MapDefaultControllerRoute())
             .UseHealthChecks("/health");
     }
 }

@@ -33,7 +33,7 @@ public static class DatabaseExtensions
         return new SqlConnection
         {
             ConnectionString = connectionString,
-            AccessToken = azureServiceTokenProvider.GetToken(new TokenRequestContext(scopes: new[] { AzureResource })).Token
+            AccessToken = azureServiceTokenProvider.GetToken(new TokenRequestContext(scopes: [AzureResource])).Token
         };
     }
 }

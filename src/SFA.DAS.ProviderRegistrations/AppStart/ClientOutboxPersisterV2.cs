@@ -10,13 +10,12 @@ using SFA.DAS.NServiceBus.Services;
 using SFA.DAS.NServiceBus.SqlServer.Data;
 using SFA.DAS.NServiceBus.SqlServer.Features.ClientOutbox.Data;
 
-namespace SFA.DAS.ProviderRegistrations;
+namespace SFA.DAS.ProviderRegistrations.AppStart;
 
 [ExcludeFromCodeCoverage]
 public class ClientOutboxPersisterV2 : IClientOutboxStorageV2
 {
     private readonly IDateTimeService _dateTimeService;
-
     private readonly Func<DbConnection> _connectionBuilder;
 
     public ClientOutboxPersisterV2(IDateTimeService dateTimeService, ReadOnlySettings settings)

@@ -1,4 +1,5 @@
-﻿using SFA.DAS.ProviderRegistrations.Services;
+﻿using SFA.DAS.NServiceBus.Services;
+using SFA.DAS.ProviderRegistrations.Services;
 
 namespace SFA.DAS.ProviderRegistrations.Web.ServiceRegistrations;
 
@@ -11,6 +12,7 @@ public static class ApplicationServiceRegistrations
         services.AddTransient<IRoatpApiHttpClientFactory, RoatpApiHttpClientFactory>();
         services.AddTransient<IEmployerApprenticeshipService, EmployerApprenticeshipService>();
         services.AddTransient<ILinkGenerator, LinkGenerator>();
+        services.AddTransient<IDateTimeService, DateTimeService>();
 
         return services;
     }

@@ -21,6 +21,7 @@
         <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0"/>
         <PackageReference Include="Microsoft.Rest.ClientRuntime" Version="2.3.24"/>
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
+        <PackageReference Include="NServiceBus.MSDependencyInjection" Version="0.1.4" />
         <PackageReference Include="SFA.DAS.Authorization.Mvc" Version="6.0.97"/>
         <PackageReference Include="SFA.DAS.Configuration.AzureTableStorage" Version="3.0.84"/>
         <PackageReference Include="SFA.DAS.DfESignIn.Auth" Version="17.1.61"/>
