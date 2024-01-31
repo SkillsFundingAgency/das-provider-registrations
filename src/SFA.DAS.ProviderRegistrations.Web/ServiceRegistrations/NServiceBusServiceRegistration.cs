@@ -1,8 +1,10 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Configuration;
 using NServiceBus;
+using NServiceBus.ObjectBuilder.MSDependencyInjection;
 using SFA.DAS.NServiceBus.Configuration;
 using SFA.DAS.NServiceBus.Configuration.AzureServiceBus;
+using SFA.DAS.NServiceBus.Configuration.MicrosoftDependencyInjection;
 using SFA.DAS.NServiceBus.Configuration.NewtonsoftJsonSerializer;
 using SFA.DAS.NServiceBus.Hosting;
 using SFA.DAS.NServiceBus.SqlServer.Configuration;
@@ -15,21 +17,22 @@ namespace SFA.DAS.ProviderRegistrations.Web.ServiceRegistrations;
 [ExcludeFromCodeCoverage]
 public static class NServiceBusServiceRegistration
 {
-    public static IServiceCollection StartNServiceBus(this IServiceCollection services, IConfiguration configuration)
+    private const string EndpointName = "SFA.DAS.ProviderRegistrations.Web";
+    
+    public static IServiceCollection StartNServiceBus(this UpdateableServiceProvider services, IConfiguration configuration)
     {
-        const string endPointName = "SFA.DAS.ProviderRegistrations.Web";
-
         var providerRegistrationsSettings = configuration.GetSection(ProviderRegistrationsConfigurationKeys.ProviderRegistrationsSettings).Get<ProviderRegistrationsSettings>();
         var nServiceBusSettings = configuration.GetSection(ProviderRegistrationsConfigurationKeys.NServiceBusSettings).Get<NServiceBusSettings>();
-
-        var endpointConfiguration = new EndpointConfiguration(endPointName)
-            .UseErrorQueue($"{endPointName}-errors")
+        
+        var endpointConfiguration = new EndpointConfiguration(EndpointName)
+            .UseErrorQueue($"{EndpointName}-errors")
             .UseInstallers()
             .UseLicense(nServiceBusSettings.NServiceBusLicense)
             .UseMessageConventions()
+            .UseServicesBuilder(services)
             .UseNewtonsoftJsonSerializer()
-            .UseOutbox(true)
-            .UseSqlServerPersistence(() => DatabaseExtensions.GetSqlConnection(providerRegistrationsSettings.DatabaseConnectionString))
+            .UseOutbox(true)                
+            .UseSqlServerPersistence(() => DatabaseExtensions.GetSqlConnection(providerRegistrationsSettings.DatabaseConnectionString))                
             .UseUnitOfWork()
             .UseSendOnly();
 
