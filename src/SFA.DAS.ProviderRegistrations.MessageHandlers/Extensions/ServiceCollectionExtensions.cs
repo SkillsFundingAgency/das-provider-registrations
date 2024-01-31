@@ -20,15 +20,21 @@ public static class ServiceCollectionExtensions
 {
     private const string EndpointName = "SFA.DAS.ProviderRegistrations.MessageHandlers";
     
-    public static IServiceCollection StartNServiceBus(this IServiceCollection services, IConfiguration config)
+    public static IServiceCollection StartNServiceBus(this IServiceCollection services, IConfiguration configuration)
     {
         return services
             .AddSingleton(provider =>
             {
-                var nServiceBusSettings = config.GetSection(ProviderRegistrationsConfigurationKeys.NServiceBusSettings).Get<NServiceBusSettings>();
-                var configuration = provider.GetService<ProviderRegistrationsSettings>();
                 var hostingEnvironment = provider.GetService<IHostEnvironment>();
                 var isDevelopment = hostingEnvironment.IsDevelopment();
+                
+                var nServiceBusSettings = configuration
+                    .GetSection(ProviderRegistrationsConfigurationKeys.NServiceBusSettings)
+                    .Get<NServiceBusSettings>();
+                
+                var providerRegistrationsConfig = configuration
+                    .GetSection(ProviderRegistrationsConfigurationKeys.ProviderRegistrationsSettings)
+                    .Get<ProviderRegistrationsSettings>();
 
                 var endpointConfiguration = new EndpointConfiguration(EndpointName)
                     .UseErrorQueue($"{EndpointName}-errors")
@@ -37,7 +43,7 @@ public static class ServiceCollectionExtensions
                     .UseMessageConventions()
                     .UseNewtonsoftJsonSerializer()
                     .UseOutbox()
-                    .UseSqlServerPersistence(() => DatabaseExtensions.GetSqlConnection(configuration.DatabaseConnectionString))
+                    .UseSqlServerPersistence(() => DatabaseExtensions.GetSqlConnection(providerRegistrationsConfig.DatabaseConnectionString))
                     .UseServicesBuilder(new UpdateableServiceProvider(services))
                     .UseUnitOfWork();
 

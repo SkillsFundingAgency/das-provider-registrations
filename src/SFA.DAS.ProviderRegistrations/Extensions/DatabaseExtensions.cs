@@ -11,10 +11,7 @@ public static class DatabaseExtensions
 
     public static DbConnection GetSqlConnection(string connectionString)
     {
-        if (string.IsNullOrEmpty(connectionString))
-        {
-            throw new ArgumentNullException(nameof(connectionString));
-        }
+        ArgumentNullException.ThrowIfNull(connectionString);
 
         var connectionStringBuilder = new SqlConnectionStringBuilder(connectionString);
         var useManagedIdentity = !connectionStringBuilder.IntegratedSecurity && string.IsNullOrEmpty(connectionStringBuilder.UserID);

@@ -42,7 +42,7 @@ public static class HostBuilderExtensions
         {
             builder.AddAzureTableStorage(options =>
                 {
-                    options.ConfigurationKeys = ProviderRegistrationsConfigurationKeys.ProviderRegistrations.Split(',');
+                    options.ConfigurationKeys = [ProviderRegistrationsConfigurationKeys.ProviderRegistrations];
                     options.PreFixConfigurationKeys = false;
                 })
                 .AddJsonFile("appsettings.json", true, true)
