@@ -12,7 +12,7 @@ public class SignedAgreementEventHandler : IHandleMessages<SignedAgreementEvent>
 
     public SignedAgreementEventHandler(IMediator mediator) => _mediator = mediator;
 
-    public Task Handle(SignedAgreementEvent message, IMessageHandlerContext context)
+    public async Task Handle(SignedAgreementEvent message, IMessageHandlerContext context)
     {
         var command = new SignedAgreementCommand(
             message.AccountId,
@@ -25,6 +25,6 @@ public class SignedAgreementEventHandler : IHandleMessages<SignedAgreementEvent>
             message.UserRef,
             message.CorrelationId);
         
-        return _mediator.Send(command);
+        await _mediator.Send(command);
     }
 }

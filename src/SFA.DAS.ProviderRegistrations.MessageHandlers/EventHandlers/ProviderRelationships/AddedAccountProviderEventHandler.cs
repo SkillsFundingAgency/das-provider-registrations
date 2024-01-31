@@ -12,7 +12,7 @@ public class AddedAccountProviderEventHandler : IHandleMessages<AddedAccountProv
 
     public AddedAccountProviderEventHandler(IMediator mediator) => _mediator = mediator;
 
-    public Task Handle(AddedAccountProviderEvent message, IMessageHandlerContext context)
+    public async Task Handle(AddedAccountProviderEvent message, IMessageHandlerContext context)
     {
         var command = new AddedAccountProviderCommand(
             message.ProviderUkprn,
@@ -20,6 +20,6 @@ public class AddedAccountProviderEventHandler : IHandleMessages<AddedAccountProv
             message.CorrelationId.ToString(),
             message.Added);
         
-        return _mediator.Send(command);
+        await _mediator.Send(command);
     }
 }

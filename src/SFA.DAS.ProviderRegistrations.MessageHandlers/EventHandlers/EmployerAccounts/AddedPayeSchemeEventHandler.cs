@@ -12,7 +12,7 @@ public class AddedPayeSchemeEventHandler : IHandleMessages<AddedPayeSchemeEvent>
 
     public AddedPayeSchemeEventHandler(IMediator mediator) => _mediator = mediator;
 
-    public Task Handle(AddedPayeSchemeEvent message, IMessageHandlerContext context)
+    public async Task Handle(AddedPayeSchemeEvent message, IMessageHandlerContext context)
     {
         var command = new AddedPayeSchemeCommand(
             message.AccountId,
@@ -24,6 +24,6 @@ public class AddedPayeSchemeEventHandler : IHandleMessages<AddedPayeSchemeEvent>
             message.CorrelationId,
             message.Created);
         
-        return _mediator.Send(command);
+        await _mediator.Send(command);
     }
 }

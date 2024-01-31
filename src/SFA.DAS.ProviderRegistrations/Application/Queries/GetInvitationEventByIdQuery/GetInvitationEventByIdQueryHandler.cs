@@ -10,11 +10,11 @@ public class GetInvitationEventByIdQueryHandler : IRequestHandler<GetInvitationE
 
     public GetInvitationEventByIdQueryHandler(Lazy<ProviderRegistrationsDbContext> db) => _db = db;
 
-    public Task<GetInvitationEventByIdQueryResult> Handle(GetInvitationEventByIdQuery request, CancellationToken cancellationToken)
+    public async Task<GetInvitationEventByIdQueryResult> Handle(GetInvitationEventByIdQuery request, CancellationToken cancellationToken)
     {
-        var invitationEvent = _db.Value.Invitations
+        var invitationEvent = await _db.Value.Invitations
             .Include(i => i.InvitationEvents)
-            .Where(i => i.Id == request.InvitationId)                
+            .Where(i => i.Id == request.InvitationId)
             .Select(inv => new InvitationDto
             {
                 EmployerEmail = inv.EmployerEmail,
@@ -33,8 +33,8 @@ public class GetInvitationEventByIdQueryHandler : IRequestHandler<GetInvitationE
                     Date = e.Date,
                     EventType = e.EventType
                 })
-            });
+            }).ToListAsync(cancellationToken);
 
-        return Task.FromResult(new GetInvitationEventByIdQueryResult(invitationEvent.FirstOrDefault()));
+        return new GetInvitationEventByIdQueryResult(invitationEvent.FirstOrDefault());
     }
 }

@@ -17,10 +17,10 @@ public class RunHealthCheckCommandHandler : IHandleMessages<RunHealthCheckComman
         _logger = logger;
     }
 
-    public Task Handle(RunHealthCheckCommand message, IMessageHandlerContext context)
+    public async Task Handle(RunHealthCheckCommand message, IMessageHandlerContext context)
     {
         _logger.LogInformation($"Handled {nameof(RunHealthCheckCommand)} with MessageId '{context.MessageId}'");
 
-        return _distributedCache.SetStringAsync(context.MessageId, "OK");
+        await _distributedCache.SetStringAsync(context.MessageId, "OK");
     }
 }
