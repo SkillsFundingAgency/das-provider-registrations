@@ -48,9 +48,9 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             [Greedy]Invitation invitation)
         {
             //arrange
-            var updateDate = DateTime.Now;
-            invitation.UpdateStatus((int)InvitationStatus.InvitationSent, DateTime.Now.AddHours(-1));
-            var command = new AddedAccountProviderCommand(invitation.Ukprn, Guid.NewGuid(), invitation.Reference.ToString(), updateDate);
+            var referenceDate = new DateTime(2024, 10, 10);
+            invitation.UpdateStatus((int)InvitationStatus.InvitationSent, referenceDate.AddHours(-1));
+            var command = new AddedAccountProviderCommand(invitation.Ukprn, Guid.NewGuid(), invitation.Reference.ToString(), referenceDate);
             setupContext.Invitations.Add(invitation);
             await setupContext.SaveChangesAsync();
 
@@ -59,7 +59,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
 
             //assert
             var addedInvitationEvent = await confirmationContext.InvitationEvents.FirstOrDefaultAsync(s => s.InvitationId == invitation.Id && s.EventType == (int)EventType.AccountProviderAdded);
-            addedInvitationEvent.Date.Should().Be(updateDate);
+            addedInvitationEvent.Date.Should().Be(referenceDate);
         }
 
         [Test, ProviderAutoData]
