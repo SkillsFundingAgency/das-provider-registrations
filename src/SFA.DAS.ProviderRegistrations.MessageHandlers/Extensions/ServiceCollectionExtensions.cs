@@ -1,9 +1,8 @@
-﻿using System.Reflection;
+﻿using System.Net;
 using Microsoft.Azure.ServiceBus.Primitives;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using NServiceBus;
 using NServiceBus.ObjectBuilder.MSDependencyInjection;
 using SFA.DAS.NServiceBus.Configuration;
@@ -15,7 +14,6 @@ using SFA.DAS.NServiceBus.SqlServer.Configuration;
 using SFA.DAS.ProviderRegistrations.Configuration;
 using SFA.DAS.ProviderRegistrations.Extensions;
 using SFA.DAS.UnitOfWork.NServiceBus.Configuration;
-using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace SFA.DAS.ProviderRegistrations.MessageHandlers.Extensions;
 
@@ -40,31 +38,36 @@ public static class ServiceCollectionExtensions
                     .Get<ProviderRegistrationsSettings>();
 
                 var endpointConfiguration = new EndpointConfiguration(EndpointName)
+                    .ConfigureServiceBusTransport(() => nServiceBusSettings.ServiceBusConnectionString, isDevelopment)
                     .UseErrorQueue($"{EndpointName}-errors")
                     .UseInstallers()
-                    .UseLicense(nServiceBusSettings.NServiceBusLicense)
-                    .UseMessageConventions()
+                    .UseSqlServerPersistence(() => DatabaseExtensions.GetSqlConnection(providerRegistrationsConfig.DatabaseConnectionString))
                     .UseNewtonsoftJsonSerializer()
                     .UseOutbox()
-                    .UseSqlServerPersistence(() => DatabaseExtensions.GetSqlConnection(providerRegistrationsConfig.DatabaseConnectionString))
-                    .UseServicesBuilder(new UpdateableServiceProvider(services))
-                    .UseUnitOfWork();
-
-                if (isDevelopment)
+                    .UseUnitOfWork()
+                    .UseServicesBuilder(new UpdateableServiceProvider(services));
+                    
+                if (!string.IsNullOrEmpty(nServiceBusSettings.NServiceBusLicense))
                 {
-                    endpointConfiguration.UseLearningTransport(s => s.AddRouting());
+                    var decodedLicence = WebUtility.HtmlDecode(nServiceBusSettings.NServiceBusLicense);
+                    endpointConfiguration.UseLicense(decodedLicence);
                 }
-                else
-                {
-                    var transport = endpointConfiguration.UseTransport<AzureServiceBusTransport>();
-                    var ruleNameShortener = new RuleNameShortener();
-
-                    var tokenProvider = TokenProvider.CreateManagedIdentityTokenProvider();
-                    transport.CustomTokenProvider(tokenProvider);
-                    transport.ConnectionString(nServiceBusSettings.ServiceBusConnectionString);
-                    transport.RuleNameShortener(ruleNameShortener.Shorten);
-                    transport.Routing().AddRouting();
-                }
+                
+                // if (isDevelopment)
+                // {
+                //     endpointConfiguration.UseLearningTransport(s => s.AddRouting());
+                // }
+                // else
+                // {
+                //     var transport = endpointConfiguration.UseTransport<AzureServiceBusTransport>();
+                //     var ruleNameShortener = new RuleNameShortener();
+                //
+                //     var tokenProvider = TokenProvider.CreateManagedIdentityTokenProvider();
+                //     transport.CustomTokenProvider(tokenProvider);
+                //     transport.ConnectionString(nServiceBusSettings.ServiceBusConnectionString);
+                //     transport.RuleNameShortener(ruleNameShortener.Shorten);
+                //     transport.Routing().AddRouting();
+                // }
 
                 return Endpoint.Start(endpointConfiguration).GetAwaiter().GetResult();
             })

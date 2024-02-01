@@ -16,8 +16,12 @@ internal class Program
 {
     public static async Task Main()
     {
-        var builder = new ConfigurationBuilder()
-            .AddAzureTableStorage(ProviderRegistrationsConfigurationKeys.ProviderRegistrations);
+        //var builder = new ConfigurationBuilder().AddAzureTableStorage(ProviderRegistrationsConfigurationKeys.ProviderRegistrations);
+        var builder = new ConfigurationBuilder().AddAzureTableStorage(options =>
+        {
+           options.ConfigurationKeys = [ ProviderRegistrationsConfigurationKeys.ProviderRegistrations];
+           options.PreFixConfigurationKeys = false;
+        });
 
         IConfigurationRoot configuration = builder.Build();
 
@@ -33,15 +37,17 @@ internal class Program
             .UseLicense(config.NServiceBusLicense)
             .UseMessageConventions()
             .UseNewtonsoftJsonSerializer();
+        
+        endpointConfiguration.UseLearningTransport();
 
-        if (isDevelopment)
-        {
-            endpointConfiguration.UseLearningTransport();
-        }
-        else
-        {
-            endpointConfiguration.UseAzureServiceBusTransport(config.ServiceBusConnectionString);
-        }
+        // if (isDevelopment)
+        // {
+        //     endpointConfiguration.UseLearningTransport();
+        // }
+        // else
+        // {
+        //     endpointConfiguration.UseAzureServiceBusTransport(config.ServiceBusConnectionString);
+        // }
 
         var endpoint = await Endpoint.Start(endpointConfiguration);
 
