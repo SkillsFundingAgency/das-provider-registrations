@@ -28,8 +28,8 @@ public static class HostBuilderExtensions
             if (!string.IsNullOrEmpty(connectionString))
             {
                 loggingBuilder.AddApplicationInsightsWebJobs(o => o.ConnectionString = connectionString);
-                loggingBuilder.AddFilter<ApplicationInsightsLoggerProvider>(string.Empty, LogLevel.Information);
-                loggingBuilder.AddFilter<ApplicationInsightsLoggerProvider>("Microsoft", LogLevel.Information);
+                loggingBuilder.AddFilter<ApplicationInsightsLoggerProvider>(string.Empty, LogLevel.Debug);
+                loggingBuilder.AddFilter<ApplicationInsightsLoggerProvider>("Microsoft", LogLevel.Debug);
             }
 
             loggingBuilder.AddConsole();
