@@ -17,14 +17,14 @@ namespace SFA.DAS.ProviderRegistrations.Api;
 
 public class Startup
 {
+    private readonly IConfiguration _configuration;
+    private readonly IWebHostEnvironment _environment;
+    
     public Startup(IConfiguration configuration, IWebHostEnvironment environment)
     {
         _environment = environment;
         _configuration = configuration.BuildDasConfiguration();
     }
-
-    private readonly IConfiguration _configuration;
-    private readonly IWebHostEnvironment _environment;
 
     public void ConfigureServices(IServiceCollection services)
     {
@@ -46,7 +46,7 @@ public class Startup
         services.AddApiConfigurationSections(_configuration);
         services.AddMediatR(configuration=> configuration.RegisterServicesFromAssembly(typeof(GetInvitationByIdQuery).Assembly));
         services.AddDasDistributedMemoryCache(_configuration, _configuration.IsDevOrLocal());
-        services.AddDatabaseRegistration();
+        services.AddDatabaseRegistration(_configuration);
         services.AddMemoryCache();
         services.AddHealthChecks();
         services.AddAutoMapper(typeof(InvitationMappings));

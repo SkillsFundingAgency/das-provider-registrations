@@ -11,6 +11,7 @@ using NUnit.Framework;
 using SFA.DAS.ProviderRegistrations.Api.ServiceRegistrations;
 using SFA.DAS.ProviderRegistrations.Application.Commands.UnsubscribeByIdCommand;
 using SFA.DAS.ProviderRegistrations.Application.Queries.GetInvitationByIdQuery;
+using SFA.DAS.ProviderRegistrations.Configuration;
 using SFA.DAS.ProviderRegistrations.Mappings;
 using SFA.DAS.ProviderRegistrations.ServiceRegistrations;
 using SFA.DAS.UnitOfWork.DependencyResolution.Microsoft;
@@ -33,7 +34,7 @@ public class WhenAddingServicesToTheContainer
         
         services.AddApiConfigurationSections(config);
         services.AddMediatR(x=> x.RegisterServicesFromAssembly(typeof(GetInvitationByIdQuery).Assembly));
-        services.AddDatabaseRegistration();
+        services.AddDatabaseRegistration(config);
         services.AddAutoMapper(typeof(InvitationMappings));
         
         var provider = services.BuildServiceProvider();
@@ -48,7 +49,7 @@ public class WhenAddingServicesToTheContainer
         {
             InitialData = new List<KeyValuePair<string, string>>
             {
-                 new("DatabaseConnectionString", "Server=myServerAddress;Database=myDataBase;User Id=myUsername;Password=myPassword;"),
+                 new($"{ProviderRegistrationsConfigurationKeys.ProviderRegistrationsSettings}:DatabaseConnectionString", "Server=myServerAddress;Database=myDataBase;User Id=myUsername;Password=myPassword;"),
             }
         };
 
