@@ -14,9 +14,9 @@ public static class EntityFrameworkStartup
     [ExcludeFromCodeCoverage]
     public static IServiceCollection AddEntityFramework(this IServiceCollection services, ProviderRegistrationsSettings config)
     {
-        services.AddScoped<ProviderRegistrationsDbContext>(p =>
+        services.AddScoped<ProviderRegistrationsDbContext>(serviceProvider =>
         {
-            var unitOfWorkContext = p.GetService<IUnitOfWorkContext>();
+            var unitOfWorkContext = serviceProvider.GetService<IUnitOfWorkContext>();
             var azureServiceTokenProvider = new AzureServiceTokenProvider();
             ProviderRegistrationsDbContext dbContext;
             try

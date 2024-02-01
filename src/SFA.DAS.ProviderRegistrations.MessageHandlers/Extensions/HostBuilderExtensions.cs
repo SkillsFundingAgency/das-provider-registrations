@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Azure.WebJobs.Logging.ApplicationInsights;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,6 +17,7 @@ using SFA.DAS.UnitOfWork.NServiceBus.DependencyResolution.Microsoft;
 
 namespace SFA.DAS.ProviderRegistrations.MessageHandlers.Extensions;
 
+[ExcludeFromCodeCoverage]
 public static class HostBuilderExtensions
 {
     public static IHostBuilder ConfigureDasLogging(this IHostBuilder hostBuilder)
@@ -64,13 +66,17 @@ public static class HostBuilderExtensions
     {
         hostBuilder.ConfigureServices((context, services) =>
         {
+            var providerRegistrationsSettings = context.Configuration
+                .GetSection(ProviderRegistrationsConfigurationKeys.ProviderRegistrationsSettings)
+                .Get<ProviderRegistrationsSettings>();
+            
             services.AddConfigurationSections(context.Configuration);
             services.AddUnitOfWork();
             services.AddNServiceBusUnitOfWork();
             services.AddEntityFrameworkUnitOfWork<ProviderRegistrationsDbContext>();
             services.AddMemoryCache();
             services.AddMediatR(configuration => configuration.RegisterServicesFromAssembly(typeof(AddedPayeSchemeCommand).Assembly));
-            services.AddEntityFramework(context.Configuration.Get<ProviderRegistrationsSettings>());
+            services.AddEntityFramework(providerRegistrationsSettings);
             services.StartNServiceBus(context.Configuration);
         });
 
