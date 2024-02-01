@@ -3,6 +3,7 @@ using Microsoft.Azure.ServiceBus.Primitives;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using NServiceBus;
 using NServiceBus.ObjectBuilder.MSDependencyInjection;
 using SFA.DAS.NServiceBus.Configuration;
@@ -14,6 +15,7 @@ using SFA.DAS.NServiceBus.SqlServer.Configuration;
 using SFA.DAS.ProviderRegistrations.Configuration;
 using SFA.DAS.ProviderRegistrations.Extensions;
 using SFA.DAS.UnitOfWork.NServiceBus.Configuration;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace SFA.DAS.ProviderRegistrations.MessageHandlers.Extensions;
 
@@ -26,6 +28,8 @@ public static class ServiceCollectionExtensions
         return services
             .AddSingleton(provider =>
             {
+                var logger = provider.GetService<ILogger<Program>>();
+                
                 var hostingEnvironment = provider.GetService<IHostEnvironment>();
                 var isDevelopment = hostingEnvironment.IsDevelopment();
                 
@@ -36,6 +40,8 @@ public static class ServiceCollectionExtensions
                 var providerRegistrationsConfig = configuration
                     .GetSection(ProviderRegistrationsConfigurationKeys.ProviderRegistrationsSettings)
                     .Get<ProviderRegistrationsSettings>();
+                
+                logger.LogInformation("ProviderRegistrationsSettings config value: {Value}", JsonSerializer.Serialize(providerRegistrationsConfig));
 
                 var endpointConfiguration = new EndpointConfiguration(EndpointName)
                     .UseErrorQueue($"{EndpointName}-errors")
