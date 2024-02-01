@@ -22,26 +22,22 @@ namespace SFA.DAS.ProviderRegistrations.MessageHandlers.Extensions;
 public static class ServiceCollectionExtensions
 {
     private const string EndpointName = "SFA.DAS.ProviderRegistrations.MessageHandlers";
-    
+
     public static IServiceCollection StartNServiceBus(this IServiceCollection services, IConfiguration configuration)
     {
         return services
             .AddSingleton(provider =>
             {
-                var logger = provider.GetService<ILogger<Program>>();
-                
                 var hostingEnvironment = provider.GetService<IHostEnvironment>();
                 var isDevelopment = hostingEnvironment.IsDevelopment();
-                
+
                 var nServiceBusSettings = configuration
                     .GetSection(ProviderRegistrationsConfigurationKeys.NServiceBusSettings)
                     .Get<NServiceBusSettings>();
-                
+
                 var providerRegistrationsConfig = configuration
                     .GetSection(ProviderRegistrationsConfigurationKeys.ProviderRegistrationsSettings)
                     .Get<ProviderRegistrationsSettings>();
-                
-                logger.LogInformation("ProviderRegistrationsSettings config value: {Value}", JsonSerializer.Serialize(providerRegistrationsConfig));
 
                 var endpointConfiguration = new EndpointConfiguration(EndpointName)
                     .UseErrorQueue($"{EndpointName}-errors")
@@ -71,7 +67,6 @@ public static class ServiceCollectionExtensions
                 }
 
                 return Endpoint.Start(endpointConfiguration).GetAwaiter().GetResult();
-                
             })
             .AddSingleton<IMessageSession>(s => s.GetService<IEndpointInstance>())
             .AddHostedService<NServiceBusHostedService>();
