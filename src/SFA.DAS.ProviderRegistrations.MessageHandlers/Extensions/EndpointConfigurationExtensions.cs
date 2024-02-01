@@ -18,7 +18,6 @@ public static class EndpointConfigurationExtensions
         }
         else
         {
-            //config.UseAzureServiceBusTransport(connectionStringBuilder(), s => s.AddRouting());
             var transport = config.UseTransport<AzureServiceBusTransport>();
             var ruleNameShortener = new RuleNameShortener();
             
