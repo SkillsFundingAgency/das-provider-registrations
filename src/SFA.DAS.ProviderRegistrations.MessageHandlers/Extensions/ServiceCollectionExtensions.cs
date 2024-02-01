@@ -50,23 +50,7 @@ public static class ServiceCollectionExtensions
                     var decodedLicence = WebUtility.HtmlDecode(nServiceBusSettings.NServiceBusLicense);
                     endpointConfiguration.UseLicense(decodedLicence);
                 }
-
-                // if (isDevelopment)
-                // {
-                //     endpointConfiguration.UseLearningTransport(s => s.AddRouting());
-                // }
-                // else
-                // {
-                // var transport = endpointConfiguration.UseTransport<AzureServiceBusTransport>();
-                // var ruleNameShortener = new RuleNameShortener();
-                //
-                // var tokenProvider = TokenProvider.CreateManagedIdentityTokenProvider();
-                // transport.CustomTokenProvider(tokenProvider);
-                // transport.ConnectionString(nServiceBusSettings.ServiceBusConnectionString);
-                // transport.RuleNameShortener(ruleNameShortener.Shorten);
-                // transport.Routing().AddRouting();
-                // }
-
+                
                 return Endpoint.Start(endpointConfiguration).GetAwaiter().GetResult();
             })
             .AddSingleton<IMessageSession>(s => s.GetService<IEndpointInstance>())
