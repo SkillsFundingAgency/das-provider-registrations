@@ -37,22 +37,22 @@ public static class ServiceCollectionExtensions
                     .GetSection(ProviderRegistrationsConfigurationKeys.ProviderRegistrationsSettings)
                     .Get<ProviderRegistrationsSettings>();
 
-                var endpointConfiguration = new EndpointConfiguration(EndpointName)
-                    .ConfigureServiceBusTransport(() => nServiceBusSettings.ServiceBusConnectionString, isDevelopment)
-                    .UseErrorQueue($"{EndpointName}-errors")
-                    .UseInstallers()
-                    .UseSqlServerPersistence(() => DatabaseExtensions.GetSqlConnection(providerRegistrationsConfig.DatabaseConnectionString))
-                    .UseNewtonsoftJsonSerializer()
-                    .UseOutbox()
-                    .UseUnitOfWork()
-                    .UseServicesBuilder(new UpdateableServiceProvider(services));
-                    
+                var endpointConfiguration = new EndpointConfiguration(EndpointName);
+                endpointConfiguration.ConfigureServiceBusTransport(() => nServiceBusSettings.ServiceBusConnectionString, isDevelopment);
+                endpointConfiguration.UseErrorQueue($"{EndpointName}-errors");
+                endpointConfiguration.UseInstallers();
+                endpointConfiguration.UseSqlServerPersistence(() => DatabaseExtensions.GetSqlConnection(providerRegistrationsConfig.DatabaseConnectionString));
+                endpointConfiguration.UseNewtonsoftJsonSerializer();
+                endpointConfiguration.UseOutbox();
+                endpointConfiguration.UseUnitOfWork();
+                endpointConfiguration.UseServicesBuilder(new UpdateableServiceProvider(services));
+
                 if (!string.IsNullOrEmpty(nServiceBusSettings.NServiceBusLicense))
                 {
                     var decodedLicence = WebUtility.HtmlDecode(nServiceBusSettings.NServiceBusLicense);
                     endpointConfiguration.UseLicense(decodedLicence);
                 }
-                
+
                 // if (isDevelopment)
                 // {
                 //     endpointConfiguration.UseLearningTransport(s => s.AddRouting());
