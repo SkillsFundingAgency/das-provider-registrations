@@ -1,12 +1,10 @@
 ﻿using System.Net;
-using Microsoft.Azure.ServiceBus.Primitives;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NServiceBus;
 using NServiceBus.ObjectBuilder.MSDependencyInjection;
 using SFA.DAS.NServiceBus.Configuration;
-using SFA.DAS.NServiceBus.Configuration.AzureServiceBus;
 using SFA.DAS.NServiceBus.Configuration.MicrosoftDependencyInjection;
 using SFA.DAS.NServiceBus.Configuration.NewtonsoftJsonSerializer;
 using SFA.DAS.NServiceBus.Hosting;
@@ -21,7 +19,7 @@ public static class ServiceCollectionExtensions
 {
     private const string EndpointName = "SFA.DAS.ProviderRegistrations.MessageHandlers";
 
-    public static IServiceCollection StartNServiceBus(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddNServiceBus(this IServiceCollection services, IConfiguration configuration)
     {
         return services
             .AddSingleton(provider =>
@@ -37,15 +35,15 @@ public static class ServiceCollectionExtensions
                     .GetSection(ProviderRegistrationsConfigurationKeys.ProviderRegistrationsSettings)
                     .Get<ProviderRegistrationsSettings>();
 
-                var endpointConfiguration = new EndpointConfiguration(EndpointName);
-                endpointConfiguration.ConfigureServiceBusTransport(() => nServiceBusSettings.ServiceBusConnectionString, isDevelopment);
-                endpointConfiguration.UseErrorQueue($"{EndpointName}-errors");
-                endpointConfiguration.UseInstallers();
-                endpointConfiguration.UseSqlServerPersistence(() => DatabaseExtensions.GetSqlConnection(providerRegistrationsConfig.DatabaseConnectionString));
-                endpointConfiguration.UseNewtonsoftJsonSerializer();
-                endpointConfiguration.UseOutbox();
-                endpointConfiguration.UseUnitOfWork();
-                endpointConfiguration.UseServicesBuilder(new UpdateableServiceProvider(services));
+                var endpointConfiguration = new EndpointConfiguration(EndpointName)
+                    .ConfigureServiceBusTransport(() => nServiceBusSettings.ServiceBusConnectionString, isDevelopment)
+                    .UseErrorQueue($"{EndpointName}-errors")
+                    .UseInstallers()
+                    .UseSqlServerPersistence(() => DatabaseExtensions.GetSqlConnection(providerRegistrationsConfig.DatabaseConnectionString))
+                    .UseNewtonsoftJsonSerializer()
+                    .UseOutbox()
+                    .UseUnitOfWork()
+                    .UseServicesBuilder(new UpdateableServiceProvider(services));
 
                 if (!string.IsNullOrEmpty(nServiceBusSettings.NServiceBusLicense))
                 {
@@ -59,14 +57,14 @@ public static class ServiceCollectionExtensions
                 // }
                 // else
                 // {
-                //     var transport = endpointConfiguration.UseTransport<AzureServiceBusTransport>();
-                //     var ruleNameShortener = new RuleNameShortener();
+                // var transport = endpointConfiguration.UseTransport<AzureServiceBusTransport>();
+                // var ruleNameShortener = new RuleNameShortener();
                 //
-                //     var tokenProvider = TokenProvider.CreateManagedIdentityTokenProvider();
-                //     transport.CustomTokenProvider(tokenProvider);
-                //     transport.ConnectionString(nServiceBusSettings.ServiceBusConnectionString);
-                //     transport.RuleNameShortener(ruleNameShortener.Shorten);
-                //     transport.Routing().AddRouting();
+                // var tokenProvider = TokenProvider.CreateManagedIdentityTokenProvider();
+                // transport.CustomTokenProvider(tokenProvider);
+                // transport.ConnectionString(nServiceBusSettings.ServiceBusConnectionString);
+                // transport.RuleNameShortener(ruleNameShortener.Shorten);
+                // transport.Routing().AddRouting();
                 // }
 
                 return Endpoint.Start(endpointConfiguration).GetAwaiter().GetResult();

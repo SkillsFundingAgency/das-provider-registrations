@@ -71,13 +71,13 @@ public static class HostBuilderExtensions
                 .Get<ProviderRegistrationsSettings>();
             
             services.AddConfigurationSections(context.Configuration);
+            
             services.AddUnitOfWork();
-            services.AddNServiceBusUnitOfWork();
-            services.AddEntityFrameworkUnitOfWork<ProviderRegistrationsDbContext>();
-            services.AddMemoryCache();
-            services.AddMediatR(configuration => configuration.RegisterServicesFromAssembly(typeof(AddedPayeSchemeCommand).Assembly));
             services.AddEntityFramework(providerRegistrationsSettings);
-            services.StartNServiceBus(context.Configuration);
+            services.AddNServiceBusUnitOfWork();
+            services.AddMediatR(configuration => configuration.RegisterServicesFromAssembly(typeof(AddedPayeSchemeCommand).Assembly));
+            services.AddMemoryCache();
+            services.AddNServiceBus(context.Configuration);
         });
 
         return hostBuilder;

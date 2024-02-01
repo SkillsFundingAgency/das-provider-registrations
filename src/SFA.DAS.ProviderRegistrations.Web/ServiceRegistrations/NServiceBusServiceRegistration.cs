@@ -11,6 +11,7 @@ using SFA.DAS.NServiceBus.Hosting;
 using SFA.DAS.NServiceBus.SqlServer.Configuration;
 using SFA.DAS.ProviderRegistrations.Configuration;
 using SFA.DAS.ProviderRegistrations.Extensions;
+using SFA.DAS.ProviderRegistrations.Web.Extensions;
 using SFA.DAS.UnitOfWork.NServiceBus.Configuration;
 
 namespace SFA.DAS.ProviderRegistrations.Web.ServiceRegistrations;

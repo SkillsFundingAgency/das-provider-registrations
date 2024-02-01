@@ -1,7 +1,7 @@
 ﻿using NServiceBus;
 using SFA.DAS.Notifications.Messages.Commands;
 
-namespace SFA.DAS.ProviderRegistrations.Extensions;
+namespace SFA.DAS.ProviderRegistrations.Web.Extensions;
 
 public static class NServiceBusExtensions
 {
