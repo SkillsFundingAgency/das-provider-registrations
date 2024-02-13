@@ -1,36 +1,35 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using SFA.DAS.ProviderRegistrations.Configuration;
 
-namespace SFA.DAS.ProviderRegistrations.Api.Extensions
-{
-    public static class SecurityServicesCollectionExtension
-    {
-        public static void AddAdAuthentication(this IServiceCollection services, IConfiguration configuration)
-        {
-            var activeDirectorySettings = configuration.GetSection(ProviderRegistrationsConfigurationKeys.ActiveDirectorySettings).Get<ActiveDirectorySettings>();
+namespace SFA.DAS.ProviderRegistrations.Api.Extensions;
 
-            services.AddAuthorization(o =>
+public static class SecurityServicesCollectionExtension
+{
+    public static void AddAdAuthentication(this IServiceCollection services, IConfiguration configuration)
+    {
+        var activeDirectorySettings = configuration.GetSection(ProviderRegistrationsConfigurationKeys.ActiveDirectorySettings).Get<ActiveDirectorySettings>();
+
+        services.AddAuthorization(o =>
+        {
+            o.AddPolicy("default", policy =>
             {
-                o.AddPolicy("default", policy =>
-                {
-                    policy.RequireAuthenticatedUser();
-                    policy.RequireRole("Default");
-                });
+                policy.RequireAuthenticatedUser();
+                policy.RequireRole("Default");
             });
-            services.AddAuthentication(auth =>
+        });
+        services.AddAuthentication(auth =>
+        {
+            auth.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+        }).AddJwtBearer(auth =>
+        {
+            auth.Authority = $"https://login.microsoftonline.com/{activeDirectorySettings.Tenant}";
+            auth.TokenValidationParameters = new TokenValidationParameters
             {
-                auth.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(auth =>
-            {
-                auth.Authority = $"https://login.microsoftonline.com/{activeDirectorySettings.Tenant}";
-                auth.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
-                {
-                    ValidAudiences = activeDirectorySettings.IdentifierUri.Split(",")
-                };
-            });
-        }
+                ValidAudiences = activeDirectorySettings.IdentifierUri.Split(",")
+            };
+        });
     }
 }

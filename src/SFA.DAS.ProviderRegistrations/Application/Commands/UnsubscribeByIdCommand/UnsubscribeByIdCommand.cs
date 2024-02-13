@@ -1,15 +1,11 @@
-using System;
-using MediatR;
+namespace SFA.DAS.ProviderRegistrations.Application.Commands.UnsubscribeByIdCommand;
 
-namespace SFA.DAS.ProviderRegistrations.Application.Commands.UnsubscribeByIdCommand
+public class UnsubscribeByIdCommand : IRequest
 {
-    public class UnsubscribeByIdCommand : IRequest
+    public UnsubscribeByIdCommand(Guid correlationId)
     {
-        public UnsubscribeByIdCommand(Guid correlationId)
-        {
-            CorrelationId = correlationId;
-        }
-
-        public Guid CorrelationId { get; }
+        CorrelationId = correlationId;
     }
+
+    public Guid CorrelationId { get; }
 }

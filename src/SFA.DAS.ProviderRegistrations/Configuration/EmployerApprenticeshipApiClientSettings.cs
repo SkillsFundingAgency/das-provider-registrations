@@ -1,11 +1,10 @@
 ﻿using SFA.DAS.Http.Configuration;
 
-namespace SFA.DAS.ProviderRegistrations.Configuration
-{
-    class EmployerApprenticeshipApiClientSettings : IManagedIdentityClientConfiguration
-    {
-        public string ApiBaseUrl { get; set; }
+namespace SFA.DAS.ProviderRegistrations.Configuration;
 
-        public string IdentifierUri { get; set; }
-    }
+public class EmployerApprenticeshipApiClientSettings : IManagedIdentityClientConfiguration
+{
+    public string ApiBaseUrl { get; set; }
+
+    public string IdentifierUri { get; set; }
 }

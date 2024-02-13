@@ -3,6 +3,7 @@
 @using SFA.DAS.ProviderRegistrations.Web.ViewModels
 @using  SFA.DAS.ProviderRegistrations.Models;
 @model SFA.DAS.ProviderRegistrations.Web.ViewModels.InvitationsViewModel
+@inject SFA.DAS.ProviderRegistrations.Services.ILinkGenerator LinkGenerator;
 
 @{
     ViewData["Title"] = "Manage apprenticeships";
@@ -17,7 +18,7 @@
 
 @section breadcrumb
 {
-    <a id="back-link" class="govuk-back-link" href="@Url.ProviderApprenticeshipServiceLink("/account")">Back</a>
+    <a id="back-link" class="govuk-back-link" href="@Url.ProviderApprenticeshipServiceLink("/account", LinkGenerator)">Back</a>
 }
 
 <div class="govuk-grid-row">

@@ -1,65 +1,59 @@
-﻿using System.Data.Common;
-using Microsoft.Azure.ServiceBus.Primitives;
+﻿using System.Net;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using NServiceBus;
+using NServiceBus.ObjectBuilder.MSDependencyInjection;
 using SFA.DAS.NServiceBus.Configuration;
-using SFA.DAS.NServiceBus.Configuration.AzureServiceBus;
+using SFA.DAS.NServiceBus.Configuration.MicrosoftDependencyInjection;
 using SFA.DAS.NServiceBus.Configuration.NewtonsoftJsonSerializer;
-using SFA.DAS.NServiceBus.Configuration.NLog;
-using SFA.DAS.NServiceBus.Configuration.StructureMap;
 using SFA.DAS.NServiceBus.Hosting;
 using SFA.DAS.NServiceBus.SqlServer.Configuration;
 using SFA.DAS.ProviderRegistrations.Configuration;
+using SFA.DAS.ProviderRegistrations.Extensions;
 using SFA.DAS.UnitOfWork.NServiceBus.Configuration;
-using StructureMap;
 
-namespace SFA.DAS.ProviderRegistrations.MessageHandlers.Extensions
+namespace SFA.DAS.ProviderRegistrations.MessageHandlers.Extensions;
+
+public static class ServiceCollectionExtensions
 {
-    public static class ServiceCollectionExtensions
+    private const string EndpointName = "SFA.DAS.ProviderRegistrations.MessageHandlers";
+
+    public static IServiceCollection AddNServiceBus(this IServiceCollection services, IConfiguration configuration)
     {
-        public static IServiceCollection AddNServiceBus(this IServiceCollection services, IConfiguration config, bool isDevelopment)
-        {
-            return services
-                .AddSingleton(p =>
+        return services
+            .AddSingleton(provider =>
+            {
+                var hostingEnvironment = provider.GetService<IHostEnvironment>();
+                var isDevelopment = hostingEnvironment.IsDevelopment();
+
+                var nServiceBusSettings = configuration
+                    .GetSection(ProviderRegistrationsConfigurationKeys.NServiceBusSettings)
+                    .Get<NServiceBusSettings>();
+
+                var providerRegistrationsConfig = configuration
+                    .GetSection(ProviderRegistrationsConfigurationKeys.ProviderRegistrationsSettings)
+                    .Get<ProviderRegistrationsSettings>();
+
+                var endpointConfiguration = new EndpointConfiguration(EndpointName)
+                    .ConfigureServiceBusTransport(() => nServiceBusSettings.ServiceBusConnectionString, isDevelopment)
+                    .UseErrorQueue($"{EndpointName}-errors")
+                    .UseInstallers()
+                    .UseSqlServerPersistence(() => DatabaseExtensions.GetSqlConnection(providerRegistrationsConfig.DatabaseConnectionString))
+                    .UseNewtonsoftJsonSerializer()
+                    .UseOutbox()
+                    .UseUnitOfWork()
+                    .UseServicesBuilder(new UpdateableServiceProvider(services));
+
+                if (!string.IsNullOrEmpty(nServiceBusSettings.NServiceBusLicense))
                 {
-                    var container = p.GetService<IContainer>();
-                    var configuration = config.GetSection(ProviderRegistrationsConfigurationKeys.NServiceBusSettings).Get<NServiceBusSettings>();
-
-                    var endpointName = "SFA.DAS.ProviderRegistrations.MessageHandlers";
-                    var endpointConfiguration = new EndpointConfiguration(endpointName)
-                        .UseErrorQueue($"{endpointName}-errors")
-                        .UseInstallers()
-                        .UseLicense(configuration.NServiceBusLicense)
-                        .UseMessageConventions()
-                        .UseNewtonsoftJsonSerializer()
-                        .UseNLogFactory()
-                        .UseOutbox()
-                        .UseSqlServerPersistence(() => container.GetInstance<DbConnection>())
-                        .UseStructureMapBuilder(container)
-                        .UseUnitOfWork();
-
-                    if (isDevelopment)
-                    {
-                        endpointConfiguration.UseLearningTransport(s => s.AddRouting());
-                    }
-                    else
-                    {
-                        var transport = endpointConfiguration.UseTransport<AzureServiceBusTransport>();
-                        var ruleNameShortener = new RuleNameShortener();
-
-                        var tokenProvider = TokenProvider.CreateManagedIdentityTokenProvider();
-                        transport.CustomTokenProvider(tokenProvider);
-                        transport.ConnectionString(configuration.ServiceBusConnectionString);
-                        transport.RuleNameShortener(ruleNameShortener.Shorten);
-                        transport.Routing().AddRouting();
-                    }
-
-                    var endpoint = Endpoint.Start(endpointConfiguration).GetAwaiter().GetResult();
-
-                    return endpoint;
-                })
-                .AddHostedService<NServiceBusHostedService>();
-        }
+                    var decodedLicence = WebUtility.HtmlDecode(nServiceBusSettings.NServiceBusLicense);
+                    endpointConfiguration.UseLicense(decodedLicence);
+                }
+                
+                return Endpoint.Start(endpointConfiguration).GetAwaiter().GetResult();
+            })
+            .AddSingleton<IMessageSession>(s => s.GetService<IEndpointInstance>())
+            .AddHostedService<NServiceBusHostedService>();
     }
 }

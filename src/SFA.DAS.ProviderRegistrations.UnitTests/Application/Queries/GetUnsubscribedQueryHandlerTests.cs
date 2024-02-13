@@ -6,6 +6,7 @@ using SFA.DAS.ProviderRegistrations.Models;
 using SFA.DAS.ProviderRegistrations.UnitTests.AutoFixture;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoFixture.NUnit3;
 
 namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Queries
 {
@@ -16,7 +17,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Queries
         [Test, ProviderAutoData]
         public async Task Handle_WhenHandlingGetUnsubscribedQueryAndParametersAreMatched_ThenShouldReturnGetATrueResult(
             ProviderRegistrationsDbContext setupContext,
-            Unsubscribe entity,
+            [Greedy]Unsubscribe entity,
             GetUnsubscribedQueryHandler handler)
         {
             //arrange

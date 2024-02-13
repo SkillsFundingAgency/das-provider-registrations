@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace SFA.DAS.ProviderRegistrations.Web.ViewModels
+﻿namespace SFA.DAS.ProviderRegistrations.Web.ViewModels
 {
     public class InvitationsViewModel
     {

@@ -8,13 +8,12 @@
 
 @section Styles
 {
-    <link rel="Stylesheet" href="@Href("~/stylesheets/site.css")" />
+    <link rel="Stylesheet" href="@Href("~/stylesheets/site.css")"/>
 }
 
-<form id="InviteEmployerUser" novalidate method="post" action="@Url.InviteEmployeruserAction("InviteEmployeruser", Model?.InvitationId)">
-    @Html.AntiForgeryToken()
-    @Html.HiddenFor(m => m.Reference)
-    @Html.HiddenFor(m => m.ResendInvitation)
+<form id="InviteEmployerUser" novalidate method="post" action="@Url.InviteEmployeruserAction("InviteEmployeruser", Model?.InvitationId)" asp-antiforgery="true">
+    <input type="hidden" asp-for="Reference"/>
+    <input type="hidden" asp-for="ResendInvitation"/>
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             <h1 class="govuk-heading-xl">
@@ -30,7 +29,7 @@
                         This employer has unsubscribed from invitation emails. You cannot resend their invitation.
                     </strong>
                 </div>
-            } 
+            }
             else if (Model.IsEmailInUse)
             {
                 <div class="govuk-warning-text">
@@ -49,71 +48,71 @@
 
             <dl class="govuk-summary-list">
                 <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">
-                    Employer organisation
-                </dt>
-                <dd class="govuk-summary-list__value">
-                    @Model.EmployerOrganisation
-                    @Html.HiddenFor(m => m.EmployerOrganisation)
-                </dd>
-                <dd class="govuk-summary-list__actions">
-                    @if (Model.EditAndResendEnabled)
-                    {
-                        <input class="govuk-link govuk-button--looks-like-link" type="submit" value="Change" name="command" />
-                    }
-                </dd>
-        </div>
-        <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-                Employer first name
-            </dt>
-            <dd class="govuk-summary-list__value">
-                @Model.EmployerFirstName
-                @Html.HiddenFor(m => m.EmployerFirstName)
-            </dd>
-            <dd class="govuk-summary-list__actions">
-                @if (Model.EditAndResendEnabled)
-                {
-                    <input class="govuk-link govuk-button--looks-like-link" type="submit" value="Change" name="command" />
-                }
-            </dd>
-        </div>
-        <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-                Employer last name
-            </dt>
-            <dd class="govuk-summary-list__value">
-                @Model.EmployerLastName
-                @Html.HiddenFor(m => m.EmployerLastName)
-            </dd>
-            <dd class="govuk-summary-list__actions">
-                @if (Model.EditAndResendEnabled)
-                {
-                    <input class="govuk-link govuk-button--looks-like-link" type="submit" value="Change" name="command" />
-                }
-            </dd>
-        </div>
-        <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-                Employer email address
-            </dt>
-            <dd class="govuk-summary-list__value">
-                @Model.EmployerEmailAddress
-                @Html.HiddenFor(m => m.EmployerEmailAddress)
-            </dd>
-            <dd class="govuk-summary-list__actions">
-                @if (Model.EditAndResendEnabled && !Model.ResendInvitation)
-                {
-                    <input class="govuk-link govuk-button--looks-like-link" type="submit" value="Change" name="command" />
-                }
-            </dd>
-        </div>
-        </dl>
-        @if (Model.EditAndResendEnabled)
-        {
-            <button type="submit" class="govuk-button">Send invitation</button>
-        }
+                    <dt class="govuk-summary-list__key">
+                        Employer organisation
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.EmployerOrganisation
+                        <input type="hidden" asp-for="EmployerOrganisation"/>
+                    </dd>
+                    <dd class="govuk-summary-list__actions">
+                        @if (Model.EditAndResendEnabled)
+                        {
+                            <input class="govuk-link govuk-button--looks-like-link" type="submit" value="Change" name="command"/>
+                        }
+                    </dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Employer first name
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.EmployerFirstName
+                        <input type="hidden" asp-for="EmployerFirstName"/>
+                    </dd>
+                    <dd class="govuk-summary-list__actions">
+                        @if (Model.EditAndResendEnabled)
+                        {
+                            <input class="govuk-link govuk-button--looks-like-link" type="submit" value="Change" name="command"/>
+                        }
+                    </dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Employer last name
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.EmployerLastName
+                        <input type="hidden" asp-for="EmployerLastName"/>
+                    </dd>
+                    <dd class="govuk-summary-list__actions">
+                        @if (Model.EditAndResendEnabled)
+                        {
+                            <input class="govuk-link govuk-button--looks-like-link" type="submit" value="Change" name="command"/>
+                        }
+                    </dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        Employer email address
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.EmployerEmailAddress
+                        <input type="hidden" asp-for="EmployerEmailAddress"/>
+                    </dd>
+                    <dd class="govuk-summary-list__actions">
+                        @if (Model.EditAndResendEnabled && !Model.ResendInvitation)
+                        {
+                            <input class="govuk-link govuk-button--looks-like-link" type="submit" value="Change" name="command"/>
+                        }
+                    </dd>
+                </div>
+            </dl>
+            @if (Model.EditAndResendEnabled)
+            {
+                <button type="submit" class="govuk-button">Send invitation</button>
+            }
 
-    </div>
+        </div>
     </div>
 </form>

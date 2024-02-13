@@ -1,47 +1,41 @@
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using MediatR;
 using NServiceBus;
 using SFA.DAS.Notifications.Messages.Commands;
-using SFA.DAS.ProviderRegistrations.Application.Queries.GetProviderByUkprnQuery;
 using SFA.DAS.ProviderRegistrations.Configuration;
 
-namespace SFA.DAS.ProviderRegistrations.Application.Commands.SendInvitationEmailCommand
+namespace SFA.DAS.ProviderRegistrations.Application.Commands.SendInvitationEmailCommand;
+
+public class SendInvitationEmailCommandHandler : IRequestHandler<SendInvitationEmailCommand>
 {
-    public class SendInvitationEmailCommandHandler : AsyncRequestHandler<SendInvitationEmailCommand>
+    private readonly string _notificationTemplateId = "ProviderInviteEmployerNotification";
+    private readonly IMessageSession _publisher;
+    private readonly ProviderRegistrationsSettings _configuration;
+
+    public SendInvitationEmailCommandHandler(IMessageSession publisher, ProviderRegistrationsSettings configuration)
     {
-        private readonly string _notificationTemplateId = "ProviderInviteEmployerNotification";
-        private readonly IMessageSession _publisher;
-        private readonly ProviderRegistrationsSettings _configuration;
+        _publisher = publisher;
+        _configuration = configuration;
 
-        public SendInvitationEmailCommandHandler(IMessageSession publisher, ProviderRegistrationsSettings configuration)
+        if (_configuration.UseGovLogin)
         {
-            _publisher = publisher;
-            _configuration = configuration;
-            if (_configuration.UseGovLogin)
-            {
-                _notificationTemplateId = _configuration.ResourceEnvironmentName.ToLower() == "prd" 
-                    ? "9dc52d84-0ee5-4755-b836-f4e71ae2a326" : "02818d7b-cea1-4445-8b16-5a27f40ddaf6";
-            }
+            _notificationTemplateId = _configuration.ResourceEnvironmentName.ToLower() == "prd"
+                ? "9dc52d84-0ee5-4755-b836-f4e71ae2a326"
+                : "02818d7b-cea1-4445-8b16-5a27f40ddaf6";
         }
+    }
 
-        protected override async Task Handle(SendInvitationEmailCommand request, CancellationToken cancellationToken)
+    public async Task Handle(SendInvitationEmailCommand request, CancellationToken cancellationToken)
+    {
+        var tokens = new Dictionary<string, string>
         {
-            var tokens = new Dictionary<string, string>()
-            {
-                { "provider_organisation", request.ProviderOrgName },
-                { "provider_name", request.ProviderUserFullName },
-                { "employer_organisation", request.EmployerOrganisation },
-                { "employer_name", request.EmployerFullName },
-                { "invitation_link", $"{_configuration.EmployerAccountsBaseUrl}/service/register/{request.CorrelationId}" },
-                { "unsubscribe_training_provider", $"{_configuration.EmployerAccountsBaseUrl}/service/unsubscribe/{request.CorrelationId}" },
-                { "report_training_provider", $"{_configuration.EmployerAccountsBaseUrl}/report/trainingprovider/{request.CorrelationId}" }
+            { "provider_organisation", request.ProviderOrgName },
+            { "provider_name", request.ProviderUserFullName },
+            { "employer_organisation", request.EmployerOrganisation },
+            { "employer_name", request.EmployerFullName },
+            { "invitation_link", $"{_configuration.EmployerAccountsBaseUrl}/service/register/{request.CorrelationId}" },
+            { "unsubscribe_training_provider", $"{_configuration.EmployerAccountsBaseUrl}/service/unsubscribe/{request.CorrelationId}" },
+            { "report_training_provider", $"{_configuration.EmployerAccountsBaseUrl}/report/trainingprovider/{request.CorrelationId}" }
+        };
 
-            };
-
-            await _publisher.Send(new SendEmailCommand(_notificationTemplateId, request.EmployerEmail, tokens));
-        }
+        await _publisher.Send(new SendEmailCommand(_notificationTemplateId, request.EmployerEmail, tokens));
     }
 }

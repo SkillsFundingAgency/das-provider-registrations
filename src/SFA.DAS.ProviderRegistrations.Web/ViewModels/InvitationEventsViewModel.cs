@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace SFA.DAS.ProviderRegistrations.Web.ViewModels
+﻿namespace SFA.DAS.ProviderRegistrations.Web.ViewModels
 {
     public class InvitationEventsViewModel
     {

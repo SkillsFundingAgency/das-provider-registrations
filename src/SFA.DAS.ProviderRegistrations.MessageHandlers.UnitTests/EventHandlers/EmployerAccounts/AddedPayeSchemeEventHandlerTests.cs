@@ -10,33 +10,32 @@ using SFA.DAS.ProviderRegistrations.MessageHandlers.UnitTests.AutoFixture;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.ProviderRegistrations.MessageHandlers.UnitTests.EventHandlers.EmployerAccounts
+namespace SFA.DAS.ProviderRegistrations.MessageHandlers.UnitTests.EventHandlers.EmployerAccounts;
+
+[TestFixture]
+[Parallelizable]
+public class AddedPayeSchemeEventHandlerTests
 {
-    [TestFixture]
-    [Parallelizable]
-    public class AddedPayeSchemeEventHandlerTests
+    [Test, DomainAutoData]
+    public async Task Handle_WhenHandlingAddedPayeSchemeEvent_ThenShouldSendAddedPayeSchemeCommand(
+        TestableMessageHandlerContext context,
+        [Frozen] Mock<IMediator> mediator,
+        AddedPayeSchemeEventHandler handler,
+        AddedPayeSchemeEvent message)
     {
-        [Test, DomainAutoData]
-        public async Task Handle_WhenHandlingAddedPayeSchemeEvent_ThenShouldSendAddedPayeSchemeCommand(
-            TestableMessageHandlerContext context,
-            [Frozen] Mock<IMediator> mediator,
-            AddedPayeSchemeEventHandler handler,
-            AddedPayeSchemeEvent message)
-        {
-            //arrange
+        //arrange
 
-            //act
-            await handler.Handle(message, context);
+        //act
+        await handler.Handle(message, context);
 
-            //assert
-            mediator.Verify(s => s.Send(It.Is<AddedPayeSchemeCommand>(c =>
-                c.AccountId == message.AccountId &&
-                c.Aorn == message.Aorn &&
-                c.CorrelationId == message.CorrelationId &&
-                c.PayeRef == message.PayeRef &&
-                c.SchemeName == message.SchemeName &&
-                c.UserName == message.UserName &&
-                c.UserRef == message.UserRef), It.IsAny<CancellationToken>()));
-        }
+        //assert
+        mediator.Verify(s => s.Send(It.Is<AddedPayeSchemeCommand>(c =>
+            c.AccountId == message.AccountId &&
+            c.Aorn == message.Aorn &&
+            c.CorrelationId == message.CorrelationId &&
+            c.PayeRef == message.PayeRef &&
+            c.SchemeName == message.SchemeName &&
+            c.UserName == message.UserName &&
+            c.UserRef == message.UserRef), It.IsAny<CancellationToken>()));
     }
 }

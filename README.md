@@ -17,7 +17,7 @@ Licensed under the [MIT license](https://github.com/SkillsFundingAgency/das-asse
 
 #### Requirements
 
-- Install [.NET Core 2.2 SDK](https://www.microsoft.com/net/download)
+- Install [NET6 SDK](https://www.microsoft.com/net/download)
 - Install [Visual Studio 2019](https://www.visualstudio.com/downloads/) with these workloads:
     - ASP.NET and web development
     - Azure development

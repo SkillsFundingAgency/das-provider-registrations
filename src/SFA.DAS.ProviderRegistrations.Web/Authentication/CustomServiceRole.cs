@@ -2,11 +2,10 @@
 using SFA.DAS.DfESignIn.Auth.Enums;
 using SFA.DAS.DfESignIn.Auth.Interfaces;
 
-namespace SFA.DAS.ProviderRegistrations.Web.Authentication
+namespace SFA.DAS.ProviderRegistrations.Web.Authentication;
+
+public class CustomServiceRole : ICustomServiceRole
 {
-    public class CustomServiceRole : ICustomServiceRole
-    {
-        public string RoleClaimType => CustomClaimsIdentity.Service;
-        public CustomServiceRoleValueType RoleValueType => CustomServiceRoleValueType.Code;
-    }
+    public string RoleClaimType => CustomClaimsIdentity.Service;
+    public CustomServiceRoleValueType RoleValueType => CustomServiceRoleValueType.Code;
 }

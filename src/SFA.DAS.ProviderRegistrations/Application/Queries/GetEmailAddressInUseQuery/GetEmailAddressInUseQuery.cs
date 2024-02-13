@@ -1,14 +1,11 @@
-using MediatR;
+namespace SFA.DAS.ProviderRegistrations.Application.Queries.GetEmailAddressInUseQuery;
 
-namespace SFA.DAS.ProviderRegistrations.Application.Queries.GetEmailAddressInUseQuery
+public class GetEmailAddressInUseQuery : IRequest<bool>
 {
-    public class GetEmailAddressInUseQuery : IRequest<bool>
+    public GetEmailAddressInUseQuery(string emailAddress)
     {
-        public GetEmailAddressInUseQuery(string emailAddress)
-        {
-            EmailAddress = emailAddress;
-        }
-
-        public string EmailAddress { get; }
+        EmailAddress = emailAddress;
     }
+
+    public string EmailAddress { get; }
 }

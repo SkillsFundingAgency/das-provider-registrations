@@ -1,15 +1,11 @@
-using System;
-using MediatR;
+namespace SFA.DAS.ProviderRegistrations.Application.Queries.GetInvitationByIdQuery;
 
-namespace SFA.DAS.ProviderRegistrations.Application.Queries.GetInvitationByIdQuery
+public class GetInvitationByIdQuery : IRequest<GetInvitationByIdQueryResult>
 {
-    public class GetInvitationByIdQuery : IRequest<GetInvitationByIdQueryResult>
+    public GetInvitationByIdQuery(Guid correlationId)
     {
-        public GetInvitationByIdQuery(Guid correlationId)
-        {
-            CorrelationId = correlationId;
-        }
-
-        public Guid CorrelationId { get; }
+        CorrelationId = correlationId;
     }
+
+    public Guid CorrelationId { get; }
 }

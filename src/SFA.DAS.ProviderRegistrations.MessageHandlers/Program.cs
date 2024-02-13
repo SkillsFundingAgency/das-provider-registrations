@@ -1,43 +1,28 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
+﻿using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
-using NLog.Extensions.Logging;
-using SFA.DAS.ProviderRegistrations.MessageHandlers.DependencyResolution;
+using SFA.DAS.NServiceBus.Configuration.MicrosoftDependencyInjection;
 using SFA.DAS.ProviderRegistrations.MessageHandlers.Extensions;
-using StructureMap;
 
-namespace SFA.DAS.ProviderRegistrations.MessageHandlers
+namespace SFA.DAS.ProviderRegistrations.MessageHandlers;
+
+public class Program
 {
-    public class Program
+    public static async Task Main(string[] args)
     {
-        static async Task Main(string[] args)
-        {
-            var hostBuilder = new HostBuilder();
+        using var host = CreateHost(args);
+        
+        await host.RunAsync();
+    }
 
-            try
-            {
-                hostBuilder
-                    .UseDasEnvironment()
-                    .ConfigureDasAppConfiguration(args)
-                    .ConfigureLogging(b => b.AddNLog())
-                    .UseConsoleLifetime()
-                    .UseStructureMap()
-                    .ConfigureServices((c, s) => s
-                        .AddMemoryCache()
-                        .AddNServiceBus(c.Configuration, c.HostingEnvironment.IsDevelopment()))
-                    .ConfigureContainer<Registry>(IoC.Initialize);
-
-                using (var host = hostBuilder.Build())
-                {
-                    await host.RunAsync();
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                throw;
-            }
-        }
+    private static IHost CreateHost(string[] args)
+    {
+        return new HostBuilder()
+            .ConfigureDasAppConfiguration(args)
+            .UseDasEnvironment()
+            .UseConsoleLifetime()
+            .ConfigureDasLogging()
+            .ConfigureDasServices()
+            .UseNServiceBusContainer()
+            .Build();
     }
 }

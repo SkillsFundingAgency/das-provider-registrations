@@ -1,4 +1,9 @@
-﻿using AutoFixture;
+﻿using System;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using AutoFixture;
+using AutoFixture.NUnit3;
 using FluentAssertions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -7,10 +12,6 @@ using SFA.DAS.ProviderRegistrations.Application.Commands.UpdateInvitationCommand
 using SFA.DAS.ProviderRegistrations.Data;
 using SFA.DAS.ProviderRegistrations.Models;
 using SFA.DAS.ProviderRegistrations.UnitTests.AutoFixture;
-using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
 {
@@ -37,17 +38,17 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
            ProviderRegistrationsDbContext setupContext,
            ProviderRegistrationsDbContext confirmationContext,
            UpdateInvitationCommandHandler handler,
-           UpdateInvitationCommand command)
+           UpdateInvitationCommand command,
+           [Greedy]Invitation invitation)
         {
             //arrange
-            var invitation = fixture.Create<Invitation>();
             invitation.UpdateInvitation(invitation.EmployerOrganisation, invitation.EmployerFirstName, invitation.EmployerLastName, (int)InvitationStatus.InvitationSent, DateTime.Now);
             setupContext.Invitations.Add(invitation);
             await setupContext.SaveChangesAsync();
             command.CorrelationId = Guid.NewGuid().ToString();
 
             //act           
-            var result = await ((IRequestHandler<UpdateInvitationCommand, Unit>)handler).Handle(command, new CancellationToken());
+            await ((IRequestHandler<UpdateInvitationCommand>)handler).Handle(command, new CancellationToken());
 
             //assert
             var updatedInvite = await confirmationContext.Invitations.SingleAsync(s => s.Reference == invitation.Reference);

@@ -1,15 +1,13 @@
-using System.Collections.Generic;
 using SFA.DAS.ProviderRegistrations.Types;
 
-namespace SFA.DAS.ProviderRegistrations.Application.Queries.GetInvitationQuery
-{
-    public class GetInvitationQueryResult
-    {
-        public GetInvitationQueryResult(List<InvitationDto> invitations)
-        {
-            Invitations = invitations;
-        }
+namespace SFA.DAS.ProviderRegistrations.Application.Queries.GetInvitationQuery;
 
-        public List<InvitationDto> Invitations { get; }
+public class GetInvitationQueryResult
+{
+    public GetInvitationQueryResult(List<InvitationDto> invitations)
+    {
+        Invitations = invitations;
     }
+
+    public List<InvitationDto> Invitations { get; }
 }

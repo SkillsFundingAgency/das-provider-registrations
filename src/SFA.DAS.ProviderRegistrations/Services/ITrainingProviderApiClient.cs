@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using SFA.DAS.ProviderRegistrations.Models;
+﻿using SFA.DAS.ProviderRegistrations.Models;
 
 namespace SFA.DAS.ProviderRegistrations.Services
 {

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using SFA.DAS.ProviderRegistrations.Web.Authentication;
+﻿using SFA.DAS.ProviderRegistrations.Web.Authentication;
 
 namespace SFA.DAS.ProviderRegistrations.Web.Extensions
 {

@@ -1,8 +1,7 @@
-﻿namespace SFA.DAS.ProviderRegistrations.Configuration
+﻿namespace SFA.DAS.ProviderRegistrations.Configuration;
+
+public class ActiveDirectorySettings
 {
-    public class ActiveDirectorySettings
-    {
-        public string Tenant { get; set; }
-        public string IdentifierUri { get; set; }
-    }
+    public string Tenant { get; set; }
+    public string IdentifierUri { get; set; }
 }

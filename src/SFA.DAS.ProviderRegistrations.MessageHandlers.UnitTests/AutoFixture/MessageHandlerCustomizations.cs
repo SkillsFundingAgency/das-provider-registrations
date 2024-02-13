@@ -2,13 +2,12 @@
 using NServiceBus.Testing;
 using System;
 
-namespace SFA.DAS.ProviderRegistrations.MessageHandlers.UnitTests.AutoFixture
+namespace SFA.DAS.ProviderRegistrations.MessageHandlers.UnitTests.AutoFixture;
+
+public class MessageHandlerCustomizations : ICustomization
 {
-    public class MessageHandlerCustomizations : ICustomization
+    public void Customize(IFixture fixture)
     {
-        public void Customize(IFixture fixture)
-        {
-            fixture.Register(() => new TestableMessageHandlerContext());
-        }
+        fixture.Register(() => new TestableMessageHandlerContext());
     }
 }

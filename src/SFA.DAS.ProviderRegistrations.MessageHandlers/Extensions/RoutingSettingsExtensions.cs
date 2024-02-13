@@ -1,13 +1,15 @@
 ﻿using NServiceBus;
 using SFA.DAS.ProviderRegistrations.Messages.Commands;
 
-namespace SFA.DAS.ProviderRegistrations.MessageHandlers.Extensions
+namespace SFA.DAS.ProviderRegistrations.MessageHandlers.Extensions;
+
+public static class RoutingSettingsExtensions
 {
-    public static class RoutingSettingsExtensions
+    public static void AddRouting(this RoutingSettings routing)
     {
-        public static void AddRouting(this RoutingSettings routingSettings)
-        {
-            routingSettings.RouteToEndpoint(typeof(RunHealthCheckCommand), "SFA.DAS.ProviderRegistrations.MessageHandlers");
-        }
+        routing.RouteToEndpoint(
+            typeof(RunHealthCheckCommand).Assembly, 
+            typeof(RunHealthCheckCommand).Namespace, 
+            "SFA.DAS.ProviderRegistrations.MessageHandlers");
     }
 }

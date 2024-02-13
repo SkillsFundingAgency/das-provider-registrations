@@ -1,11 +1,9 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authentication.WsFederation;
-using Microsoft.AspNetCore.Mvc;
-using SFA.DAS.Provider.Shared.UI.Models;
-using System;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
+using SFA.DAS.Provider.Shared.UI.Models;
 
 namespace SFA.DAS.ProviderRegistrations.Web.Controllers
 {
@@ -33,7 +31,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.Controllers
                 : WsFederationDefaults.AuthenticationScheme;
 
             return SignOut(
-                new Microsoft.AspNetCore.Authentication.AuthenticationProperties
+                new AuthenticationProperties
                 {
                     AllowRefresh = true
                 },

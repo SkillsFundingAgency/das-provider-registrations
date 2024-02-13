@@ -129,7 +129,9 @@
         "uiAppServiceName": "[concat(variables('resourceNamePrefix'), '-as')]",
         "webJobAppServiceName": "[concat(variables('resourceNamePrefix'), 'wkr-as')]",
         "webJobAppServicePlanName": "[concat(variables('resourceNamePrefix'), 'wkr-asp')]",
-        "databaseName": "[concat(variables('resourceNamePrefix'), '-db')]"
+        "databaseName": "[concat(variables('resourceNamePrefix'), '-db')]",
+        "configNames": "SFA.DAS.ProviderRegistrations,SFA.DAS.Provider.DfeSignIn,SFA.DAS.ProviderUrlHelper",
+        "configNamesApi": "SFA.DAS.ProviderRegistrations"
     },
     "resources": [
         {
@@ -408,32 +410,36 @@
                     },
                     "appServiceAppSettings": {
                         "value": {
-                          "array": [
-                            {
-                              "name": "EnvironmentName",
-                              "value": "[parameters('environmentName')]"
-                            },
-                            {
-                              "name": "ResourceEnvironmentName",
-                              "value": "[parameters('resourceEnvironmentName')]"
-                            },
-                            {
-                              "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-                              "value": "[reference(concat(variables('uiAppServiceName'), '-app-insights-',parameters('utcValue'))).outputs.InstrumentationKey.value]"
-                            },
-                            {
-                              "name": "ASPNETCORE_ENVIRONMENT",
-                              "value": "[toUpper(parameters('environmentName'))]"
-                            },
-                            {
-                              "name": "LoggingRedisConnectionString",
-                              "value": "[parameters('loggingRedisConnectionString')]"
-                            },
-                            {
-                              "name": "ConfigurationStorageConnectionString",
-                              "value": "[parameters('configurationStorageConnectionString')]"
-                            }
-                          ]
+                            "array": [
+                                {
+                                    "name": "EnvironmentName",
+                                    "value": "[parameters('environmentName')]"
+                                },
+                                {
+                                    "name": "ResourceEnvironmentName",
+                                    "value": "[parameters('resourceEnvironmentName')]"
+                                },
+                                {
+                                    "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+                                    "value": "[reference(concat(variables('uiAppServiceName'), '-app-insights-',parameters('utcValue'))).outputs.InstrumentationKey.value]"
+                                },
+                                {
+                                    "name": "ASPNETCORE_ENVIRONMENT",
+                                    "value": "[toUpper(parameters('environmentName'))]"
+                                },
+                                {
+                                    "name": "LoggingRedisConnectionString",
+                                    "value": "[parameters('loggingRedisConnectionString')]"
+                                },
+                                {
+                                    "name": "ConfigurationStorageConnectionString",
+                                    "value": "[parameters('configurationStorageConnectionString')]"
+                                },
+                                {
+                                    "name": "ConfigNames",
+                                    "value": "[variables('configNames')]"
+                                }
+                            ]
                         }
                     },
                     "customHostName": {
@@ -538,6 +544,10 @@
                                 {
                                     "name": "LoggingRedisConnectionString",
                                     "value": "[parameters('loggingRedisConnectionString')]"
+                                },
+                                {
+                                    "name": "ConfigNames",
+                                    "value": "[variables('configNamesApi')]"
                                 }
                             ]
                         }

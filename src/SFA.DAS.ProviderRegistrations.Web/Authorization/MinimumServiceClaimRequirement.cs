@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using SFA.DAS.ProviderRegistrations.Web.Authentication;
+﻿using SFA.DAS.ProviderRegistrations.Web.Authentication;
 
 namespace SFA.DAS.ProviderRegistrations.Web.Authorization
 {

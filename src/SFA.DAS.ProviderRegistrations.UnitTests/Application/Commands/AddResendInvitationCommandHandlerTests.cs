@@ -11,6 +11,7 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoFixture.NUnit3;
 
 namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
 {
@@ -18,26 +19,25 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
     [Parallelizable]
     public class AddResendInvitationCommandHandlerTests
     {
-        private Fixture fixture { get; set; }
-        private Invitation invitation { get; set; }
+        private Fixture _fixture;
 
         [SetUp]
         public void SetUp()
         {
-            fixture = new Fixture();
-            fixture.Behaviors
+            _fixture = new Fixture();
+            _fixture.Behaviors
                 .OfType<ThrowingRecursionBehavior>()
                 .ToList()
-                .ForEach(b => fixture.Behaviors.Remove(b));
-            fixture.Behaviors.Add(new OmitOnRecursionBehavior());
-            invitation = fixture.Create<Invitation>();
+                .ForEach(b => _fixture.Behaviors.Remove(b));
+            _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
         }
 
         [Test, ProviderAutoData]
         public async Task Handle_WhenHandlingAddResendInvitationCommand_ThenShouldAddResendInvitation(
             ProviderRegistrationsDbContext setupContext,
             ProviderRegistrationsDbContext confirmationContext,
-            AddResendInvitationCommandHandler handler)
+            AddResendInvitationCommandHandler handler,
+            [Greedy]Invitation invitation)
         {
             //arrange
             var updatedDate = DateTime.Now;
@@ -46,7 +46,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             var command = new AddResendInvitationCommand(invitation.Id, updatedDate);
 
             //act            
-            await ((IRequestHandler<AddResendInvitationCommand, Unit>)handler).Handle(command, new CancellationToken());
+            await ((IRequestHandler<AddResendInvitationCommand>)handler).Handle(command, new CancellationToken());
 
             //assert
             confirmationContext.InvitationEvents.Should().ContainSingle(s => s.InvitationId == command.InvitationId && s.Date == updatedDate);            
@@ -55,7 +55,8 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
         [Test, ProviderAutoData]
         public async Task Handle_WhenInvalidStatusCommandIsHandled_ThenNoChangesAreMade(
            ProviderRegistrationsDbContext setupContext,           
-           AddResendInvitationCommandHandler handler)
+           AddResendInvitationCommandHandler handler,
+           [Greedy]Invitation invitation)
         {
             //arrange            
             invitation.UpdateStatus((int)InvitationStatus.InvitationComplete, DateTime.Now);
@@ -66,12 +67,12 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             //act
             try
             {
-                await ((IRequestHandler<AddResendInvitationCommand, Unit>)handler).Handle(command, new CancellationToken());
+                await ((IRequestHandler<AddResendInvitationCommand>)handler).Handle(command, new CancellationToken());
             }
             catch (InvalidInvitationException ex)
             {
                 //assert
-                Assert.AreEqual(ex.Message, $"No invitation found for InvitationId:{command.InvitationId}");
+                Assert.That($"No invitation found for InvitationId:{command.InvitationId}", Is.EqualTo(ex.Message));
             }
         }
     }

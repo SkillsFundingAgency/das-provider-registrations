@@ -1,4 +1,5 @@
-﻿using AutoFixture.NUnit3;
+﻿using System.Threading.Tasks;
+using AutoFixture.NUnit3;
 using Microsoft.AspNetCore.Authorization;
 using Moq;
 using NUnit.Framework;
@@ -7,7 +8,6 @@ using SFA.DAS.ProviderRegistrations.Services;
 using SFA.DAS.ProviderRegistrations.Web.Authentication;
 using SFA.DAS.ProviderRegistrations.Web.Authorization;
 using SFA.DAS.ProviderRegistrations.Web.UnitTests.AutoFixture;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.ProviderRegistrations.Web.UnitTests.Authentication
 {

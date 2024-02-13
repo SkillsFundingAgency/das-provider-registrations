@@ -17,7 +17,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.UnitTests.ViewModels
                 new InvitationEventViewModel{ EventType = EventTypeViewModel.PayeSchemeAdded, Date = dateTimeNow}
             };
 
-            Assert.AreEqual(viewModel.PayeSchemeAddedStatus, dateTimeNow.ToString(InvitationEventsViewModel.DateFormat));
+            Assert.That(dateTimeNow.ToString(InvitationEventsViewModel.DateFormat), Is.EqualTo(viewModel.PayeSchemeAddedStatus));
         }
 
         [TestCase(InvitationStatusViewModel.InvitationSent, "PAYE scheme not added")]
@@ -34,7 +34,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.UnitTests.ViewModels
                 Status = status
             };
 
-            Assert.AreEqual(viewModel.PayeSchemeAddedStatus,textToDisplay);
+            Assert.That(textToDisplay, Is.EqualTo(viewModel.PayeSchemeAddedStatus));
         }
 
         [Test]
@@ -47,7 +47,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.UnitTests.ViewModels
                 new InvitationEventViewModel{ EventType = EventTypeViewModel.AccountStarted, Date = dateTimeNow}
             };
 
-            Assert.AreEqual(viewModel.AccountCreationStartedStatus, dateTimeNow.ToString(InvitationEventsViewModel.DateFormat));
+            Assert.That(dateTimeNow.ToString(InvitationEventsViewModel.DateFormat), Is.EqualTo(viewModel.AccountCreationStartedStatus));
         }
 
         [TestCase(InvitationStatusViewModel.InvitationSent, "Account creation not started")]
@@ -63,7 +63,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.UnitTests.ViewModels
                 Status = status
             };
 
-            Assert.AreEqual(viewModel.AccountCreationStartedStatus, textToDisplay);
+            Assert.That(textToDisplay, Is.EqualTo(viewModel.AccountCreationStartedStatus));
         }
 
         [Test]
@@ -76,7 +76,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.UnitTests.ViewModels
                 new InvitationEventViewModel{ EventType = EventTypeViewModel.LegalAgreementSigned, Date = dateTimeNow}
             };
 
-            Assert.AreEqual(viewModel.AgreementAcceptedStatus, dateTimeNow.ToString(InvitationEventsViewModel.DateFormat));
+            Assert.That(dateTimeNow.ToString(InvitationEventsViewModel.DateFormat), Is.EqualTo(viewModel.AgreementAcceptedStatus));
         }
 
         [TestCase(InvitationStatusViewModel.InvitationSent, "Legal agreement not accepted")]
@@ -92,7 +92,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.UnitTests.ViewModels
                 Status = status
             };
 
-            Assert.AreEqual(viewModel.AgreementAcceptedStatus, textToDisplay);
+            Assert.That(textToDisplay, Is.EqualTo(viewModel.AgreementAcceptedStatus));
         }
     }
 }

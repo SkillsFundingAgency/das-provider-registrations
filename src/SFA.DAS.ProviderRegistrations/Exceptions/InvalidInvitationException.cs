@@ -1,12 +1,9 @@
-﻿using System;
+﻿namespace SFA.DAS.ProviderRegistrations.Exceptions;
 
-namespace SFA.DAS.ProviderRegistrations.Exceptions
+public class InvalidInvitationException : Exception
 {
-    public class InvalidInvitationException : Exception
+    public InvalidInvitationException(string message) : base(message)
     {
-        public InvalidInvitationException(string message) : base(message)
-        {
 
-        }
     }
 }

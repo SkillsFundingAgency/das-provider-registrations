@@ -10,45 +10,50 @@ using SFA.DAS.NServiceBus.Configuration.AzureServiceBus;
 using SFA.DAS.NServiceBus.Configuration.NewtonsoftJsonSerializer;
 using SFA.DAS.ProviderRegistrations.Configuration;
 
-namespace SFA.DAS.ProviderRegistrations.MessageHandlers.TestHarness
+namespace SFA.DAS.ProviderRegistrations.MessageHandlers.TestHarness;
+
+internal class Program
 {
-    internal class Program
+    public static async Task Main()
     {
-        public static async Task Main()
+        //var builder = new ConfigurationBuilder().AddAzureTableStorage(ProviderRegistrationsConfigurationKeys.ProviderRegistrations);
+        var builder = new ConfigurationBuilder().AddAzureTableStorage(options =>
         {
-            var builder = new ConfigurationBuilder()
-                .AddAzureTableStorage(ProviderRegistrationsConfigurationKeys.ProviderRegistrations);
+           options.ConfigurationKeys = [ ProviderRegistrationsConfigurationKeys.ProviderRegistrations];
+           options.PreFixConfigurationKeys = false;
+        });
 
-            IConfigurationRoot configuration = builder.Build();
+        IConfigurationRoot configuration = builder.Build();
 
-            var provider = new ServiceCollection()
-                .AddOptions()
-                .Configure<ProviderRegistrationsSettings>(configuration.GetSection(ProviderRegistrationsConfigurationKeys.ProviderRegistrations)).BuildServiceProvider();
+        var provider = new ServiceCollection()
+            .AddOptions()
+            .Configure<ProviderRegistrationsSettings>(configuration.GetSection(ProviderRegistrationsConfigurationKeys.ProviderRegistrations)).BuildServiceProvider();
 
-            var config = configuration.GetSection(ProviderRegistrationsConfigurationKeys.NServiceBusSettings).Get<NServiceBusSettings>();
-            var isDevelopment = Environment.GetEnvironmentVariable(EnvironmentVariableNames.EnvironmentName) == "LOCAL";
+        var config = configuration.GetSection(ProviderRegistrationsConfigurationKeys.NServiceBusSettings).Get<NServiceBusSettings>();
+        var isDevelopment = Environment.GetEnvironmentVariable(EnvironmentVariableNames.EnvironmentName) == "LOCAL";
 
-            var endpointConfiguration = new EndpointConfiguration("SFA.DAS.ProviderRegistrations.MessageHandlers.TestHarness")
-                .UseInstallers()
-                .UseLicense(config.NServiceBusLicense)
-                .UseMessageConventions()
-                .UseNewtonsoftJsonSerializer();
+        var endpointConfiguration = new EndpointConfiguration("SFA.DAS.ProviderRegistrations.MessageHandlers.TestHarness")
+            .UseInstallers()
+            .UseLicense(config.NServiceBusLicense)
+            .UseMessageConventions()
+            .UseNewtonsoftJsonSerializer();
+        
+        endpointConfiguration.UseLearningTransport();
 
-            if (isDevelopment)
-            {
-                endpointConfiguration.UseLearningTransport();
-            }
-            else
-            {
-                endpointConfiguration.UseAzureServiceBusTransport(config.ServiceBusConnectionString);
-            }
+        // if (isDevelopment)
+        // {
+        //     endpointConfiguration.UseLearningTransport();
+        // }
+        // else
+        // {
+        //     endpointConfiguration.UseAzureServiceBusTransport(config.ServiceBusConnectionString);
+        // }
 
-            var endpoint = await Endpoint.Start(endpointConfiguration);
+        var endpoint = await Endpoint.Start(endpointConfiguration);
 
-            var testHarness = new TestHarness(endpoint);
+        var testHarness = new TestHarness(endpoint);
 
-            await testHarness.Run();
-            await endpoint.Stop();
-        }
+        await testHarness.Run();
+        await endpoint.Stop();
     }
 }

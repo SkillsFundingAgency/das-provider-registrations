@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Security.Claims;
-using System.Security.Principal;
+﻿using System.Security.Principal;
 using SFA.DAS.ProviderRegistrations.Web.Authentication;
 
 namespace SFA.DAS.ProviderRegistrations.Web.Extensions

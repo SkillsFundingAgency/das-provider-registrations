@@ -10,33 +10,32 @@ using SFA.DAS.ProviderRegistrations.Application.Commands.SignedAgreementCommand;
 using SFA.DAS.ProviderRegistrations.MessageHandlers.EventHandlers.EmployerAccounts;
 using SFA.DAS.ProviderRegistrations.MessageHandlers.UnitTests.AutoFixture;
 
-namespace SFA.DAS.ProviderRegistrations.MessageHandlers.UnitTests.EventHandlers.EmployerAccounts
+namespace SFA.DAS.ProviderRegistrations.MessageHandlers.UnitTests.EventHandlers.EmployerAccounts;
+
+[TestFixture]
+[Parallelizable]
+public class SignedAgreementEventHandlerTests
 {
-    [TestFixture]
-    [Parallelizable]
-    public class SignedAgreementEventHandlerTests
+    [Test, DomainAutoData]
+    public async Task Handle_WhenHandlingAddedPayeSchemeEvent_ThenShouldSendSignedAgreementCommand(
+        TestableMessageHandlerContext context,
+        [Frozen] Mock<IMediator> mediator,
+        SignedAgreementEventHandler handler,
+        SignedAgreementEvent message)
     {
-        [Test, DomainAutoData]
-        public async Task Handle_WhenHandlingAddedPayeSchemeEvent_ThenShouldSendSignedAgreementCommand(
-            TestableMessageHandlerContext context,
-            [Frozen] Mock<IMediator> mediator,
-            SignedAgreementEventHandler handler,
-            SignedAgreementEvent message)
-        {
-            //arrange
+        //arrange
 
-            //act
-            await handler.Handle(message, context);
+        //act
+        await handler.Handle(message, context);
 
-            //assert
-            mediator.Verify(s => s.Send(It.Is<SignedAgreementCommand>(c =>
-                c.AccountId == message.AccountId &&
-                c.AgreementId == message.AgreementId &&
-                c.LegalEntityId == message.LegalEntityId &&
-                c.OrganisationName == message.OrganisationName &&
-                c.UserName == message.UserName &&
-                c.UserRef == message.UserRef &&
-                c.CorrelationId == message.CorrelationId), It.IsAny<CancellationToken>()));
-        }
+        //assert
+        mediator.Verify(s => s.Send(It.Is<SignedAgreementCommand>(c =>
+            c.AccountId == message.AccountId &&
+            c.AgreementId == message.AgreementId &&
+            c.LegalEntityId == message.LegalEntityId &&
+            c.OrganisationName == message.OrganisationName &&
+            c.UserName == message.UserName &&
+            c.UserRef == message.UserRef &&
+            c.CorrelationId == message.CorrelationId), It.IsAny<CancellationToken>()));
     }
 }

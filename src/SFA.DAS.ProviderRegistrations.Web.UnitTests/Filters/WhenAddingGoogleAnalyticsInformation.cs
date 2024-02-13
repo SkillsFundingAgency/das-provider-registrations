@@ -32,11 +32,11 @@ namespace SFA.DAS.ProviderRegistrations.Web.UnitTests.Filters
 
             //Assert
             var actualController = context.Controller as Controller;
-            Assert.IsNotNull(actualController);
+            Assert.That(actualController, Is.Not.Null);
             var viewBagData = actualController.ViewBag.GaData as GaData;
-            Assert.IsNotNull(viewBagData);
-            Assert.AreEqual(ukPrn.ToString(), viewBagData.UkPrn);
-            Assert.AreEqual(userId, viewBagData.UserId);
+            Assert.That(viewBagData, Is.Not.Null);
+            Assert.That(viewBagData.UkPrn, Is.EqualTo(ukPrn.ToString()));
+            Assert.That(viewBagData.UserId, Is.EqualTo(userId));
         }
 
         [Test, DomainAutoData]
