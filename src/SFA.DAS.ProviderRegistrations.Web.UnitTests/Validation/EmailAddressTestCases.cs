@@ -52,7 +52,7 @@ internal class InvalidEmailCases : IEnumerable
         yield return new object[] { "b o b@example.com" };
         yield return new object[] { "bob@example.com " }; // whitespace at the end of the domain
         yield return new object[] { "bob@example.com." }; // full stop at the end of the domain
-        yield return new object[] { "bob@example.com09" }; // full stop at the end of the domain
+        yield return new object[] { "bob@example.com09" }; // numerics in TLD
         yield return new object[] { "bob.example@tbwaworldhealth.london " }; // whitespace at the end of the domain
     }
 }
