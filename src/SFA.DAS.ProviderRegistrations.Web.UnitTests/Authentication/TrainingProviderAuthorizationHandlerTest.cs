@@ -33,7 +33,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.UnitTests.Authentication
             var actual = await handler.IsProviderAuthorized(context, true);
 
             //Assert
-            Assert.True(actual);
+            Assert.That(actual, Is.True);
         }
 
         [Test, DomainAutoData]
@@ -56,7 +56,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.UnitTests.Authentication
             var actual = await handler.IsProviderAuthorized(context, true);
 
             //Assert
-            Assert.False(actual);
+            Assert.That(actual, Is.False);
         }
 
         [Test, DomainAutoData]
@@ -79,7 +79,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.UnitTests.Authentication
             var actual = await handler.IsProviderAuthorized(context, true);
 
             //Assert
-            Assert.False(actual);
+            Assert.That(actual, Is.False);
         }
 
         [Test, DomainAutoData]
@@ -95,7 +95,7 @@ namespace SFA.DAS.ProviderRegistrations.Web.UnitTests.Authentication
             var actual = await handler.IsProviderAuthorized(context, true);
 
             //Assert
-            Assert.False(actual);
+            Assert.That(actual, Is.False);
         }
     }
 }
