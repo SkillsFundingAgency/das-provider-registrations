@@ -13,11 +13,11 @@
 
     <ItemGroup>
         <PackageReference Include="AutoMapper" Version="12.0.1"/>
-        <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.17.2" />
+        <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.17.3" />
         <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.22.0"/>
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.26"/>
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.WsFederation" Version="6.0.26"/>
-        <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="6.0.26"/>
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.27" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.WsFederation" Version="6.0.27" />
+        <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="6.0.27" />
         <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.1"/>
         <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0"/>
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
