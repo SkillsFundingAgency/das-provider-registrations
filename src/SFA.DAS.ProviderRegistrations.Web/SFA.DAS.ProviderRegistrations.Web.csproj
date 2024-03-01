@@ -24,7 +24,7 @@
         <PackageReference Include="SFA.DAS.Authorization.Mvc" Version="6.0.97"/>
         <PackageReference Include="SFA.DAS.Configuration.AzureTableStorage" Version="3.0.84"/>
         <PackageReference Include="SFA.DAS.DfESignIn.Auth" Version="17.1.61"/>
-        <PackageReference Include="SFA.DAS.Provider.Shared.UI" Version="2.0.28"/>
+        <PackageReference Include="SFA.DAS.Provider.Shared.UI" Version="2.0.30"/>
         <PackageReference Include="SFA.DAS.UnitOfWork.EntityFrameworkCore" Version="9.0.28"/>
         <PackageReference Include="MediatR" Version="12.2.0"/>
         <PackageReference Include="SFA.DAS.UnitOfWork.Mvc" Version="9.0.28" />
