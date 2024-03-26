@@ -11,7 +11,6 @@ namespace SFA.DAS.ProviderRegistrations.Web.Authentication;
 
 public static class AuthenticationExtensions
 {
-    private const string ClientName = "ProviderRoATP";
     private const string CookieAuthName = "SFA.DAS.ProviderApprenticeshipService";
 
     public static IServiceCollection AddProviderIdamsAuthentication(this IServiceCollection services, IConfiguration config)
@@ -30,7 +29,7 @@ public static class AuthenticationExtensions
                     config,
                     CookieAuthName,
                     typeof(CustomServiceRole),
-                    ClientName,
+                    DfESignIn.Auth.Enums.ClientName.ProviderRoatp,
                     "/signout");
             }
             else

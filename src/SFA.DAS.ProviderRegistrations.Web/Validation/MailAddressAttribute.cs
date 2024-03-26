@@ -1,24 +1,19 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Net.Mail;
+using SFA.DAS.EmailValidationService;
 
-namespace SFA.DAS.ProviderRegistrations.Web.Validation
+namespace SFA.DAS.ProviderRegistrations.Web.Validation;
+
+public class MailAddressAttribute : ValidationAttribute
 {
-    public class MailAddressAttribute : ValidationAttribute
+    protected override ValidationResult IsValid(object value, ValidationContext validationContext)
     {
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        if (value == null)
         {
-            try
-            {
-                var emailAddress = value.ToString().Trim();
-                if (emailAddress.Contains(' ')) return new ValidationResult(ErrorMessage); 
-
-                var mailAddress = new MailAddress(emailAddress);
-                return mailAddress.Address == emailAddress ? ValidationResult.Success : new ValidationResult(ErrorMessage);
-            }
-            catch 
-            {
-                return new ValidationResult(ErrorMessage);
-            }
+            return new ValidationResult(ErrorMessage);
         }
+        
+        var isValid = value.ToString().IsAValidEmailAddress();
+
+        return isValid ? ValidationResult.Success : new ValidationResult(ErrorMessage);
     }
 }
