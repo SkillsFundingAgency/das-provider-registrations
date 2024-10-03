@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <LangVersion>latest</LangVersion>
-        <TargetFramework>netcoreapp6.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
     </PropertyGroup>
 
     <ItemGroup>
@@ -14,24 +14,24 @@
     <ItemGroup>
         <PackageReference Include="AutoMapper" Version="13.0.1" />
         <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.17.3" />
-        <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.22.0"/>
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.27" />
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.WsFederation" Version="6.0.27" />
-        <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="6.0.27" />
-        <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.1"/>
-        <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0"/>
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
-        <PackageReference Include="SFA.DAS.Authorization.Mvc" Version="6.0.97"/>
-        <PackageReference Include="SFA.DAS.Configuration.AzureTableStorage" Version="3.0.84"/>
+        <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.22.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="8.0.8" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.WsFederation" Version="8.0.8" />
+        <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="8.0.8" />
+        <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+        <PackageReference Include="SFA.DAS.Authorization.Mvc" Version="6.0.97" />
+        <PackageReference Include="SFA.DAS.Configuration.AzureTableStorage" Version="3.0.84" />
         <PackageReference Include="SFA.DAS.DfESignIn.Auth" Version="17.1.76" />
-        <PackageReference Include="SFA.DAS.Provider.Shared.UI" Version="2.0.30"/>
-        <PackageReference Include="SFA.DAS.UnitOfWork.EntityFrameworkCore" Version="9.0.28"/>
-        <PackageReference Include="MediatR" Version="12.2.0"/>
+        <PackageReference Include="SFA.DAS.Provider.Shared.UI" Version="2.0.39" />
+        <PackageReference Include="SFA.DAS.UnitOfWork.EntityFrameworkCore" Version="9.0.28" />
+        <PackageReference Include="MediatR" Version="12.4.1" />
         <PackageReference Include="SFA.DAS.UnitOfWork.Mvc" Version="9.0.28" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\SFA.DAS.ProviderRegistrations\SFA.DAS.ProviderRegistrations.csproj"/>
+        <ProjectReference Include="..\SFA.DAS.ProviderRegistrations\SFA.DAS.ProviderRegistrations.csproj" />
     </ItemGroup>
     
 </Project>
