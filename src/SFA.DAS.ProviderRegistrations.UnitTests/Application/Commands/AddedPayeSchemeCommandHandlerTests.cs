@@ -49,6 +49,7 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
                 [Greedy]Invitation invitation)
         {
             //arrange            
+            invitation.Id = 1234567;
             var updatedDate = DateTime.Now;
             invitation.UpdateStatus((int)InvitationStatus.AccountStarted, DateTime.Now.AddHours(-1));
             var command = GetAddedPayeSchemeCommand(commandDetails, invitation.Reference.ToString(), updatedDate);
@@ -59,7 +60,8 @@ namespace SFA.DAS.ProviderRegistrations.UnitTests.Application.Commands
             await ((IRequestHandler<AddedPayeSchemeCommand>)handler).Handle(command, new CancellationToken());
 
             //assert
-            var addedInvitationEvent = await confirmationContext.InvitationEvents.FirstOrDefaultAsync(s => s.Invitation.Id == invitation.Id && s.EventType == (int)EventType.PayeSchemeAdded);
+            var addedInvitationEvent = await confirmationContext.InvitationEvents.FirstOrDefaultAsync(s => s.Invitation.Id == invitation.Id 
+                                                                                                        && s.EventType == (int)EventType.PayeSchemeAdded);
             addedInvitationEvent.Date.Should().Be(updatedDate);
         }
 
