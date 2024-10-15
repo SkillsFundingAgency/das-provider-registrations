@@ -252,6 +252,7 @@
             "apiVersion": "2020-06-01",
             "name": "[concat(variables('webJobAppServiceName'), '-', parameters('utcValue'))]",
             "type": "Microsoft.Resources/deployments",
+            "resourceGroup": "[variables('resourceGroupName')]",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -266,7 +267,7 @@
                         "value": "[variables('webJobAppServicePlanName')]"
                     },
                     "appServicePlanResourceGroup": {
-                        "value": "[resourceGroup().name]"
+                        "value": "[variables('resourceGroupName')]",
                     },
                     "subnetResourceId": {
                         "value": "[reference(concat(parameters('subnetObject').name, '-', parameters('utcValue'))).outputs.SubnetResourceId.value]"
@@ -407,6 +408,7 @@
             "apiVersion": "2020-06-01",
             "name": "[concat(variables('uiAppServiceName'), '-',parameters('utcValue'))]",
             "type": "Microsoft.Resources/deployments",
+            "resourceGroup": "[variables('resourceGroupName')]",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -522,6 +524,7 @@
             "apiVersion": "2020-06-01",
             "name": "[concat(variables('apiAppServiceName'), '-',parameters('utcValue'))]",
             "type": "Microsoft.Resources/deployments",
+            "resourceGroup": "[variables('resourceGroupName')]",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
