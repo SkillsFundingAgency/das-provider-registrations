@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System.Net;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using NServiceBus.ObjectBuilder.MSDependencyInjection;
-using SFA.DAS.Authorization.DependencyResolution.Microsoft;
-using SFA.DAS.Authorization.Mvc.Extensions;
 using SFA.DAS.NServiceBus.Features.ClientOutbox.Data;
 using SFA.DAS.Provider.Shared.UI.Startup;
 using SFA.DAS.ProviderRegistrations.Application.Commands.UnsubscribeByIdCommand;
@@ -47,8 +47,9 @@ public class Startup
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
-            })
-            .AddProviderIdamsAuthentication(_configuration);
+            });
+        
+        services.AddProviderAuthentication(_configuration);
         
         services.AddDasDistributedMemoryCache(_configuration, _configuration.IsDevOrLocal());
         services.AddMemoryCache();
@@ -58,7 +59,6 @@ public class Startup
 
         services.AddDasMvc(_configuration);
 
-        services.AddAuthorization<AuthorizationContextProvider>();
 
         var providerRegistrationsSettings = _configuration.GetSection(ProviderRegistrationsConfigurationKeys.ProviderRegistrationsSettings).Get<ProviderRegistrationsSettings>();
 
@@ -99,9 +99,23 @@ public class Startup
             app.UseExceptionHandler("/error");
             app.UseHsts();
         }
+        
+        app.UseExceptionHandler(builder =>
+        {
+            builder.Run(context =>
+            {
+                var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
+                var logger = context.RequestServices.GetService<ILogger<Startup>>();
+                if (exceptionHandlerPathFeature?.Error is UnauthorizedAccessException)
+                {
+                    logger.LogWarning("Unauthorized Access");
+                    context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                }
+                return Task.CompletedTask;
+            });
+        });
 
         app.UseStatusCodePagesWithReExecute("/error", "?statuscode={0}")
-            .UseUnauthorizedAccessExceptionHandler()
             .UseHttpsRedirection()
             .UseUnitOfWork()
             .UseStaticFiles()

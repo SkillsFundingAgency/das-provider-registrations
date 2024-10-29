@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc.Infrastructure;
-using SFA.DAS.Authorization.Context;
 using SFA.DAS.ProviderRegistrations.Web.Authentication;
 
 namespace SFA.DAS.ProviderRegistrations.Web.Authorization;
@@ -58,7 +57,6 @@ public static class AuthorizationPolicy
         services.AddTransient<IActionContextAccessor, ActionContextAccessor>();
         services.AddTransient<IAuthorizationHandler, ProviderHandler>();
         services.AddTransient<IAuthorizationHandler, MinimumServiceClaimRequirementHandler>();
-        services.AddTransient<IAuthorizationContextProvider, AuthorizationContextProvider>();
         services.AddSingleton<IAuthenticationService, AuthenticationService>();
         services.AddSingleton<ITrainingProviderAuthorizationHandler, TrainingProviderAuthorizationHandler>();
         services.AddSingleton<IAuthorizationHandler, TrainingProviderAllRolesAuthorizationHandler>();

@@ -13,7 +13,7 @@ public static class AuthenticationExtensions
 {
     private const string CookieAuthName = "SFA.DAS.ProviderApprenticeshipService";
 
-    public static IServiceCollection AddProviderIdamsAuthentication(this IServiceCollection services, IConfiguration config)
+    public static IServiceCollection AddProviderAuthentication(this IServiceCollection services, IConfiguration config)
     {
         if (config["UseAuthenticationStub"] != null && bool.Parse(config["UseAuthenticationStub"]))
         {
@@ -64,7 +64,7 @@ public static class AuthenticationExtensions
             });
     }
 
-    public static IServiceCollection AddProviderStubAuthentication(this IServiceCollection services)
+    private static IServiceCollection AddProviderStubAuthentication(this IServiceCollection services)
     {
         services.AddAuthentication("Provider-stub").AddScheme<AuthenticationSchemeOptions, ProviderStubAuthHandler>(
             "Provider-stub",
